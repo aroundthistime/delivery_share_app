@@ -7,12 +7,15 @@ import Favorites from "../screens/Restaurant/Favorites";
 import Orders from "../screens/Order/Orders";
 import SettingsHome from "../screens/Settings/SettingsHome";
 import styles from "../styles"
+import { StatusBar } from "react-native";
 
 const TabNavigation = createBottomTabNavigator();
 
 const SELECTED_TAB_COLOR = styles.themeColor;
 
 export default ({navigation, route}) => (
+    <>
+    <StatusBar />
     <TabNavigation.Navigator
         tabBarOptions={{
             tabStyle : {
@@ -82,4 +85,5 @@ export default ({navigation, route}) => (
             }}
         />
     </TabNavigation.Navigator>
+    </>
 )
