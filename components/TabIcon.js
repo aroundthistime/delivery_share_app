@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Ionicons} from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons"
 
 const TabIcon = ({name, color="rgba(100, 100, 100, 0.5)", size=22, group="Ionicons"}) => {
     if (group === "Ionicons"){

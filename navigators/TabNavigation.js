@@ -56,8 +56,8 @@ export default ({navigation, route}) => (
             component={Favorites}
             options={{
                 tabBarIcon : ({focused}) => focused
-                    ? <TabIcon name="heart-sharp" color={SELECTED_TAB_COLOR} />
-                    : <TabIcon name="heart-outline" />,
+                    ? <TabIcon name="heart-sharp" size={24.5} color={SELECTED_TAB_COLOR} />
+                    : <TabIcon name="heart-outline" size={24.5} />,
                 tabBarLabel : "찜"
             }}
         />
@@ -76,8 +76,8 @@ export default ({navigation, route}) => (
             component={SettingsHome}
             options={{
                 tabBarIcon : ({focused}) => focused
-                ? <TabIcon name="person-circle" color={SELECTED_TAB_COLOR} />
-                : <TabIcon name="person-circle-outline"/>,
+                ? <TabIcon name="person-circle"  size={25} color={SELECTED_TAB_COLOR} />
+                : <TabIcon name="person-circle-outline" size={25} />,
                 tabBarLabel : "계정"
             }}
         />
