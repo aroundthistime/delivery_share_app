@@ -11,6 +11,7 @@ import Categories from "../screens/Order/Categories";
 import Order from "../screens/Order/Order";
 import Restaurants from "../screens/Order/Restaurants";
 import Restaurant from "../screens/Restaurant/Restaurant";
+import Menu from "../screens/Restaurant/Menu";
 
 
 const CartLink =  ({onPress}) => (
@@ -86,6 +87,14 @@ export default ({navigation, route}) => (
             component={Restaurant}
             options={({navigation}) => ({
                 title : "음식 카테고리 선택",
+                headerTitleAlign : "center",
+                headerRight : () => <CartLink onPress={()=>navigation.navigate("Cart")} />
+            })}
+        />
+        <LoggedInNavigation.Screen
+            name="Menu"
+            component={Menu}
+            options={({navigation}) => ({
                 headerTitleAlign : "center",
                 headerRight : () => <CartLink onPress={()=>navigation.navigate("Cart")} />
             })}
