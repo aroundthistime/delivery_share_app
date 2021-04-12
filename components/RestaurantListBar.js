@@ -51,15 +51,14 @@ const RestaurantRate = ({rate, reviewCounts}) => (
 )
 
 
-const RestaurantBar = ({avatar, name, rate, reviewCounts, popular, leastPay, onPress}) => {
-    console.log(reviewCounts, name, rate);
+const RestaurantBar = ({thumbnail, name, rate, reviewCounts, popular, minOrder, onPress}) => {
     return (
         <ListBar onPress={onPress}>
-            <RestaurantImg source={{uri : avatar}} />
+            <RestaurantImg source={{uri : thumbnail}} />
             <RestaurantInfos>
                 <RestaurantName numberOfLines={1}>{name}</RestaurantName>
                 <RestaurantRate rate={rate} reviewCounts={formatReviewCounts(reviewCounts)}/>
-                <BlurText>최소주문금액 {leastPay}원</BlurText>
+                <BlurText>최소주문금액 {minOrder}원</BlurText>
                 <BlurText numberOfLines={1}>{popular.join(", ")}</BlurText>
             </RestaurantInfos>
         </ListBar>

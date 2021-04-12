@@ -1,5 +1,7 @@
 import React from "react";
-import { createStackNavigator, HeaderTitle } from "@react-navigation/stack";
+import { TouchableOpacity } from "react-native";
+import { createStackNavigator} from "@react-navigation/stack";
+import { Ionicons } from '@expo/vector-icons';
 import TabNavigation from "./TabNavigation";
 import Calls from "../screens/Call/Calls";
 import Call from "../screens/Call/Call";
@@ -8,6 +10,14 @@ import Cart from "../screens/Order/Cart";
 import Categories from "../screens/Order/Categories";
 import Order from "../screens/Order/Order";
 import Restaurants from "../screens/Order/Restaurants";
+import Restaurant from "../screens/Restaurant/Restaurant";
+
+
+const CartLink =  ({onPress}) => (
+    <TouchableOpacity onPress={onPress} style={{marginRight : 10}}>
+        <Ionicons name="cart" size={28} color="black" />
+    </TouchableOpacity>
+)
 
 const LoggedInNavigation = createStackNavigator();
 
@@ -49,10 +59,11 @@ export default ({navigation, route}) => (
         <LoggedInNavigation.Screen
             name="Categories"
             component={Categories}
-            options={{
+            options={({navigation}) => ({
                 title : "음식 카테고리 선택",
-                headerTitleAlign : "center"
-            }}
+                headerTitleAlign : "center",
+                headerRight : () => <CartLink onPress={()=>navigation.navigate("Cart")} />
+            })}
         />
         <LoggedInNavigation.Screen
             name="Order"
@@ -65,9 +76,19 @@ export default ({navigation, route}) => (
         <LoggedInNavigation.Screen
             name="Restaurants"
             component={Restaurants}
-            options={{
-                headerTitleAlign : "center"
-            }}
+            options={({navigation}) => ({
+                headerTitleAlign : "center",
+                headerRight : () => <CartLink onPress={()=>navigation.navigate("Cart")} />
+            })}
+        />
+        <LoggedInNavigation.Screen
+            name="Restaurant"
+            component={Restaurant}
+            options={({navigation}) => ({
+                title : "음식 카테고리 선택",
+                headerTitleAlign : "center",
+                headerRight : () => <CartLink onPress={()=>navigation.navigate("Cart")} />
+            })}
         />
     </LoggedInNavigation.Navigator>
 )
