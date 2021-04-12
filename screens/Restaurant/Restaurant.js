@@ -7,6 +7,8 @@ import ViewContainer from "../../components/ViewContainer";
 import constants from "../../constants";
 import styles from "../../styles";
 import Heart from "../../components/Heart";
+import RestaurantNavigation from "../../navigators/RestaurantNavigation";
+import { ScrollView } from "react-native-gesture-handler";
 
 const RESTAURANT_ICON_INFO_SIZE = 19;
 
@@ -25,9 +27,10 @@ const RestaurantBrief = styled.View`
     border-width : 0.7;
     border-color : ${styles.lightGrayColor};
     border-radius : 10;
-    margin-top : 20;
+    margin-top : ${constants.width / 4.6 + 25};
     margin-bottom : 20;
     padding-top : ${constants.width / 5 + 20};
+    background-color : white;
 `
 
 const RestaruantName = styled.Text`
@@ -94,31 +97,38 @@ export default ({navigation, route}) => {
     }
     navigation.setOptions({title : restaurant.name});
     return <ViewContainer>
-        <RestaurantBrief>
-            <RestaurantThumbnail source={{uri : restaurant.thumbnail}} />
-            <RestaruantName>{restaurant.name}</RestaruantName>
-            <View style={{flexDirection : "row", marginVertical : 5}}>
-                <RestaurantRate rate={restaurant.rate} />
-                <RestaurantLikes isLiked={isLikedState} likeCount={likeCountState} onPress={toggleLike}/>
-            </View>
+        <ScrollView>
+            <RestaurantBrief>
+                <RestaurantThumbnail source={{uri : restaurant.thumbnail}} />
+                <RestaruantName>{restaurant.name}</RestaruantName>
+                <View style={{flexDirection : "row", marginVertical : 5}}>
+                    <RestaurantRate rate={restaurant.rate} />
+                    <RestaurantLikes isLiked={isLikedState} likeCount={likeCountState} onPress={toggleLike}/>
+                </View>
+                <View style={{
+                    width : constants.width - 100,
+                    marginVertical : 10,
+                }}>
+                    <RestaurantInfoColumn>
+                        <RestaurantInfoColumnTitle>최소주문금액</RestaurantInfoColumnTitle>
+                        <Text>{restaurant.minOrder}</Text>
+                    </RestaurantInfoColumn>
+                    <RestaurantInfoColumn>
+                        <RestaurantInfoColumnTitle>배달팁</RestaurantInfoColumnTitle>
+                        <Text>{restaurant.deliveryTip}</Text>
+                    </RestaurantInfoColumn>
+                    <RestaurantInfoColumn>
+                        <RestaurantInfoColumnTitle>분리포장가능</RestaurantInfoColumnTitle>
+                        <Text>{restaurant.seperatable ? "O" : "X"}</Text>
+                    </RestaurantInfoColumn>
+                </View>
+            </RestaurantBrief>
             <View style={{
-                width : constants.width - 100,
-                marginVertical : 10,
+                width : constants.width - 50,
             }}>
-                <RestaurantInfoColumn>
-                    <RestaurantInfoColumnTitle>최소주문금액</RestaurantInfoColumnTitle>
-                    <Text>{restaurant.minOrder}</Text>
-                </RestaurantInfoColumn>
-                <RestaurantInfoColumn>
-                    <RestaurantInfoColumnTitle>배달팁</RestaurantInfoColumnTitle>
-                    <Text>{restaurant.deliveryTip}</Text>
-                </RestaurantInfoColumn>
-                <RestaurantInfoColumn>
-                    <RestaurantInfoColumnTitle>분리포장가능</RestaurantInfoColumnTitle>
-                    <Text>{restaurant.seperatable ? "O" : "X"}</Text>
-                </RestaurantInfoColumn>
+                <RestaurantNavigation />
             </View>
-        </RestaurantBrief>
+        </ScrollView>
     </ViewContainer>
     // return <Loader />
 }
