@@ -14,10 +14,6 @@ export default ({navigation}) => {
         data={menus}
         renderItem={renderMenuBar}
         nestedScrollEnabled
-    //     style={{
-    //         backgroundColor : styles.lightGrayColor,
-    //         paddingTop : styles.grayBorderWidth,
-    // }}
     >
     </FlatList>
 }

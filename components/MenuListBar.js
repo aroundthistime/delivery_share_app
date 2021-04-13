@@ -7,11 +7,11 @@ import styles from "../styles";
 const ListBar = styled.TouchableOpacity`
     flex-direction : row;
     align-items : center;
-    width : ${constants.width - 50};
+    width : ${constants.width};
     height : 110;
     padding-left : 15;
     padding-right : 10;
-    background-color : ${styles.bgColor};
+    background-color : white;
     margin-bottom : ${styles.grayBorderWidth + 0.8};
 `
 

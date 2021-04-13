@@ -22,7 +22,7 @@ const RestaurantThumbnail = styled.Image`
 `
 
 const RestaurantBrief = styled.View`
-    width : ${constants.width - 40};
+    width : ${constants.width - 10};
     justify-content : center;
     align-items : center;
     border-width : 0.7;
@@ -214,7 +214,8 @@ export default ({navigation, route}) => {
     return <RestaurantProvider restaurant={restaurant}>
         <ViewContainer>
             <ScrollView
-                showsVerticalScrollIndicator={false}    
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={{flexGrow : 1, alignItems : "center"}}
             >
                 <RestaurantBrief>
                     <RestaurantThumbnail source={{uri : restaurant.thumbnail}} />
@@ -242,7 +243,7 @@ export default ({navigation, route}) => {
                     </View>
                 </RestaurantBrief>
                 <View style={{
-                    width : constants.width - 50,
+                    width : constants.width - 10,
                     marginBottom : 15
                 }}>
                     <RestaurantNavigation />
