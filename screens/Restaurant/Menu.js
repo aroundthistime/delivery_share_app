@@ -52,17 +52,16 @@ const OptionsList = styled.View`
     border-width : 0.7;
     border-color : ${styles.lightGrayColor};
     border-radius : 10;
-    padding-top : 20;
-    padding-bottom : 20;
+    padding-top : 10;
+    padding-bottom : 10;
     padding-left : 20;
     padding-right : 20;
     margin-bottom : 20;
 `
 
 const Option = styled.View`
-    padding-top : 10;
-    padding-bottom : 10;
-    border-bottom-width : ${styles.grayBorderWidth};
+    padding-top : 15;
+    padding-bottom : 12;
     border-color : ${styles.lightGrayColor};
 `
 
@@ -73,7 +72,6 @@ const OptionTitle = styled.Text`
 `
 
 const OptionItems = styled.View`
-    margin-bottom : 25;
 `
 
 const OptionItemContainer = styled.TouchableOpacity`
@@ -152,8 +150,6 @@ const OptionBtnSingle = ({isSelected}) => (
         </OptionBtnSingleContainer>
     )
 )
-
-// const OptionBtn
 
 const OptionItem = ({isMultiple, isSelected, onPress, content, price=0}) => {
     if (isMultiple) {
@@ -415,7 +411,7 @@ export default ({navigation, route}) => {
                         <MenuDescription>{menu.description}</MenuDescription>
                     </MenuBrief>
                     <OptionsList>
-                        <Option>
+                        {/* <Option>
                             {menu.options.map(option => {
                                 return (
                                     <>
@@ -436,18 +432,27 @@ export default ({navigation, route}) => {
                                     </>
                                 )
                             })}
-                            {/* <OptionTitle>맵기선택</OptionTitle>
-                            <OptionItems>
-                                <OptionItem isMultiple={false} isSelected={false} onPress={()=>1} content={"1단계asdfasdfasdfadsfasdfasdfasdfadsfasdfasdf"} price={10000}/>
-                                <OptionItem isMultiple={false} isSelected={true} onPress={()=>1} content={"1단계asdfasdff"} price={10000}/>
-                                <OptionItem isMultiple={false} isSelected={false} onPress={()=>1} content={"1단계asdfasdff"} price={10000}/>
-                            </OptionItems>
-                            <OptionTitle>토핑선택</OptionTitle>
-                            <OptionItems>
-                                <OptionItem isMultiple={true} isSelected={true} onPress={()=>1} content={"1단계asdfasdff"} price={10000}/>
-                                <OptionItem isMultiple={true} isSelected={false} onPress={()=>1} content={"1단계asdfasdff"} price={10000}/>
-                            </OptionItems> */}
-                        </Option>
+                        </Option> */}
+                        {menu.options.map((option, index) => {
+                            return (
+                                <Option style={{borderBottomWidth : index === menu.options.length - 1 ? 0 : styles.grayBorderWidth}}>
+                                    <OptionTitle>{option.category}</OptionTitle>
+                                    <OptionItems>
+                                        {option.items.map((item) => {
+                                            const isSelected = checkIsSelected(option, item);
+                                            return (
+                                                <OptionItem
+                                                    isMultiple={option.isMultiple}
+                                                    isSelected={isSelected}
+                                                    onPress={()=>toggleOption(option, item, option.isMultiple, isSelected)}
+                                                    {...item}
+                                                />
+                                            )
+                                        })}
+                                    </OptionItems>
+                                </Option>
+                            )
+                        })}
                     </OptionsList>
                 </ScrollView>
                 <FooterBtn text={"장바구니에 담기"} onPress={()=>1} header={(
