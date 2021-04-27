@@ -1,12 +1,17 @@
 import React, { useState } from "react";
 import { ScrollView, Text, View } from "react-native";
 import styled from "styled-components";
+import { FontAwesome5 } from '@expo/vector-icons';
 import FooterBtn from "../../components/FooterBtn";
 import ViewContainer from "../../components/ViewContainer";
 import constants from "../../constants";
 import styles from "../../styles";
+import { useEffect } from "react";
+import Loader from "../../components/Loader";
 
 const OPTION_BTN_SIZE = 25;
+
+const OPTION_ITEM_GAP = 10;
 
 const MenuImage = styled.Image`
     width : ${constants.width / 2};
@@ -44,7 +49,6 @@ const MenuDescription = styled.Text`
 const OptionsList = styled.View`
     width : ${constants.width - 20};
     background-color : white;
-    height : 300;
     border-width : 0.7;
     border-color : ${styles.lightGrayColor};
     border-radius : 10;
@@ -65,28 +69,66 @@ const Option = styled.View`
 const OptionTitle = styled.Text`
     font-size : 18;
     font-weight : 600;
-    margin-bottom : 15;
+    margin-bottom : 5;
+`
+
+const OptionItems = styled.View`
+    margin-bottom : 25;
 `
 
 const OptionItemContainer = styled.TouchableOpacity`
-    padding-left : 20;
-    padding-right : 10;
+    padding-left : 5;
     flex-direction : row;
     justify-content : space-between;
+    align-items : center;
+    padding-top : ${OPTION_ITEM_GAP};
+    padding-bottom : ${OPTION_ITEM_GAP};
 `
 
-const OptionItemText = styled.Text`
-    width : ${constants.width - 150};
+const OptionItemContent = styled.Text`
+    flex : 1;
+    text-align-vertical : center;
+    margin-left : 8;
 `
+
+const OptionItemPrice = styled.Text`
+    width : 70;
+    text-align-vertical : center;
+    margin-left : 20;
+    font-size : 15;
+    text-align : right;
+`
+
+const OptionBtnMultipleContainer = styled.View`
+    width : ${OPTION_BTN_SIZE};
+    height : ${OPTION_BTN_SIZE};
+    border-radius : 5;
+    justify-content : center;
+    align-items : center;
+    margin-right : 5;
+`
+
+const OptionBtnMultiple = ({isSelected}) => (
+    isSelected ? (
+        <OptionBtnMultipleContainer style={{backgroundColor : styles.themeColor}}>
+            <FontAwesome5 name="check" size={14} color="white" />
+        </OptionBtnMultipleContainer>
+    ) : (
+        <OptionBtnMultipleContainer style={{backgroundColor : "lightgray"}}>
+            <FontAwesome5 name="check" size={14} color="white" />
+        </OptionBtnMultipleContainer>
+    )
+)
 
 const OptionBtnSingleContainer = styled.View`
     width : ${OPTION_BTN_SIZE};
     height : ${OPTION_BTN_SIZE};
     border-radius : ${OPTION_BTN_SIZE / 2};
-    border-width : ${styles.grayBorderWidth};
+    border-width : 0.4;
     border-color : ${styles.lightGrayColor};
     justify-content : center;
     align-items : center;
+    margin-right : 5;
 `
 
 const OptionBtnSingleDot = styled.View`
@@ -112,6 +154,46 @@ const OptionBtnSingle = ({isSelected}) => (
 )
 
 // const OptionBtn
+
+const OptionItem = ({isMultiple, isSelected, onPress, content, price=0}) => {
+    if (isMultiple) {
+        if (isSelected){
+            return (
+                <OptionItemContainer activeOpacity={1} onPress={onPress}>
+                    <OptionBtnMultiple isSelected={true}/>
+                    <OptionItemContent>{content}</OptionItemContent>
+                    <OptionItemPrice>+ {price}원</OptionItemPrice>
+                </OptionItemContainer>
+            )
+        } else {
+            return (
+                <OptionItemContainer activeOpacity={1} onPress={onPress}>
+                    <OptionBtnMultiple isSelected={false}/>
+                    <OptionItemContent>{content}</OptionItemContent>
+                    <OptionItemPrice>+ {price}원</OptionItemPrice>
+                </OptionItemContainer>
+            )
+        }
+    } else {
+        if (isSelected){
+            return (
+                <OptionItemContainer activeOpacity={1} onPress={onPress}>
+                    <OptionBtnSingle isSelected={true}/>
+                    <OptionItemContent>{content}</OptionItemContent>
+                    <OptionItemPrice>+ {price}원</OptionItemPrice>
+                </OptionItemContainer>
+            )
+        } else{
+            return (
+                <OptionItemContainer activeOpacity={1} onPress={onPress}>
+                    <OptionBtnSingle isSelected={false}/>
+                    <OptionItemContent>{content}</OptionItemContent>
+                    <OptionItemPrice>+ {price}원</OptionItemPrice>
+                </OptionItemContainer>
+            )
+        }
+    }
+}
 
 const AddBtnHeader = styled.View`
     width : ${constants.width - 40};
@@ -167,13 +249,19 @@ export default ({navigation, route}) => {
     const {
         params : {menuId}
     } = route;
-    // const [orderMenu, setOrderMenu] = useState({
+    const [menu, setMenu] = useState({});
+    const [loading, setLoading] = useState(true);
+    // const [orderMenu, setMenu] = useState({
     //     count : 0,
     //     price : 0,
     //     options : []
     // });
-    // const menu = 
-    const menu = {
+    // const menu = {
+    //     ...구한거,
+    //     options : menu.
+    // }
+    // const requiredOptions = menu.options.filter(option => option.isRequired);
+    const menuData = {
         name : "로제떡볶이",
         id : 2,
         thumbnail : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSigAD5XWPpDiv4k6yVbCLnUEFSD829OgpWng&usqp=CAU",
@@ -183,7 +271,7 @@ export default ({navigation, route}) => {
         isBestMenu : false,
         options : [
             {
-                category : "맵기",
+                category : "맵기선택",
                 isRequired : true,
                 isMultiple : false,
                 items : [
@@ -214,65 +302,165 @@ export default ({navigation, route}) => {
             }
         ]
     };
-    const getPricePerOne = () => {
-        let price = menu.price;
-        for(option in orderMenu.options){
-            price += option.price;
-        }
-        return price;
-    }
-    const [orderMenu, setOrderMenu] = useState({
-        id : menu.id,
-        count : 1,
-        price : menu.price,
-        options : []
-    })
+    useEffect(() => {
+        setMenu({
+            ...menuData,
+            count : 1,
+            options : menuData.options.map(option => {
+                return ({
+                    ...option,
+                    selected : option.isRequired ? [option.items[0]] : [],
+                })
+            })
+        });
+        setLoading(false);
+    }, [])
     navigation.setOptions({title : menu.name});
+    const toggleOption = (currentOption, currentItem, isMultiple, isSelected) => {
+        if (isMultiple){
+            if (isSelected){
+                setMenu({
+                    ...menu,
+                    price : menu.price - currentItem.price * menu.count,
+                    options : menu.options.map(option => {
+                        if (option.category === currentOption.category){
+                            return {
+                                ...option,
+                                selected : option.selected.filter(item => item.content !== currentItem.content)
+                            }
+                        } else{
+                            return option
+                        }
+                    }),
+                })
+            } else{
+                setMenu({
+                    ...menu,
+                    price : menu.price + currentItem.price * menu.count,
+                    options : menu.options.map(option => {
+                        if (option.category === currentOption.category){
+                            return {
+                                ...option,
+                                selected : option.selected.concat([currentItem])
+                            }
+                        } else{
+                            return option
+                        }
+                    }),
+                })
+            }
+        } else {
+            if (isSelected){
+                return
+            } else{
+                setMenu({
+                    ...menu,
+                    options : menu.options.map(option => {
+                        if (option.category === currentOption.category){
+                            return {
+                                ...option,
+                                selected : [currentItem]
+                            }
+                        } else{
+                            return option
+                        }
+                    }),
+                    price : menu.price + currentItem.price * menu.count - currentOption.selected[0].price * menu.count,
+                })
+            }
+        }
+    }
+    const checkIsSelected = (option, item) => option.selected.some(selectedItem => selectedItem.content === item.content);
     const decreaseCount = () => {
-        setOrderMenu({
-            ...orderMenu,
-            count : orderMenu.count > 1 ? orderMenu.count - 1 : orderMenu.count,
-            price : orderMenu.count > 1
-                ? orderMenu.price - getPricePerOne()
-                : orderMenu.price
+        setMenu({
+            ...menu,
+            count : menu.count > 1 ? menu.count - 1 : menu.count,
+            price : menu.count > 1
+                ? menu.price * (menu.count - 1) / menu.count
+                : menu.price
         })
     }
     const increaseCount = () => {
-        setOrderMenu({
-            ...orderMenu,
-            count : orderMenu.count + 1,
-            price : orderMenu.price + getPricePerOne()
+        setMenu({
+            ...menu,
+            count : menu.count + 1,
+            price : menu.price * (menu.count + 1) / menu.count
         });
     }
-    return <ViewContainer>
-        <ScrollView
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{flexGrow : 1, alignItems : "center"}}
-        >
-            <MenuBrief>
-                <MenuImage source={{uri : menu.thumbnail}}/>
-                <MenuName>{menu.name}</MenuName>
-                <MenuDescription>{menu.description}</MenuDescription>
-            </MenuBrief>
-            <OptionsList>
-                <Option>
-                    <OptionTitle>맵기선택</OptionTitle>
-                    <OptionItemContainer activeOpacity={1}>
-                        <OptionItemText style={{backgroundColor : "red"}}>- 1단계dfdfasd ㅇㅇㅇㅇㅇㅇㅇㅇㄹㄹㅇ</OptionItemText>
-                        <OptionBtnSingle isSelected={true}/>
-                    </OptionItemContainer>
-                </Option>
-            </OptionsList>
-        </ScrollView>
-        <FooterBtn text={"장바구니에 담기"} onPress={()=>1} header={(
-            <AddBtnHeader>
-                <MenuCountController>
-                    <CountControlBtn isMinus={true} onPress={decreaseCount} />
-                    <CurrentCount>{orderMenu.count}</CurrentCount>
-                    <CountControlBtn isMinus={false} onPress={increaseCount} />
-                </MenuCountController>
-                <CurrentPrice>{orderMenu.price} 원</CurrentPrice>
-            </AddBtnHeader>
-        )}/>
-    </ViewContainer>
+    const extractSelectedMenu = () => {
+        return {
+            name : menu.name,
+            id : menu.id,
+            price : menu.price,
+            count : menu.count,
+            options : menu.options.filter(option => option.selected.length > 0)
+        }
+    }
+    const addToCart = async() => {
+        const selectedMenu = await extractSelectedMenu();
+        
+    }
+    return (
+        loading ? (
+            <Loader />
+        ) : (
+            <ViewContainer>
+                <ScrollView
+                    showsVerticalScrollIndicator={false}
+                    contentContainerStyle={{flexGrow : 1, alignItems : "center"}}
+                >
+                    <MenuBrief>
+                        <MenuImage source={{uri : menu.thumbnail}}/>
+                        <MenuName>{menu.name}</MenuName>
+                        <MenuDescription>{menu.description}</MenuDescription>
+                    </MenuBrief>
+                    <OptionsList>
+                        <Option>
+                            {menu.options.map(option => {
+                                return (
+                                    <>
+                                    <OptionTitle>{option.category}</OptionTitle>
+                                    <OptionItems>
+                                        {option.items.map((item) => {
+                                            const isSelected = checkIsSelected(option, item);
+                                            return (
+                                                <OptionItem
+                                                    isMultiple={option.isMultiple}
+                                                    isSelected={isSelected}
+                                                    onPress={()=>toggleOption(option, item, option.isMultiple, isSelected)}
+                                                    {...item}
+                                                />
+                                            )
+                                        })}
+                                    </OptionItems>
+                                    </>
+                                )
+                            })}
+                            {/* <OptionTitle>맵기선택</OptionTitle>
+                            <OptionItems>
+                                <OptionItem isMultiple={false} isSelected={false} onPress={()=>1} content={"1단계asdfasdfasdfadsfasdfasdfasdfadsfasdfasdf"} price={10000}/>
+                                <OptionItem isMultiple={false} isSelected={true} onPress={()=>1} content={"1단계asdfasdff"} price={10000}/>
+                                <OptionItem isMultiple={false} isSelected={false} onPress={()=>1} content={"1단계asdfasdff"} price={10000}/>
+                            </OptionItems>
+                            <OptionTitle>토핑선택</OptionTitle>
+                            <OptionItems>
+                                <OptionItem isMultiple={true} isSelected={true} onPress={()=>1} content={"1단계asdfasdff"} price={10000}/>
+                                <OptionItem isMultiple={true} isSelected={false} onPress={()=>1} content={"1단계asdfasdff"} price={10000}/>
+                            </OptionItems> */}
+                        </Option>
+                    </OptionsList>
+                </ScrollView>
+                <FooterBtn text={"장바구니에 담기"} onPress={()=>1} header={(
+                    <AddBtnHeader>
+                        <MenuCountController>
+                            <CountControlBtn isMinus={true} onPress={decreaseCount} />
+                            <CurrentCount>{menu.count}</CurrentCount>
+                            <CountControlBtn isMinus={false} onPress={increaseCount} />
+                        </MenuCountController>
+                        <CurrentPrice>{menu.price} 원</CurrentPrice>
+                    </AddBtnHeader>
+                )}/>
+            </ViewContainer>
+        )
+    )
 }

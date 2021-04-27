@@ -1,6 +1,6 @@
 export default{
     bgColor: "#FAFAFA",
-    blackColor : "#262626",
+    blackColor : "#1e1d1d",
     grayColor: "#FAFAFA",
     lightGrayColor: "rgb(230, 230, 230)",
     yellowColor : "#FDBD00",
