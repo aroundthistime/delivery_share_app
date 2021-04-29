@@ -37,7 +37,7 @@ export const CartProvider = ({children}) => {
     const increaseMenuInCart = (menu) => {
         const menuIncreasedCart = getMenuIncreasedCart(menu);
         setCart({
-            restaurant,
+            restaurant : cart.restaurant,
             menus : menuIncreasedCart
         })
     }
@@ -49,14 +49,14 @@ export const CartProvider = ({children}) => {
         })
     }
     const addMenuToCart = (menu, restaurant) => {
-        if (!cart.restaurant || cart.restaurant.id === restaurantId){
+        if (!cart.restaurant || cart.restaurant.id === restaurant.id){
             if (alreadyInCart(menu)) {
                 increaseMenuInCart(menu);
                 return 0
             } else {
                 setCart({
                     restaurant,
-                    menus : cart.menus.concat([...menu])
+                    menus : cart.menus.concat([menu])
                 })
                 return 1
             }

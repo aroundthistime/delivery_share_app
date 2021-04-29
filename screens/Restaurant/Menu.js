@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ScrollView, Text, View } from "react-native";
+import { Alert, ScrollView, Text, View } from "react-native";
 import styled from "styled-components";
 import { FontAwesome5 } from '@expo/vector-icons';
 import FooterBtn from "../../components/FooterBtn";
@@ -8,6 +8,8 @@ import constants from "../../constants";
 import styles from "../../styles";
 import { useEffect } from "react";
 import Loader from "../../components/Loader";
+import { useAddMenuToCart, useClearCart } from "../../Contexts/CartContext";
+import { showToast } from "../../utils";
 
 const OPTION_BTN_SIZE = 25;
 
@@ -243,10 +245,12 @@ const CurrentPrice = styled.Text`
 
 export default ({navigation, route}) => {
     const {
-        params : {menuId}
+        params : {menuId, restaurant}
     } = route;
     const [menu, setMenu] = useState({});
     const [loading, setLoading] = useState(true);
+    const addMenuToCart = useAddMenuToCart();
+    const clearCart = useClearCart();
     // const [orderMenu, setMenu] = useState({
     //     count : 0,
     //     price : 0,
@@ -395,9 +399,37 @@ export default ({navigation, route}) => {
             }))
         }
     }
-    const addCurrentMenuToCart = () => {
-        const currentMenu = extractSelectedMenu();
-        
+    const addSelectedMenuToCart = () => {
+        const selectedMenu = extractSelectedMenu();
+        const result = addMenuToCart(selectedMenu, restaurant);
+        if (result === 1){
+            showToast("해당 메뉴가 장바구니에 추가되었습니다", false)
+            navigation.pop()
+        } else if (result === 0){
+            showToast("장바구니에 있는 동일 메뉴의 수량을 증가했습니다", false)
+            navigation.pop()
+        } else {
+            Alert.alert(
+                "장바구니에는 동일한 가게의 메뉴만을 담을 수 있습니다.",
+                "기존에 담겨있던 메뉴를 삭제하시고 선택하신 메뉴를 추가하시겠습니까?",
+                [
+                    {
+                        text : "취소",
+                        onPress : ()=>1,
+                        style : "cancel"
+                    },
+                    {
+                        text : "예",
+                        onPress : async() => {
+                            await clearCart();
+                            addMenuToCart(selectedMenu, restaurant);
+                            showToast("해당 메뉴가 장바구니에 추가되었습니다", false)
+                            navigation.pop()
+                        }
+                    }
+                ]
+            )
+        }
     }
     return (
         loading ? (
@@ -436,7 +468,7 @@ export default ({navigation, route}) => {
                         })}
                     </OptionsList>
                 </ScrollView>
-                <FooterBtn text={"장바구니에 담기"} onPress={()=>console.log(extractSelectedMenu())} header={(
+                <FooterBtn text={"장바구니에 담기"} onPress={addSelectedMenuToCart} header={(
                     <AddBtnHeader>
                         <MenuCountController>
                             <CountControlBtn isMinus={true} onPress={decreaseCount} />
