@@ -9,7 +9,7 @@ import styles from "../../styles";
 import Heart from "../../components/Heart";
 import RestaurantNavigation from "../../navigators/RestaurantNavigation";
 import { ScrollView } from "react-native-gesture-handler";
-import { RestaurantProvider, useSetRestaurant } from "../../Contexts/RestaurantContext";
+import { RestaurantProvider } from "../../Contexts/RestaurantContext";
 
 const RESTAURANT_ICON_INFO_SIZE = 17.5;
 

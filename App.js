@@ -5,6 +5,7 @@ import { Ionicons, FontAwesome5, FontAwesome } from "@expo/vector-icons"
 import * as Font from "expo-font"
 import { Asset } from 'expo-asset';
 import { NavigationContainer } from '@react-navigation/native';
+import {CartProvider} from "./Contexts/CartContext";
 import LoggedInNavigation from './navigators/LoggedInNavigation';
 
 export default function App() {
@@ -29,7 +30,9 @@ export default function App() {
   }
   else {return (
     <NavigationContainer>
-      <LoggedInNavigation />
+      <CartProvider>
+        <LoggedInNavigation />
+      </CartProvider>
     </NavigationContainer>
   );}
 }

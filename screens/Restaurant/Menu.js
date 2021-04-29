@@ -389,11 +389,14 @@ export default ({navigation, route}) => {
             id : menu.id,
             price : menu.price,
             count : menu.count,
-            options : menu.options.filter(option => option.selected.length > 0)
+            options : menu.options.filter(option => option.selected.length > 0).map(option => ({
+                category : option.category,
+                items : [...option.selected]
+            }))
         }
     }
-    const addToCart = async() => {
-        const selectedMenu = await extractSelectedMenu();
+    const addCurrentMenuToCart = () => {
+        const currentMenu = extractSelectedMenu();
         
     }
     return (
@@ -411,28 +414,6 @@ export default ({navigation, route}) => {
                         <MenuDescription>{menu.description}</MenuDescription>
                     </MenuBrief>
                     <OptionsList>
-                        {/* <Option>
-                            {menu.options.map(option => {
-                                return (
-                                    <>
-                                    <OptionTitle>{option.category}</OptionTitle>
-                                    <OptionItems>
-                                        {option.items.map((item) => {
-                                            const isSelected = checkIsSelected(option, item);
-                                            return (
-                                                <OptionItem
-                                                    isMultiple={option.isMultiple}
-                                                    isSelected={isSelected}
-                                                    onPress={()=>toggleOption(option, item, option.isMultiple, isSelected)}
-                                                    {...item}
-                                                />
-                                            )
-                                        })}
-                                    </OptionItems>
-                                    </>
-                                )
-                            })}
-                        </Option> */}
                         {menu.options.map((option, index) => {
                             return (
                                 <Option style={{borderBottomWidth : index === menu.options.length - 1 ? 0 : styles.grayBorderWidth}}>
@@ -455,7 +436,7 @@ export default ({navigation, route}) => {
                         })}
                     </OptionsList>
                 </ScrollView>
-                <FooterBtn text={"장바구니에 담기"} onPress={()=>1} header={(
+                <FooterBtn text={"장바구니에 담기"} onPress={()=>console.log(extractSelectedMenu())} header={(
                     <AddBtnHeader>
                         <MenuCountController>
                             <CountControlBtn isMinus={true} onPress={decreaseCount} />
