@@ -8,7 +8,16 @@ export default ({navigation}) => {
     const restaurant = useRestaurant();
     const menus = restaurant.menus;
     const renderMenuBar = ({item}) => (
-        <MenuListBar {...item} onPress={()=>navigation.navigate("Menu", {menuId : item.id, restaurant : {id : restaurant.id, name : restaurant.name}})} />
+        <MenuListBar {...item} onPress={()=>navigation.navigate("Menu", 
+            { 
+                menuId : item.id, 
+                restaurant : {
+                    id : restaurant.id,
+                    name : restaurant.name,
+                    minOrder : restaurant.minOrder,
+                    deliveryTip : restaurant.deliveryTip
+                }
+            })} />
     )
     return <FlatList
         data={menus}

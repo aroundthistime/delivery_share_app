@@ -57,4 +57,6 @@ const categories = [
     },
 ]
 
-export default {width, height, categories};
+const headerRightMargin = 10;
+
+export default {width, height, categories, headerRightMargin};

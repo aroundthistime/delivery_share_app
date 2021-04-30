@@ -252,38 +252,4 @@ export default ({navigation, route}) => {
         </ViewContainer>
     </RestaurantProvider>
     // return <Loader />
-    // return <ViewContainer>
-    //     <ScrollView>
-    //         <RestaurantBrief>
-    //             <RestaurantThumbnail source={{uri : restaurant.thumbnail}} />
-    //             <RestaruantName>{restaurant.name}</RestaruantName>
-    //             <View style={{flexDirection : "row", marginVertical : 5}}>
-    //                 <RestaurantRate rate={restaurant.rate} />
-    //                 <RestaurantLikes isLiked={isLikedState} likeCount={likeCountState} onPress={toggleLike}/>
-    //             </View>
-    //             <View style={{
-    //                 width : constants.width - 100,
-    //                 marginVertical : 10,
-    //             }}>
-    //                 <RestaurantInfoColumn>
-    //                     <RestaurantInfoColumnTitle>최소주문금액</RestaurantInfoColumnTitle>
-    //                     <Text>{restaurant.minOrder}</Text>
-    //                 </RestaurantInfoColumn>
-    //                 <RestaurantInfoColumn>
-    //                     <RestaurantInfoColumnTitle>배달팁</RestaurantInfoColumnTitle>
-    //                     <Text>{restaurant.deliveryTip}</Text>
-    //                 </RestaurantInfoColumn>
-    //                 <RestaurantInfoColumn>
-    //                     <RestaurantInfoColumnTitle>분리포장가능</RestaurantInfoColumnTitle>
-    //                     <Text>{restaurant.seperatable ? "O" : "X"}</Text>
-    //                 </RestaurantInfoColumn>
-    //             </View>
-    //         </RestaurantBrief>
-    //         <View style={{
-    //             width : constants.width - 50,
-    //         }}>
-    //             <RestaurantNavigation />
-    //         </View>
-    //     </ScrollView>
-    // </ViewContainer>
 }
