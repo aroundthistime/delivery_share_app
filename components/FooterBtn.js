@@ -29,12 +29,19 @@ const BtnText = styled.Text`
     font-weight : 600;
 `
 
-export default ({text, onPress, header}) => (
-    <BtnContainer>
-        {header && header}
-        <Btn onPress={onPress} activeOpacity={0.5}>
-            <BtnText>{text}</BtnText>
-        </Btn>
-    </BtnContainer>
-    
-)
+export default ({text, onPress, header, needStyle=false}) => 
+    needStyle ? (
+        <BtnContainer style={{position : "absolute", bottom : 0, left : 0}}>
+            {header && header}
+            <Btn onPress={onPress} activeOpacity={0.5}>
+                <BtnText>{text}</BtnText>
+            </Btn>
+        </BtnContainer>
+    ) : (
+        <BtnContainer>
+            {header && header}
+            <Btn onPress={onPress} activeOpacity={0.5}>
+                <BtnText>{text}</BtnText>
+            </Btn>
+        </BtnContainer>
+    )

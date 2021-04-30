@@ -74,8 +74,6 @@ const EmptyMessage = styled.Text`
     color : #333131;
 `
 
-
-
 export default ({navigation}) => {
     const cart = useCart();
     const deleteMenu = useDeleteMenuFromCart();

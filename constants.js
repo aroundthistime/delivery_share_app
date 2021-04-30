@@ -59,4 +59,6 @@ const categories = [
 
 const headerRightMargin = 10;
 
-export default {width, height, categories, headerRightMargin};
+const requestMaxLength = 60;
+
+export default {width, height, categories, headerRightMargin, requestMaxLength};

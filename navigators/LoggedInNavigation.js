@@ -16,6 +16,7 @@ import ClearBtn from "../components/ClearBtn";
 import { useCart, useClearCart } from "../Contexts/CartContext";
 import constants from "../constants";
 import CallMakeForm from "../screens/Order/CallMakeForm";
+import SelectLocation from "../screens/Order/SelectLocation";
 
 
 const CartLink =  ({onPress}) => (
@@ -133,6 +134,14 @@ export default ({navigation, route}) => {
                 component={CallMakeForm}
                 options={{
                     title : "콜 요청하기",
+                    headerTitleAlign : "center"
+                }}
+            />
+            <LoggedInNavigation.Screen
+                name="SelectLocation"
+                component={SelectLocation}
+                options={{
+                    title : "수령장소 선택",
                     headerTitleAlign : "center"
                 }}
             />
