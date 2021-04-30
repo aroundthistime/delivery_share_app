@@ -1,10 +1,15 @@
 import React from "react";
-import { Text, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 import styled from "styled-components";
+import BinaryBtnFooter from "../../components/BinaryBtnFooter";
+import DeleteBtn from "../../components/DeleteBtn";
+import MenuCountController from "../../components/MenuCountController";
 import ViewContainer from "../../components/ViewContainer";
 import constants from "../../constants";
-import { useCart } from "../../Contexts/CartContext";
+import { useCart, useDecreaseMenuInCart, useDeleteMenuFromCart, useIncreaseMenuInCart } from "../../Contexts/CartContext";
 import styles from "../../styles";
+
+const OPTION_ITEM_OPACITY = 0.55;
 
 const RestaurantRow = styled.TouchableOpacity`
     justify-content : center;
@@ -21,20 +26,119 @@ const RestaurantName = styled.Text`
     font-weight : 600;
 `
 
+const CartMenu = styled.View`
+    width : ${constants.width};
+    padding-left : 20;
+    padding-right : 20;
+    padding-top : 15;
+    padding-bottom : 15;
+    background-color : white;
+    border-bottom-width : ${styles.grayBorderWidth};
+    border-color : ${styles.lightGrayColor};
+`
+
+const MenuHeader = styled.View`
+    flex-direction : row;
+    justify-content : space-between;
+    margin-bottom : 8;
+`
+
+const MenuOptions = styled.View`
+    margin-bottom : 15;
+`
+
+const MenuOption = styled.View`
+    flex-direction : row;
+    margin-bottom : 2;
+`
+
+const OptionCategory = styled.Text`
+    font-size : 14;
+    opacity : ${OPTION_ITEM_OPACITY};
+`
+
+const OptionItem = styled.Text`
+    font-size : 14;
+    opacity : ${OPTION_ITEM_OPACITY};
+`
+
+const MenuFooter = styled.View`
+    flex-direction : row;
+    justify-content : space-between;
+    align-items : center;
+    padding-left : 5;
+`
+
 const EmptyMessage = styled.Text`
     font-size : 16;
     color : #333131;
 `
 
+
+
 export default ({navigation}) => {
     const cart = useCart();
-    console.log(cart);
+    const deleteMenu = useDeleteMenuFromCart();
+    const decreaseMenu = useDecreaseMenuInCart();
+    const increaseMenu = useIncreaseMenuInCart();
+    const getTotalPrice = () => (
+        cart.menus.reduce(function(accumulator, currentValue){
+            return accumulator + currentValue.price
+        }, cart.restaurant.deliveryTip / 2)
+    )
     return <>
         {cart.menus.length > 0 ? (
             <View style={{flex : 1, backgroundColor : styles.bgColor}}>
                 <RestaurantRow onPress={()=>navigation.navigate("Restaurant", {id : cart.restaurant.id})}>
                     <RestaurantName>{cart.restaurant.name}</RestaurantName>
                 </RestaurantRow>
+                <View  style={{paddingBottom : 140}}>
+                    <ScrollView>
+                        {cart.menus.map(menu => (
+                            <CartMenu>
+                                <MenuHeader>
+                                    <Text style={{fontSize : 16, fontWeight : "600"}}>{menu.name}</Text>
+                                    <DeleteBtn onPress={() => deleteMenu(menu)}/>
+                                </MenuHeader>
+                                <MenuOptions>
+                                    {menu.options.map(option => (
+                                        <MenuOption>
+                                            <Text style={{opacity : OPTION_ITEM_OPACITY, marginRight : 5}}>-</Text>
+                                            <OptionCategory>{option.category} : </OptionCategory>
+                                            <OptionItem>{option.items.join(", ")}</OptionItem>
+                                        </MenuOption>
+                                    ))}
+                                </MenuOptions>
+                                <MenuFooter>
+                                    <Text style={{fontWeight : "600", fontSize : 15.5}}>{menu.price}원</Text>
+                                    <MenuCountController
+                                        onDecrease={()=>{
+                                            if (menu.count > 1){
+                                                decreaseMenu(menu)
+                                            }
+                                        }}
+                                        onIncrease={()=>increaseMenu(menu)}
+                                        count={menu.count}
+                                    />
+                                </MenuFooter>
+                            </CartMenu>
+                        ))}
+                        <CartMenu>
+                            <MenuHeader>
+                                <Text style={{fontSize : 16, fontWeight : "600"}}>배달팁</Text>
+                            </MenuHeader>
+                            <MenuFooter>
+                                <Text style={{fontWeight : "600", fontSize : 15.5}}>{cart.restaurant.deliveryTip / 2}원</Text>
+                            </MenuFooter>
+                        </CartMenu>
+                    </ScrollView>
+                </View>
+                <BinaryBtnFooter
+                    leftText={"메뉴 추가"}
+                    leftOnPress={()=>navigation.navigate("Restaurant", {id : cart.restaurant.id})}
+                    rightText={`${getTotalPrice()}원 콜 요청하기`}
+                    rightOnPress={()=>navigation.navigate("CallMakeForm")}
+                />
             </View>
         ) : (
             <ViewContainer>

@@ -15,6 +15,7 @@ import Menu from "../screens/Restaurant/Menu";
 import ClearBtn from "../components/ClearBtn";
 import { useCart, useClearCart } from "../Contexts/CartContext";
 import constants from "../constants";
+import CallMakeForm from "../screens/Order/CallMakeForm";
 
 
 const CartLink =  ({onPress}) => (
@@ -126,6 +127,14 @@ export default ({navigation, route}) => {
                     headerTitleAlign : "center",
                     headerRight : () => <CartLink onPress={()=>navigation.navigate("Cart")} />
                 })}
+            />
+            <LoggedInNavigation.Screen
+                name="CallMakeForm"
+                component={CallMakeForm}
+                options={{
+                    title : "콜 요청하기",
+                    headerTitleAlign : "center"
+                }}
             />
         </LoggedInNavigation.Navigator>
     )

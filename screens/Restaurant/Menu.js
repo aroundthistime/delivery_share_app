@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Alert, ScrollView, Text, View } from "react-native";
+import { Alert, ScrollView } from "react-native";
 import styled from "styled-components";
 import { FontAwesome5 } from '@expo/vector-icons';
 import FooterBtn from "../../components/FooterBtn";
@@ -10,6 +10,7 @@ import { useEffect } from "react";
 import Loader from "../../components/Loader";
 import { useAddMenuToCart, useClearCart } from "../../Contexts/CartContext";
 import { showToast } from "../../utils";
+import MenuCountController from "../../components/MenuCountController";
 
 const OPTION_BTN_SIZE = 25;
 
@@ -202,42 +203,6 @@ const AddBtnHeader = styled.View`
     align-items : center;
 `
 
-const MenuCountController = styled.View`
-    width : 110;
-    height : 40;
-    border-color : ${styles.lightGrayColor};
-    border-width : 1;
-    border-radius : 20;
-    flex-direction : row;
-`
-
-const CountControlBtnContainer = styled.TouchableOpacity`
-    justify-content : center;
-    align-items : center;
-    width : 40;
-    height : 40;
-`
-
-const CountControlBtn = ({isMinus, onPress}) => (
-    isMinus ? (
-        <CountControlBtnContainer onPress={onPress} activeOpacity={0.9}>
-            <Text style={{fontSize : 16}}>-</Text>
-        </CountControlBtnContainer>
-    ) : (
-        <CountControlBtnContainer onPress={onPress} activeOpacity={0.9}>
-            <Text style={{fontSize : 16}}>+</Text>
-        </CountControlBtnContainer>
-    )
-)
-
-const CurrentCount = styled.Text`
-    width : 30;
-    height : 40;
-    text-align : center;
-    text-align-vertical : center;
-    font-size : 15;
-`
-
 const CurrentPrice = styled.Text`
     font-size : 14.5;
     opacity : 0.75;
@@ -395,7 +360,7 @@ export default ({navigation, route}) => {
             count : menu.count,
             options : menu.options.filter(option => option.selected.length > 0).map(option => ({
                 category : option.category,
-                items : [...option.selected]
+                items : [...option.selected].map(item => item.content)
             }))
         }
     }
@@ -470,11 +435,11 @@ export default ({navigation, route}) => {
                 </ScrollView>
                 <FooterBtn text={"장바구니에 담기"} onPress={addSelectedMenuToCart} header={(
                     <AddBtnHeader>
-                        <MenuCountController>
-                            <CountControlBtn isMinus={true} onPress={decreaseCount} />
-                            <CurrentCount>{menu.count}</CurrentCount>
-                            <CountControlBtn isMinus={false} onPress={increaseCount} />
-                        </MenuCountController>
+                        <MenuCountController
+                            onDecrease={decreaseCount}
+                            onIncrease={increaseCount}
+                            count={menu.count}
+                        />
                         <CurrentPrice>{menu.price} 원</CurrentPrice>
                     </AddBtnHeader>
                 )}/>

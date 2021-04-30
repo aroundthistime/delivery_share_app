@@ -18,7 +18,8 @@ export const CartProvider = ({children}) => {
         if (isSameMenu(menu, menuObj)){
             return {
                 ...menu,
-                count : menu.count + 1
+                price : menu.price / menu.count * (menu.count + 1),
+                count : menu.count + 1,
             }
         } else {
             return menu
@@ -28,7 +29,8 @@ export const CartProvider = ({children}) => {
         if (isSameMenu(menu, menuObj)){
             return {
                 ...menu,
-                count : menu.count - 1
+                price : menu.price / menu.count * (menu.count - 1),
+                count : menu.count - 1,
             }
         } else {
             return menu
@@ -44,7 +46,7 @@ export const CartProvider = ({children}) => {
     const decreaseMenuInCart = (menu) => {
         const menuDecreasedCart = getMenuDecreasedCart(menu);
         setCart({
-            restaurant,
+            restaurant : cart.restaurant,
             menus : menuDecreasedCart
         })
     }
@@ -66,13 +68,17 @@ export const CartProvider = ({children}) => {
     }
     const deleteMenuFromCart = (menuObj) => {
         try{
-            setCart({
-                ...cart,
-                menus : cart.menus.filter(menu => !isSameMenu(menu, menuObj))
-            })
+            if (cart.menus.length === 1 && isSameMenu(cart.menus[0], menuObj)){
+               clearCart();
+            } else {
+                setCart({
+                    ...cart,
+                    menus : cart.menus.filter(menu => !isSameMenu(menu, menuObj))
+                })
+            }
         }catch{}
     }
-    const clearCart = (menu) => {
+    const clearCart = () => {
         setCart({
             restaurant : undefined,
             menus : []
