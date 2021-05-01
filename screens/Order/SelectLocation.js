@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import MapView, { Marker } from 'react-native-maps';
-import { Alert, Text, TextInput, View } from "react-native";
+import { TextInput, View } from "react-native";
 import * as Location from 'expo-location';
 import { FontAwesome5 } from '@expo/vector-icons';
+import Constants from "expo-constants";
 import styled from "styled-components";
 import Loader from "../../components/Loader";
 import constants from "../../constants";
@@ -35,6 +36,7 @@ const FooterContainer = styled.View`
     bottom : 0;
     width : ${constants.width};
     height : ${constants.height - constants.width - 143};
+    background-color : white;
 `
 
 const InputRow = styled.View`
@@ -155,7 +157,7 @@ export default () => {
                     <MarkerIcon isCurrent={false}/>
                 </Marker>
             </MapView>
-            <FooterContainer style={{backgroundColor : "white"}}>
+            <FooterContainer>
                 <InputRow>
                     <InputRowTitle>현위치</InputRowTitle>
                     <CurrentSpotContent>강원도 속초시 조양동 동대문구 부영아파트3단지 304동 1203호</CurrentSpotContent>
@@ -170,20 +172,8 @@ export default () => {
                 <MarkerGuide>주소를 직접 입력하거나 지도화면을 터치하여 수령장소를 선택할 수 있습니다.</MarkerGuide>
                 <FooterBtn text="콜 요청하기" onPress={()=>1} needStyle/>
             </FooterContainer>
-            {/* <InputRow>
-                <InputRowTitle>현위치</InputRowTitle>
-                <CurrentSpotContent>강원도 속초시 조양동 동대문구 부영아파트3단지 304동 1203호</CurrentSpotContent>
-            </InputRow>
-            <InputRow>
-                <InputRowTitle>수령장소</InputRowTitle>
-                <Input
-                    placeholder="상품을 수령할 장소를 입력하세요"
-                    {...receivingSpotInput}
-                />
-            </InputRow>
-            <FooterBtn text="콜 요청하기" onPress={()=>1} needStyle/> */}
-            <FooterContainer />
         </View>
     )}
     </>
 }
+// `https://maps.googleapis.com/maps/api/geocode/json?latlng=${receivingSpot.latitude},${receivingSpot.longitude}&key=${Constants.manifest.extra.GOOGLE_MAP_KEY}`
