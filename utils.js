@@ -20,3 +20,6 @@ export const translateStars = (average) => {
   else if (average >= 2) return "⭐⭐";
   else return "⭐";
 };
+
+export const splitNumberPerThousand = (number) =>
+  number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");

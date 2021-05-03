@@ -85,3 +85,8 @@ export const OrderProcess = styled.View`
   border-bottom-width: 1px;
   margin-bottom: 20px;
 `;
+
+export const TextTitle = styled.Text`
+  font-weight: bold;
+  margin-bottom: 15px;
+`;

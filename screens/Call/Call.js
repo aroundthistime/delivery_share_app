@@ -1,38 +1,46 @@
 import React, { useState } from "react";
 import { ScrollView, Text, View } from "react-native";
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import "./styled";
 import styles from "../../styles";
 import UserSpecification from "../../components/UserSpecification";
 import NavigationButton from "../../components/NavigationButton";
 import {
-  ButtonBackground,
   ButtonContainer,
-  ButtonOutline,
   Divider,
   InputContainer,
   MenuContainer,
   OrderContainer,
-  ProfileImage,
   RestaurantView,
   TextInputBox,
   UserProfile,
+  TextTitle,
 } from "./styled";
+import { splitNumberPerThousand } from "../../utils";
+import {
+  MenuListWithName,
+  MenuListWithPrice,
+} from "../../components/MenuListDetails";
 
 /**
  * TODO *
- * 1. component 단위 modularization
+ * 1. component 단위 modularization (✔)
  * 2. 필요한 부가 정보 있는지 체크
- * 3. 메뉴 정보 map 으로 리턴 필요 (list 형태)
+ * 3. 메뉴 정보 map 으로 리턴 필요 (✔)
  */
 
 export default ({ navigation, route }) => {
   const {
-    params: { image, brandName, userId, menu, dist },
+    params: { image, brandName, userId, menus, dist },
   } = route;
 
   const [requestForStore, setRequestForStore] = useState("");
   const [requestForDelivery, setRequestForDelivery] = useState("");
+
+  const getAmountOfMenus = () => {
+    return splitNumberPerThousand(
+      menus.reduce((acc, cur) => acc + cur.price, 0)
+    );
+  };
 
   return (
     <ScrollView
@@ -67,9 +75,7 @@ export default ({ navigation, route }) => {
 
       <RestaurantView>
         <View style={{ marginBottom: 20 }}>
-          <Text style={{ fontWeight: "bold", marginBottom: 15 }}>
-            • 매장 정보
-          </Text>
+          <TextTitle>• 매장 정보</TextTitle>
           <Text>- 이름 : {brandName}</Text>
         </View>
 
@@ -87,26 +93,20 @@ export default ({ navigation, route }) => {
       <OrderContainer>
         <MenuContainer>
           <View>
-            <Text style={{ fontWeight: "bold", marginBottom: 15 }}>
-              • 선택한 메뉴 목록
-            </Text>
-            <Text>- {menu}</Text>
+            <TextTitle>• 선택한 메뉴 목록</TextTitle>
+            <MenuListWithName menus={menus} />
           </View>
 
           <View>
-            <Text style={{ fontWeight: "bold", marginBottom: 15 }}>
-              총액 : 25,000원
-            </Text>
-            <Text style={{ textAlign: "right" }}>25,000원</Text>
+            <TextTitle>총액 : {getAmountOfMenus()}원</TextTitle>
+            <MenuListWithPrice menus={menus} />
           </View>
         </MenuContainer>
 
         <Divider />
 
         <InputContainer>
-          <Text style={{ fontWeight: "bold", marginBottom: 15 }}>
-            • 가게측 요청사항
-          </Text>
+          <TextTitle>• 가게측 요청사항</TextTitle>
           <TextInputBox
             value={requestForStore}
             onChangeText={(text) => setRequestForStore(text)}
@@ -115,9 +115,7 @@ export default ({ navigation, route }) => {
         </InputContainer>
 
         <InputContainer>
-          <Text style={{ fontWeight: "bold", marginBottom: 15 }}>
-            • 배달측 요청사항
-          </Text>
+          <TextTitle>• 배달측 요청사항</TextTitle>
           <TextInputBox
             value={requestForDelivery}
             onChangeText={(text) => setRequestForDelivery(text)}
@@ -134,7 +132,7 @@ export default ({ navigation, route }) => {
           {
             requestForStore,
             requestForDelivery,
-            menu,
+            menus,
             userId,
           },
         ]}

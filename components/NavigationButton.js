@@ -3,6 +3,11 @@ import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import styled from "styled-components";
 import { Text } from "react-native";
 
+/**
+ * TODO *
+ * 1. function modularzation 필요 (개당 1 기능 담당하도록)
+ */
+
 const NavigationButton = ({
   navigation,
   flaticon,
