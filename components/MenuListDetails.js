@@ -3,7 +3,12 @@ import { Text } from "react-native";
 import { splitNumberPerThousand } from "../utils";
 
 export const MenuListWithName = ({ menus }) => {
-  return <>{menus.length && menus.map((menu) => <Text>- {menu.name}</Text>)}</>;
+  return (
+    <>
+      {menus.length &&
+        menus.map((menu) => <Text key={menu.id}>- {menu.name}</Text>)}
+    </>
+  );
 };
 
 export const MenuListWithPrice = ({ menus }) => {
@@ -11,7 +16,7 @@ export const MenuListWithPrice = ({ menus }) => {
     <>
       {menus.length &&
         menus.map((menu) => (
-          <Text style={{ textAlign: "right" }}>
+          <Text key={menu.id} style={{ textAlign: "right" }}>
             {splitNumberPerThousand(menu.price)}원
           </Text>
         ))}

@@ -1,13 +1,5 @@
 import styled from "styled-components";
 
-export const UserProfile = styled.View`
-  padding: 20px;
-  border-bottom-color: #ededed;
-  border-bottom-width: 1px;
-  margin-bottom: 20px;
-  background-color: #fff;
-`;
-
 export const ButtonContainer = styled.View`
   margin-top: 30px;
   display: flex;
@@ -41,24 +33,6 @@ export const Divider = styled.View`
   margin: 30px 5px;
 `;
 
-export const RestaurantView = styled.View`
-  padding: 20px;
-  background-color: #fff;
-  margin-bottom: 20px;
-  border-bottom-color: #ededed;
-  border-bottom-width: 1px;
-  margin-bottom: 20px;
-`;
-
-export const OrderContainer = styled.View`
-  padding: 20px;
-  background-color: #fff;
-  margin-bottom: 20px;
-  border-bottom-color: #ededed;
-  border-bottom-width: 1px;
-  margin-bottom: 20px;
-`;
-
 export const MenuContainer = styled.View`
   display: flex;
   justify-content: space-between;
@@ -75,15 +49,6 @@ export const TextInputBox = styled.TextInput`
   border-color: #ededed;
   border-bottom-width: 1px;
   padding: 10px;
-`;
-
-export const OrderProcess = styled.View`
-  padding: 20px;
-  background-color: #fff;
-  margin-bottom: 20px;
-  border-bottom-color: #ededed;
-  border-bottom-width: 1px;
-  margin-bottom: 20px;
 `;
 
 export const TextTitle = styled.Text`

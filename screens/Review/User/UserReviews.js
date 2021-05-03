@@ -1,14 +1,14 @@
 import React from "react";
-import { FlatList, ScrollView, Text, View } from "react-native";
-import styled from "styled-components";
+import { FlatList, ScrollView, Text } from "react-native";
 import UserSpecification from "../../../components/UserSpecification";
-import { ButtonBackground, UserProfile } from "../../Call/styled";
 import ReviewsBar from "../../../components/ReviewsBar";
 import styles from "../../../styles";
+import ContainerWrapper from "../../../components/ContainerWrapper";
+import NavigationButton from "../../../components/NavigationButton";
 
 /**
  * TODO *
- * 0. component 단위로 modularization
+ * 0. component 단위로 modularization (✔)
  * 1. 유저 정보 연동 필요 (가입일자 / 주문건수 등등)
  * 2. 실제 유저 리뷰 데이터 연동 필요
  * 3. Infinite scrolling + 스크롤 다운 시 작성 버튼 출력 vs Pagination
@@ -27,53 +27,34 @@ export default ({ navigation, route }) => {
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-      <UserProfile>
+      <ContainerWrapper>
         <UserSpecification userId={userId} />
-      </UserProfile>
+      </ContainerWrapper>
 
-      <UserDetails>
+      <ContainerWrapper>
         <Text style={{ fontWeight: "bold", marginBottom: 15 }}>• 상세정보</Text>
         <Text>가입일자 : 2021.03.13</Text>
         <Text>주문건수 : 154건</Text>
-      </UserDetails>
+      </ContainerWrapper>
 
-      <UserReviews>
+      <ContainerWrapper>
         <Text style={{ fontWeight: "bold", marginBottom: 15 }}>• 유저평가</Text>
         <FlatList
           data={dummyReviews}
           renderItem={renderReviews}
           nestedScrollEnabled
         />
-      </UserReviews>
+      </ContainerWrapper>
 
-      <ButtonBackground
-        bgColor={styles.themeColor}
-        /* navigation navigate to Order Process */
-        onPress={() => navigation.navigate("WriteUserReview")}
-      >
-        <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 22 }}>
-          리뷰작성
-        </Text>
-      </ButtonBackground>
+      <NavigationButton
+        background={styles.themeColor}
+        navigation={navigation}
+        params={["WriteUserReview"]}
+        text="리뷰작성"
+      />
     </ScrollView>
   );
 };
-
-const UserDetails = styled.View`
-  background-color: #fff;
-  padding: 20px;
-  border-bottom-color: #ededed;
-  border-bottom-width: 1px;
-  margin-bottom: 20px;
-`;
-
-const UserReviews = styled.View`
-  background-color: #fff;
-  padding: 20px;
-  border-bottom-color: #ededed;
-  border-bottom-width: 1px;
-  margin-bottom: 20px;
-`;
 
 const dummyReviews = [
   {

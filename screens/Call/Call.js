@@ -9,10 +9,7 @@ import {
   Divider,
   InputContainer,
   MenuContainer,
-  OrderContainer,
-  RestaurantView,
   TextInputBox,
-  UserProfile,
   TextTitle,
 } from "./styled";
 import { splitNumberPerThousand } from "../../utils";
@@ -20,6 +17,7 @@ import {
   MenuListWithName,
   MenuListWithPrice,
 } from "../../components/MenuListDetails";
+import ContainerWrapper from "../../components/ContainerWrapper";
 
 /**
  * TODO *
@@ -47,7 +45,7 @@ export default ({ navigation, route }) => {
       showsVerticalScrollIndicator={false}
       style={{ flex: 1, backgroundColor: styles.bgColor }}
     >
-      <UserProfile>
+      <ContainerWrapper>
         <UserSpecification userId={userId} />
 
         <ButtonContainer>
@@ -71,9 +69,9 @@ export default ({ navigation, route }) => {
             text="채팅하기"
           />
         </ButtonContainer>
-      </UserProfile>
+      </ContainerWrapper>
 
-      <RestaurantView>
+      <ContainerWrapper>
         <View style={{ marginBottom: 20 }}>
           <TextTitle>• 매장 정보</TextTitle>
           <Text>- 이름 : {brandName}</Text>
@@ -88,9 +86,9 @@ export default ({ navigation, route }) => {
           }}
           text="상세정보"
         />
-      </RestaurantView>
+      </ContainerWrapper>
 
-      <OrderContainer>
+      <ContainerWrapper>
         <MenuContainer>
           <View>
             <TextTitle>• 선택한 메뉴 목록</TextTitle>
@@ -122,7 +120,7 @@ export default ({ navigation, route }) => {
             placeholder="배달측 요청사항이 있다면 적어주세요."
           ></TextInputBox>
         </InputContainer>
-      </OrderContainer>
+      </ContainerWrapper>
 
       <NavigationButton
         background={styles.themeColor}
