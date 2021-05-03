@@ -8,14 +8,17 @@ import styled from "styled-components";
  * 2. Category 구분 필터 적용 여부 논의 필요
  */
 
-const CallListBar = ({ image, brandName, userId, menu, dist }) => {
+const CallListBar = ({ image, brandName, userId, menus, dist }) => {
   return (
     <MenuContainer>
       <MenuImage source={{ uri: image }} />
       <View style={{ marginLeft: 15 }}>
         <Text>브랜드 : {brandName}</Text>
         <Text>대기자 : {userId}</Text>
-        <Text>메뉴 : {menu}</Text>
+        <Text>
+          메뉴 : {menus[0].name}{" "}
+          {menus.length - 1 ? "외 " + (menus.length - 1) + "개" : null}
+        </Text>
       </View>
       <View style={{ position: "absolute", right: 15 }}>
         <Text>거리: {dist}M</Text>
