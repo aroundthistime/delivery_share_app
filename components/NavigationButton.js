@@ -1,0 +1,69 @@
+import React from "react";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import styled from "styled-components";
+import { Text } from "react-native";
+
+const NavigationButton = ({
+  navigation,
+  flaticon,
+  params,
+  text,
+  background,
+}) => {
+  const setVectorIcons = (flaticon) => {
+    const config = { size: 24, color: "black", style: { marginRight: 10 } };
+    if (flaticon.type === "Ionicons")
+      return <Ionicons name={flaticon.name} {...config} />;
+    else if (flaticon.type === "MaterialCommunityIcons")
+      return <MaterialCommunityIcons name={flaticon.name} {...config} />;
+  };
+
+  const setButtonContent = (background) => {
+    const styles = background
+      ? {
+          style: { color: "#fff", fontWeight: "bold", fontSize: 22 },
+        }
+      : { style: {} };
+    return (
+      <>
+        {flaticon ? setVectorIcons(flaticon) : null}
+        <Text {...styles}>{text}</Text>
+      </>
+    );
+  };
+
+  return background ? (
+    <ButtonBackground
+      background={background}
+      onPress={() => navigation.navigate(...params)}
+    >
+      {setButtonContent(background)}
+    </ButtonBackground>
+  ) : (
+    <NavigatinoBtn onPress={() => navigation.navigate(...params)}>
+      {setButtonContent(background)}
+    </NavigatinoBtn>
+  );
+};
+
+export default NavigationButton;
+
+const NavigatinoBtn = styled.TouchableOpacity`
+  flex-direction: row;
+  border: 1px solid #adadad;
+  border-radius: 10px;
+  padding: 10px 15px;
+  width: 45%;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ButtonBackground = styled.TouchableOpacity`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+  padding: 20px 0;
+  margin-bottom: 20px;
+  background-color: ${({ background }) => (background ? background : "#fff")};
+`;

@@ -4,6 +4,7 @@ import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import "./styled";
 import styles from "../../styles";
 import UserSpecification from "../../components/UserSpecification";
+import NavigationButton from "../../components/NavigationButton";
 import {
   ButtonBackground,
   ButtonContainer,
@@ -42,26 +43,25 @@ export default ({ navigation, route }) => {
         <UserSpecification userId={userId} />
 
         <ButtonContainer>
-          <ButtonOutline
-            onPress={() => navigation.navigate("UserReviews", { userId })}
-          >
-            <MaterialCommunityIcons
-              style={{ marginRight: 10 }}
-              name="account-details-outline"
-              size={24}
-              color="black"
-            />
-            <Text>상세정보</Text>
-          </ButtonOutline>
-          <ButtonOutline onPress={() => navigation.navigate("Chat")}>
-            <Ionicons
-              style={{ marginRight: 10 }}
-              name="chatbubble-ellipses-outline"
-              size={24}
-              color="black"
-            />
-            <Text>채팅하기</Text>
-          </ButtonOutline>
+          <NavigationButton
+            navigation={navigation}
+            flaticon={{
+              type: "MaterialCommunityIcons",
+              name: "account-details-outline",
+            }}
+            params={["UserReviews", { userId }]}
+            text="상세정보"
+          />
+
+          <NavigationButton
+            navigation={navigation}
+            params={["Chat"]}
+            flaticon={{
+              type: "Ionicons",
+              name: "chatbubble-ellipses-outline",
+            }}
+            text="채팅하기"
+          />
         </ButtonContainer>
       </UserProfile>
 
@@ -72,20 +72,16 @@ export default ({ navigation, route }) => {
           </Text>
           <Text>- 이름 : {brandName}</Text>
         </View>
-        <ButtonOutline
-          onPress={() =>
-            /* navigation navigate to proper Category */
-            navigation.navigate("Restaurant", { category: "떡볶이" })
-          }
-        >
-          <Ionicons
-            style={{ marginRight: 10 }}
-            name="restaurant-outline"
-            size={24}
-            color="black"
-          />
-          <Text>상세정보</Text>
-        </ButtonOutline>
+
+        <NavigationButton
+          navigation={navigation}
+          params={["Restaurant", { category: "떡볶이" }]}
+          flaticon={{
+            type: "Ionicons",
+            name: "restaurant-outline",
+          }}
+          text="상세정보"
+        />
       </RestaurantView>
 
       <OrderContainer>
@@ -130,22 +126,20 @@ export default ({ navigation, route }) => {
         </InputContainer>
       </OrderContainer>
 
-      <ButtonBackground
-        bgColor={styles.themeColor}
-        /* navigation navigate to Order Process */
-        onPress={() =>
-          navigation.navigate("Confirm", {
+      <NavigationButton
+        background={styles.themeColor}
+        navigation={navigation}
+        params={[
+          "Confirm",
+          {
             requestForStore,
             requestForDelivery,
             menu,
             userId,
-          })
-        }
-      >
-        <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 22 }}>
-          주 문 진 행
-        </Text>
-      </ButtonBackground>
+          },
+        ]}
+        text="주 문 진 행"
+      />
     </ScrollView>
   );
 };
