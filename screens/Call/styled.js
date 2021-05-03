@@ -7,26 +7,6 @@ export const ButtonContainer = styled.View`
   justify-content: space-between;
 `;
 
-export const ButtonOutline = styled.TouchableOpacity`
-  flex-direction: row;
-  border: 1px solid #adadad;
-  border-radius: 10px;
-  padding: 10px 15px;
-  width: 45%;
-  justify-content: center;
-  align-items: center;
-`;
-
-export const ButtonBackground = styled.TouchableOpacity`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #fff;
-  padding: 20px 0;
-  margin-bottom: 20px;
-  background-color: ${({ bgColor }) => bgColor};
-`;
-
 export const Divider = styled.View`
   border-bottom-color: #cdcdcd;
   border-bottom-width: 1px;

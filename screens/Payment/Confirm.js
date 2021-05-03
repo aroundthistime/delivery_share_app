@@ -1,7 +1,14 @@
 import React from "react";
 import { ScrollView, Text, View } from "react-native";
 import styled from "styled-components";
+import {
+  MenuListWithName,
+  MenuListWithPrice,
+} from "../../components/MenuListDetails";
+import NavigationButton from "../../components/NavigationButton";
+import RequestDetails from "../../components/RequestDetails";
 import styles from "../../styles";
+import { splitNumberPerThousand } from "../../utils";
 import { ButtonBackground, Divider } from "../Call/styled";
 
 /**
@@ -15,29 +22,33 @@ import { ButtonBackground, Divider } from "../Call/styled";
 
 const Confirm = ({ navigation, route }) => {
   const {
-    params: { requestForStore, requestForDelivery, menu, userId },
+    params: { requestForStore, requestForDelivery, menus, userId },
   } = route;
+
+  const getAmountOfMenus = () => {
+    return splitNumberPerThousand(
+      menus.reduce((acc, cur) => acc + cur.price, 0)
+    );
+  };
+
   return (
     <ScrollView
       style={{ flex: 1, padding: 20 }}
       showsVerticalScrollIndicator={false}
     >
       <BillCheck>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            marginBottom: 10,
-          }}
-        >
-          <TextTitle>주문내역 확인</TextTitle>
-          <TextTitle>총액: 25,000원</TextTitle>
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          <View>
+            <TextTitle>주문내역 확인</TextTitle>
+            <MenuListWithName menus={menus} />
+          </View>
+
+          <View>
+            <TextTitle>총액: {getAmountOfMenus()}원</TextTitle>
+            <MenuListWithPrice menus={menus} />
+          </View>
         </View>
 
-        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <Text>{menu}</Text>
-          <Text>25,000원</Text>
-        </View>
         <Divider />
 
         <View>
@@ -52,17 +63,10 @@ const Confirm = ({ navigation, route }) => {
           <Text style={{ fontSize: 14, fontWeight: "100" }}>님의 요청</Text>
         </TextTitle>
         <View>
-          <RequestDetails>
-            <RequestTitle style={{ fontWeight: "bold" }}>
-              To. Store
-            </RequestTitle>
-            <Text>빨리 만들어주세요!</Text>
-            <Text></Text>
-            <RequestTitle style={{ fontWeight: "bold" }}>
-              To. Delivery
-            </RequestTitle>
-            <Text>빨리 조심히 오세요!</Text>
-          </RequestDetails>
+          <RequestDetails
+            requestForStore="뻘라 만들어주세요!"
+            requestForDelivery="조심히 후딱 오셔요!"
+          />
         </View>
 
         <Divider />
@@ -76,37 +80,29 @@ const Confirm = ({ navigation, route }) => {
           나<Text style={{ fontSize: 14, fontWeight: "100" }}>의 요청</Text>
         </TextTitle>
         <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
-          <RequestDetails bgColor="#FFB800">
-            <RequestTitle style={{ fontWeight: "bold" }}>
-              To. Store
-            </RequestTitle>
-            <Text>{requestForStore ? requestForStore : "-"}</Text>
-            <Text></Text>
-            <RequestTitle style={{ fontWeight: "bold" }}>
-              To. Delivery
-            </RequestTitle>
-            <Text>{requestForDelivery ? requestForDelivery : "-"}</Text>
-          </RequestDetails>
+          <RequestDetails
+            requestForStore={requestForStore}
+            requestForDelivery={requestForDelivery}
+            background="#FFB800"
+          />
         </View>
 
         <Divider />
 
-        <ButtonBackground
-          style={{ borderRadius: 10 }}
-          bgColor={styles.themeColor}
-          onPress={() =>
-            navigation.navigate("Payment", {
+        <NavigationButton
+          background={styles.themeColor}
+          navigation={navigation}
+          params={[
+            "Payment",
+            {
               requestForStore,
               requestForDelivery,
-              menu,
+              menus,
               userId,
-            })
-          }
-        >
-          <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 22 }}>
-            결 제 진 행
-          </Text>
-        </ButtonBackground>
+            },
+          ]}
+          text="결 제 진 행"
+        />
       </BillCheck>
     </ScrollView>
   );
@@ -121,19 +117,8 @@ const BillCheck = styled.View`
   margin-bottom: 30px;
 `;
 
-const RequestDetails = styled.View`
-  padding: 15px;
-  background-color: ${({ bgColor }) => (bgColor ? bgColor : "#ededed")};
-  border-radius: 15px;
-  width: 80%;
-`;
-
-const RequestTitle = styled.Text`
-  font-weight: bold;
-  margin-bottom: 8px;
-`;
-
 const TextTitle = styled.Text`
   font-size: 16px;
   font-weight: bold;
+  margin-bottom: 10px;
 `;
