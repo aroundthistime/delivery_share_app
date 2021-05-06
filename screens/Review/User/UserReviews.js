@@ -5,13 +5,14 @@ import ReviewsBar from "../../../components/ReviewsBar";
 import styles from "../../../styles";
 import ContainerWrapper from "../../../components/ContainerWrapper";
 import NavigationButton from "../../../components/NavigationButton";
+import styled from "styled-components";
 
 /**
  * TODO *
  * 0. component 단위로 modularization (✔)
  * 1. 유저 정보 연동 필요 (가입일자 / 주문건수 등등)
  * 2. 실제 유저 리뷰 데이터 연동 필요
- * 3. Infinite scrolling + 스크롤 다운 시 작성 버튼 출력 vs Pagination
+ * 3. Infinite scrolling + 리뷰작성 버튼 sticky positon (✔)
  * 4. star 디자인 변경 및 0.5 단위 출력 필요
  * 5. 유저 리뷰 내용 길이 제한 필요한지 검토
  * 6. 유저 프로필 이미지 연동 필요
@@ -26,24 +27,15 @@ export default ({ navigation, route }) => {
   const renderReviews = ({ item }) => <ReviewsBar {...item} />;
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
+    <ScrollView stickyHeaderIndices={[2]} showsVerticalScrollIndicator={false}>
       <ContainerWrapper>
         <UserSpecification userId={userId} />
       </ContainerWrapper>
 
       <ContainerWrapper>
-        <Text style={{ fontWeight: "bold", marginBottom: 15 }}>• 상세정보</Text>
+        <TextTitle>• 상세정보</TextTitle>
         <Text>가입일자 : 2021.03.13</Text>
         <Text>주문건수 : 154건</Text>
-      </ContainerWrapper>
-
-      <ContainerWrapper>
-        <Text style={{ fontWeight: "bold", marginBottom: 15 }}>• 유저평가</Text>
-        <FlatList
-          data={dummyReviews}
-          renderItem={renderReviews}
-          nestedScrollEnabled
-        />
       </ContainerWrapper>
 
       <NavigationButton
@@ -52,9 +44,23 @@ export default ({ navigation, route }) => {
         params={["WriteUserReview"]}
         text="리뷰작성"
       />
+
+      <ContainerWrapper>
+        <TextTitle>• 유저평가</TextTitle>
+        <FlatList
+          data={dummyReviews}
+          renderItem={renderReviews}
+          nestedScrollEnabled
+        />
+      </ContainerWrapper>
     </ScrollView>
   );
 };
+
+const TextTitle = styled.Text`
+  font-weight: bold;
+  margin-bottom: 15px;
+`;
 
 const dummyReviews = [
   {
