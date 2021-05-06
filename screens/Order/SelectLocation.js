@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import MapView, { Marker } from 'react-native-maps';
-import { TextInput, View } from "react-native";
+import { Alert, Text, TextInput, View } from "react-native";
 import * as Location from 'expo-location';
 import { FontAwesome5 } from '@expo/vector-icons';
 import Constants from "expo-constants";
+import axios from "axios";
 import styled from "styled-components";
 import Loader from "../../components/Loader";
 import constants from "../../constants";
@@ -67,7 +68,8 @@ const CurrentSpotContent = styled.Text`
 const Input = ({
     placeholder,
     value,
-    onChange
+    onChange,
+    onEndEditing
 }) => (
     <TextInput
         onChangeText={onChange}
@@ -78,6 +80,7 @@ const Input = ({
         blurOnSubmit
         style={{flex : 1, paddingVertical : 10}}
         maxLength={80}
+        onEndEditing={onEndEditing}
     />
 )
 
@@ -93,9 +96,52 @@ export default () => {
     const [errorMsg, setErrorMsg] = useState(null);
     const [loading, setloading] = useState(true);
     const [currentSpot, setCurrentSpot] = useState();
-    // const [region, setRegion] = useState();
     const [receivingSpot, setReceivingSpot] = useState();
+    const [isGettingAddress, setIsGettingAddress] = useState(false);
     const receivingSpotInput = useInput("");
+    const setReceivingSpotByMarker = async(latitude, longitude) => {
+        setIsGettingAddress(true)
+        setReceivingSpot({
+            longitude,
+            latitude,
+        });
+        const result = await axios.get(`https://dapi.kakao.com/v2/local/geo/coord2address.json?x=${longitude}&y=${latitude}&input_coord=WGS84`, {
+            headers : {
+                "Authorization" : `KakaoAK ${Constants.manifest.extra.KAKAO_REST_KEY}`
+            }
+        })
+        receivingSpotInput.changeValue(result.data.documents[0].address.address_name)
+        setIsGettingAddress(false);
+    }
+    const setMarkerByAddress = async() => {
+        try{
+            const result = await axios.get(`https://dapi.kakao.com/v2/local/search/address.json?query=${receivingSpotInput.value}`, {
+                headers : {
+                    "Authorization" : `KakaoAK ${Constants.manifest.extra.KAKAO_REST_KEY}`
+                }
+            });
+            if (result.data.documents.length >= 1){
+                setReceivingSpot({
+                    longitude : parseFloat(result.data.documents[0].x),
+                    latitude :  parseFloat(result.data.documents[0].y)
+                })
+            } else {
+                setReceivingSpot({
+                    longitude : parseFloat(result.data.documents[0].x),
+                    latitude :  parseFloat(result.data.documents[0].y)
+                })
+            }
+        } catch{
+            Alert.alert("검색결과를 찾을 수 없습니다. 정확한 주소를 입력해주세요.")
+        }
+    }
+    const setReceivingSpotByCurrentSpot = () => {
+        setReceivingSpot({
+            latitude : currentSpot.latitude,
+            longitude : currentSpot.longitude,
+        })
+        receivingSpotInput.changeValue(currentSpot.address);
+    }
     useEffect(() => {
         (async () => {
         let { status } = await Location.requestPermissionsAsync();
@@ -103,21 +149,23 @@ export default () => {
             setErrorMsg('Permission to access location was denied');
             return;
         }
-
         let location = await Location.getCurrentPositionAsync({});
+        const latitude = location.coords.latitude;
+        const longitude = location.coords.longitude;
+        const result = await axios.get(`https://dapi.kakao.com/v2/local/geo/coord2address.json?x=${longitude}&y=${latitude}&input_coord=WGS84`, {
+            headers : {
+                "Authorization" : `KakaoAK ${Constants.manifest.extra.KAKAO_REST_KEY}`
+            }
+        })
+        const address = result.data.documents[0].address.address_name;
         setCurrentSpot({
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude
+            latitude,
+            longitude,
+            address
         });
-        // setRegion({
-        //     latitude: location.coords.latitude,
-        //     longitude: location.coords.longitude,
-        //     latitudeDelta: 0.002,
-        //     longitudeDelta: 0.002,
-        // })
         setReceivingSpot({
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude
+            latitude,
+            longitude
         })
         setloading(false);
         })();
@@ -141,10 +189,14 @@ export default () => {
                     longitude : e.nativeEvent.coordinate.longitude,
                     latitude : e.nativeEvent.coordinate.latitude,
                 })}
+                onPress={(e)=> 
+                    setReceivingSpotByMarker(e.nativeEvent.coordinate.latitude,e.nativeEvent.coordinate.longitude)
+                }
             >
                 <Marker
                     coordinate={{latitude : currentSpot.latitude, longitude : currentSpot.longitude}}
                     style={{alignItems : "center"}}
+                    onPress={setReceivingSpotByCurrentSpot}
                 >
                     <MarkerTitle>현위치</MarkerTitle>
                     <MarkerIcon isCurrent={true}/>
@@ -160,20 +212,25 @@ export default () => {
             <FooterContainer>
                 <InputRow>
                     <InputRowTitle>현위치</InputRowTitle>
-                    <CurrentSpotContent>강원도 속초시 조양동 동대문구 부영아파트3단지 304동 1203호</CurrentSpotContent>
+                    <CurrentSpotContent>{currentSpot.address}</CurrentSpotContent>
                 </InputRow>
                 <InputRow>
                     <InputRowTitle>수령장소</InputRowTitle>
-                    <Input
-                        placeholder="음식을 수령할 주소를 입력하세요"
-                        {...receivingSpotInput}
-                    />
+                    {isGettingAddress ? (
+                        <Text style={{paddingVertical : 10, opacity : 0.35}}>주소 변환중 ⋯</Text>
+                    ) : (
+                        <Input
+                            placeholder="음식을 수령할 주소를 입력하세요"
+                            value={receivingSpotInput.value}
+                            onChange={receivingSpotInput.onChange}
+                            onEndEditing={()=>setMarkerByAddress()}
+                        />
+                    )}
                 </InputRow>
-                <MarkerGuide>주소를 직접 입력하거나 지도화면을 터치하여 수령장소를 선택할 수 있습니다.</MarkerGuide>
+                <MarkerGuide>주소를 직접 입력 후 확인버튼을 누르거나 지도화면을 터치하여 수령장소를 선택할 수 있습니다.</MarkerGuide>
                 <FooterBtn text="콜 요청하기" onPress={()=>1} needStyle/>
             </FooterContainer>
         </View>
     )}
     </>
 }
-// `https://maps.googleapis.com/maps/api/geocode/json?latlng=${receivingSpot.latitude},${receivingSpot.longitude}&key=${Constants.manifest.extra.GOOGLE_MAP_KEY}`
