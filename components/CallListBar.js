@@ -1,6 +1,8 @@
 import React from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Text, View } from "react-native";
 import styled from "styled-components";
+import { FontAwesome5 } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 
 /**
  * TODO *
@@ -11,17 +13,31 @@ import styled from "styled-components";
 const CallListBar = ({ image, brandName, userId, menus, dist }) => {
   return (
     <MenuContainer>
-      <MenuImage source={{ uri: image }} />
+      <BrandImage source={{ uri: image }} />
       <View style={{ marginLeft: 15 }}>
-        <Text>브랜드 : {brandName}</Text>
-        <Text>대기자 : {userId}</Text>
-        <Text>
-          메뉴 : {menus[0].name}{" "}
-          {menus.length - 1 ? "외 " + (menus.length - 1) + "개" : null}
-        </Text>
-      </View>
-      <View style={{ position: "absolute", right: 15 }}>
-        <Text>거리: {dist}M</Text>
+        <Menudetails>
+          <FontAwesome5 name="store" size={14} color="black" />
+          <MenuDescription>브랜드 : {brandName}</MenuDescription>
+        </Menudetails>
+
+        <Menudetails>
+          <FontAwesome5 name="user-alt" size={17} color="black" />
+          <MenuDescription>대기자 : {userId}</MenuDescription>
+        </Menudetails>
+
+        <Menudetails>
+          <Ionicons name="fast-food" size={17} color="black" />
+          <MenuDescription>
+            메뉴 : &nbsp;
+            {menus[0].name +
+              (menus.length - 1 ? " 외 " + (menus.length - 1) + "개" : null)}
+          </MenuDescription>
+        </Menudetails>
+
+        <Menudetails>
+          <Ionicons name="location" size={17} color="black" />
+          <MenuDescription>거리: {dist}M</MenuDescription>
+        </Menudetails>
       </View>
     </MenuContainer>
   );
@@ -40,8 +56,17 @@ const MenuContainer = styled.View`
   margin-bottom: 5px;
 `;
 
-const MenuImage = styled.Image`
+const BrandImage = styled.Image`
   width: 80;
   height: 80;
   border-radius: 80;
+`;
+
+const Menudetails = styled.View`
+  flex-direction: row;
+  margin-bottom: 2.5px;
+`;
+
+const MenuDescription = styled.Text`
+  margin-left: 10px;
 `;
