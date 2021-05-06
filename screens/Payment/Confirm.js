@@ -9,12 +9,12 @@ import NavigationButton from "../../components/NavigationButton";
 import RequestDetails from "../../components/RequestDetails";
 import styles from "../../styles";
 import { splitNumberPerThousand } from "../../utils";
-import { ButtonBackground, Divider } from "../Call/styled";
+import { Divider } from "../Call/styled";
 
 /**
  * TODO *
- * 1. component 단위로 modularization
- * 2. 주문 내역 map 을 통해 list 형태 리턴
+ * 1. component 단위로 modularization (✔)
+ * 2. 주문 내역 map 을 통해 list 형태 리턴 (✔)
  * 3. 배달장소 정보 연동 필요
  * 4. 요청사항 메시지 형태 디자인 변경 ?
  * 5. 추가로 필요한 부가 정보 있는지 검토

@@ -24,6 +24,7 @@ import ContainerWrapper from "../../components/ContainerWrapper";
  * 1. component 단위 modularization (✔)
  * 2. 필요한 부가 정보 있는지 체크
  * 3. 메뉴 정보 map 으로 리턴 필요 (✔)
+ * 4. 매장 상세 정보 이동 시 로딩 구현
  */
 
 export default ({ navigation, route }) => {
