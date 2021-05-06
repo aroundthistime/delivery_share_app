@@ -3,6 +3,7 @@ import { Text, View } from "react-native";
 import styled from "styled-components";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
+import styles from "../styles";
 
 /**
  * TODO *
@@ -16,17 +17,17 @@ const CallListBar = ({ image, brandName, userId, menus, dist }) => {
       <BrandImage source={{ uri: image }} />
       <View style={{ marginLeft: 15 }}>
         <Menudetails>
-          <FontAwesome5 name="store" size={14} color="black" />
+          <FontAwesome5 name="store" size={14} color={styles.themeColor} />
           <MenuDescription>브랜드 : {brandName}</MenuDescription>
         </Menudetails>
 
         <Menudetails>
-          <FontAwesome5 name="user-alt" size={17} color="black" />
+          <FontAwesome5 name="user-alt" size={17} color={styles.themeColor} />
           <MenuDescription>대기자 : {userId}</MenuDescription>
         </Menudetails>
 
         <Menudetails>
-          <Ionicons name="fast-food" size={17} color="black" />
+          <Ionicons name="fast-food" size={17} color={styles.themeColor} />
           <MenuDescription>
             메뉴 : &nbsp;
             {menus[0].name +
@@ -35,7 +36,7 @@ const CallListBar = ({ image, brandName, userId, menus, dist }) => {
         </Menudetails>
 
         <Menudetails>
-          <Ionicons name="location" size={17} color="black" />
+          <Ionicons name="location" size={17} color={styles.themeColor} />
           <MenuDescription>거리: {dist}M</MenuDescription>
         </Menudetails>
       </View>
