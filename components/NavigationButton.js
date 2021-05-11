@@ -9,6 +9,8 @@ import { Text } from "react-native";
  */
 
 const NavigationButton = ({
+  disabled,
+  bgColor,
   navigation,
   flaticon,
   params,
@@ -16,7 +18,11 @@ const NavigationButton = ({
   background,
 }) => {
   const setVectorIcons = (flaticon) => {
-    const config = { size: 24, color: "black", style: { marginRight: 10 } };
+    const config = {
+      size: 24,
+      color: bgColor ? "#fff" : "#111",
+      style: { marginRight: 10 },
+    };
     if (flaticon.type === "Ionicons")
       return <Ionicons name={flaticon.name} {...config} />;
     else if (flaticon.type === "MaterialCommunityIcons")
@@ -28,7 +34,7 @@ const NavigationButton = ({
       ? {
           style: { color: "#fff", fontWeight: "bold", fontSize: 22 },
         }
-      : { style: {} };
+      : { style: { color: bgColor ? "#fff" : "#111" } };
     return (
       <>
         {flaticon ? setVectorIcons(flaticon) : null}
@@ -39,13 +45,18 @@ const NavigationButton = ({
 
   return background ? (
     <ButtonBackground
+      disabled={disabled}
       background={background}
       onPress={() => navigation.navigate(...params)}
     >
       {setButtonContent(background)}
     </ButtonBackground>
   ) : (
-    <NavigatinoBtn onPress={() => navigation.navigate(...params)}>
+    <NavigatinoBtn
+      bgColor={bgColor}
+      disabled={disabled}
+      onPress={() => navigation.navigate(...params)}
+    >
       {setButtonContent(background)}
     </NavigatinoBtn>
   );
@@ -55,12 +66,13 @@ export default NavigationButton;
 
 const NavigatinoBtn = styled.TouchableOpacity`
   flex-direction: row;
-  border: 1px solid #adadad;
+  border: ${({ bgColor }) => (bgColor ? "none" : "1px solid #adadad")};
   border-radius: 10px;
   padding: 10px 15px;
   width: 45%;
   justify-content: center;
   align-items: center;
+  background-color: ${({ bgColor }) => (bgColor ? bgColor : "transparent")};
 `;
 
 const ButtonBackground = styled.TouchableOpacity`
