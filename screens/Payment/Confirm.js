@@ -64,7 +64,7 @@ const Confirm = ({ navigation, route }) => {
         </TextTitle>
         <View>
           <RequestDetails
-            requestForStore="뻘라 만들어주세요!"
+            requestForStore="뻘라 만들어주세요!!"
             requestForDelivery="조심히 후딱 오셔요!"
           />
         </View>
