@@ -87,11 +87,52 @@ export default ({navigation, route}) => {
     }
     const restaurant = {
         name : "동대문엽기떡볶이",
-        dayoff : "화요일",
+        dayoff : [],
         rate : 3.4,
         likeCount : 2.5,
         isLiked : false,
         minOrder : 15000,
+        runTime : [
+            {
+                day : "월",
+                open : "12:00",
+                close : "21:00"
+            },
+            {
+                day : "화",
+                open : "12:00",
+                close : "21:00"
+            },
+            {
+                day : "수",
+                open : "12:00",
+                close : "21:00"
+            },
+            {
+                day : "목",
+                open : "12:00",
+                close : "21:00"
+            },
+            {
+                day : "금",
+                open : "12:00",
+                close : "21:00"
+            },
+            {
+                day : "토",
+                open : "12:00",
+                close : "22:00"
+            },
+            {
+                day : "일",
+                open : "12:00",
+                close : "22:00"
+            }
+        ],
+        serviceAreas : [
+            "이문동", "회기동", "휘경동", "전농동", "청량리동", "석관동"
+        ],
+        introduction : "엽기떡볶이 장위점입니다!\n주문시 맵기선택 꼭 부탁드리며 항상 맛있는 음식으로 찾아뵙겠습니다.\n배달주문이 많은 식사시간에는 배달이 지연될 수 있으니 양해 부탁드립니다.",
         deliveryTip : 2000,
         seperatable : true,
         menus : [

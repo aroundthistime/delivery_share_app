@@ -227,7 +227,7 @@ export default () => {
                         />
                     )}
                 </InputRow>
-                <MarkerGuide>주소를 직접 입력 후 확인버튼을 누르거나 지도화면을 터치하여 수령장소를 선택할 수 있습니다.</MarkerGuide>
+                <MarkerGuide>주소를 직접 입력 후 엔터를 누르거나 지도화면을 터치하여 수령장소를 선택할 수 있습니다.</MarkerGuide>
                 <FooterBtn text="콜 요청하기" onPress={()=>1} needStyle/>
             </FooterContainer>
         </View>

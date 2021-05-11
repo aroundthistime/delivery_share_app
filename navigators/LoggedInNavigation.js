@@ -49,8 +49,7 @@ export default ({navigation, route}) => {
     }
     return (
         <LoggedInNavigation.Navigator
-            // initialRouteName="TabNavigation"
-            initialRouteName="SelectLocation"
+            initialRouteName="TabNavigation"
         >
             <LoggedInNavigation.Screen 
                 name="TabNavigation"

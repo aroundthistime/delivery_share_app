@@ -19,6 +19,7 @@ export default ({navigation, route}) => (
                 fontSize : 14
             }
         }}
+        backBehavior="initialRoute"
     >
         <TabNavigation.Screen 
             name="Menus"
