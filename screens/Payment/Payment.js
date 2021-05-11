@@ -1,6 +1,8 @@
-import React from "react";
-import { Image, Text, View } from "react-native";
+import React, { useState, useEffect } from "react";
+import { Text, View } from "react-native";
 import styled from "styled-components";
+import styles from "../../styles";
+import { Feather } from "@expo/vector-icons";
 
 /**
  * TODO *
@@ -12,11 +14,55 @@ import styled from "styled-components";
  * 5. 결제는 Kakaopay Open API 고려 -> 웹뷰 사용해야 함
  */
 
-const Payment = () => {
+const Payment = ({ route }) => {
+  const {
+    params: { userId },
+  } = route;
+
+  const [tempPayResult, setTempPayResult] = useState(false);
+  const [totalPayStatus, setTotalPayStatus] = useState(false);
+
+  useEffect(() => {
+    const tempTimer = setTimeout(() => {
+      setTempPayResult(true);
+    }, 5000);
+
+    const tempTimer2 = setTimeout(() => {
+      setTotalPayStatus(true);
+    }, 8000);
+
+    tempTimer;
+    tempTimer2;
+
+    return () => {
+      clearTimeout(tempTimer);
+      clearTimeout(tempTimer2);
+    };
+  }, []);
+
+  // console.log(tempPayResult);
+  // console.log(totalPayStatus);
+
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <LoadingBar source={require("../../assets/loading.gif")} />
-      <Text>진행중...</Text>
+      <PendingList bgColor={tempPayResult ? "#2BAE66FF" : styles.lightColor}>
+        <UserNickname>{userId}</UserNickname>
+        {tempPayResult ? (
+          <Feather name="check-circle" size={20} color="#006B38FF" />
+        ) : (
+          <LoadingBar source={require("../../assets/loading.gif")} />
+        )}
+      </PendingList>
+
+      <PendingList bgColor="#2BAE66FF">
+        <UserNickname>나</UserNickname>
+        <Feather name="check-circle" size={20} color="#006B38FF" />
+      </PendingList>
+      <Text>
+        {totalPayStatus
+          ? "결제가 모두 완료되었습니다."
+          : "아직 결제가 완료되지 않았습니다."}
+      </Text>
     </View>
   );
 };
@@ -24,6 +70,22 @@ const Payment = () => {
 export default Payment;
 
 const LoadingBar = styled.Image`
-  width: 200px;
-  height: 200px;
+  width: 20px;
+  height: 20px;
+`;
+
+const PendingList = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 15px;
+  width: 80%;
+  border-radius: 15px;
+  background-color: ${({ bgColor }) =>
+    bgColor ? bgColor : styles.lightGrayColor};
+  margin-bottom: 30px;
+`;
+
+const UserNickname = styled.Text`
+  font-weight: bold;
+  font-size: 15px;
 `;
