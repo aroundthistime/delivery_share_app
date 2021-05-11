@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Text, View } from "react-native";
+import { Text, View, Image } from "react-native";
 import styled from "styled-components";
 import styles from "../../styles";
 import { Feather } from "@expo/vector-icons";
+import NavigationButton from "../../components/NavigationButton";
 
 /**
  * TODO *
@@ -14,7 +15,7 @@ import { Feather } from "@expo/vector-icons";
  * 5. 결제는 Kakaopay Open API 고려 -> 웹뷰 사용해야 함
  */
 
-const Payment = ({ route }) => {
+const Payment = ({ navigation, route }) => {
   const {
     params: { userId },
   } = route;
@@ -45,6 +46,7 @@ const Payment = ({ route }) => {
 
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <Image source={require("../../assets/deliver.png")} />
       <PendingList bgColor={tempPayResult ? "#2BAE66FF" : styles.lightColor}>
         <UserNickname>{userId}</UserNickname>
         {tempPayResult ? (
@@ -58,11 +60,24 @@ const Payment = ({ route }) => {
         <UserNickname>나</UserNickname>
         <Feather name="check-circle" size={20} color="#006B38FF" />
       </PendingList>
-      <Text>
+
+      <Text style={{ marginBottom: 100 }}>
         {totalPayStatus
           ? "결제가 모두 완료되었습니다."
-          : "아직 결제가 완료되지 않았습니다."}
+          : "상대방의 결제를 기다리고 있습니다..."}
       </Text>
+
+      <NavigationButton
+        disabled={!totalPayStatus}
+        bgColor={totalPayStatus ? styles.themeColor : styles.lightGrayColor}
+        navigation={navigation}
+        flaticon={{
+          type: "Ionicons",
+          name: "md-menu",
+        }}
+        params={["Order"]}
+        text="주문조회"
+      />
     </View>
   );
 };
