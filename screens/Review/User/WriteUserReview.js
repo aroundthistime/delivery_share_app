@@ -1,22 +1,14 @@
 import React, { useState } from "react";
-import {
-  Button,
-  ScrollView,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { ScrollView, Text, TextInput, View } from "react-native";
 import styled from "styled-components";
 import ContainerWrapper from "../../../components/ContainerWrapper";
 import { Ionicons } from "@expo/vector-icons";
 import styles from "../../../styles";
 import Slider from "@react-native-community/slider";
-import NavigationButton from "../../../components/NavigationButton";
 
 /**
  * TODO *
- * 1. 리뷰 작성 Form 제작
+ * 1. 리뷰 작성 Form 제작 (✔)
  * 2. 별도 스크린으로 뺄건지 vs 하나의 스크린에 통합할 건 지 검토 필요 (✔)
  * 3. 작성된 내용 바로 화면에 반영 (로딩창 필요할 수도 - useEffect 고려)
  * 4. API 구현 시 작성 내용 데이터베이스에 반영하도록 연동 - handleSubmit 구현
