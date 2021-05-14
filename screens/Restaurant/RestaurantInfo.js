@@ -42,14 +42,14 @@ export default () => {
         const WEEKDAYS = ["월", "화", "수", "목", "금"];
         const WEEKENDS = ["토", "일"];
         const EVERYDAY = WEEKENDS.concat(WEEKDAYS);
-        if (EVERYDAY.every(day => days.indexOf(day) > -1)){
+        if (EVERYDAY.every(day => days.indexOf(day) > -1)) {
             return ["매일"]
-        } else if (WEEKDAYS.every(day => days.indexOf(day) > -1)){
+        } else if (WEEKDAYS.every(day => days.indexOf(day) > -1)) {
             return [
                 "주중",
                 ...days.filter(day => WEEKDAYS.indexOf(day) < 0)
             ]
-        } else if (WEEKENDS.every(day => days.indexOf(day) > -1)){
+        } else if (WEEKENDS.every(day => days.indexOf(day) > -1)) {
             return [
                 ...days.filter(day => WEEKENDS.indexOf(day) < 0),
                 "주말"
@@ -61,32 +61,32 @@ export default () => {
     const getFormattedRunTimeList = () => {
         const runTime = restaurant.runTime;
         let result = [];
-        for (let i = 0; i < runTime.length; i++){
+        for (let i = 0; i < runTime.length; i++) {
             let inserted = false;
-            for (let j = 0; j < result.length; j++){
-                if (runTime[i].open === result[j].open && runTime[i].close === result[j].close){
+            for (let j = 0; j < result.length; j++) {
+                if (runTime[i].open === result[j].open && runTime[i].close === result[j].close) {
                     inserted = true;
                     result[j] = {
-                        days : [...result[j].days, runTime[i].day],
-                        open : result[j].open,
-                        close : result[j].close
+                        days: [...result[j].days, runTime[i].day],
+                        open: result[j].open,
+                        close: result[j].close
                     }
                     break
                 }
             }
-            if (!inserted){
+            if (!inserted) {
                 result.push({
-                    days : [runTime[i].day],
-                    open : runTime[i].open,
-                    close : runTime[i].close
+                    days: [runTime[i].day],
+                    open: runTime[i].open,
+                    close: runTime[i].close
                 })
             }
         }
         return result.map(runTimeObj => (
             {
-                days : convertDaysList(runTimeObj.days),
-                open : runTimeObj.open,
-                close : runTimeObj.close
+                days: convertDaysList(runTimeObj.days),
+                open: runTimeObj.open,
+                close: runTimeObj.close
             }
         ))
     }
@@ -100,7 +100,7 @@ export default () => {
             <SectionTitle>식당 정보</SectionTitle>
             <InfoRow>
                 <InfoTitle>운영시간</InfoTitle>
-                <View style={{width : constants.width - 115, fontSize : 14.5}}>
+                <View style={{ width: constants.width - 115, fontSize: 14.5 }}>
                     {runTimeList.map(runTimeObj => (
                         <Text>{runTimeObj.days.join(", ")}  -  {formatAmPm(runTimeObj.open)} ~ {formatAmPm(runTimeObj.close)}</Text>
                     ))}
@@ -109,7 +109,7 @@ export default () => {
             <InfoRow>
                 <InfoTitle>휴무일</InfoTitle>
                 <InfoContent>{restaurant.dayoff.length === 0 ? "연중무휴" : convertDaysList(restaurant.dayoff).map(day => {
-                    if (day === "주중" || day === "주말" || day === "매일"){
+                    if (day === "주중" || day === "주말" || day === "매일") {
                         return day
                     } else {
                         return `${day}요일`

@@ -27,25 +27,25 @@ const CartBtns = styled.View`
 `
 
 
-export default ({leftOnPress, rightOnPress, leftText, rightText}) => (
+export default ({ leftOnPress, rightOnPress, leftText, rightText }) => (
     <CartBtns>
         <CartBtnContainer
             onPress={leftOnPress}
             style={{
-                backgroundColor : "white",
-                borderColor : styles.lightThemeColor,
-                borderWidth : 0.5
+                backgroundColor: "white",
+                borderColor: styles.lightThemeColor,
+                borderWidth: 0.5
             }}
             activeOpacity={0.4}
         >
-            <Text style={{fontSize : 16, color : styles.themeColor, fontWieght : "600"}}>{leftText}</Text>
+            <Text style={{ fontSize: 16, color: styles.themeColor, fontWeight: "600" }}>{leftText}</Text>
         </CartBtnContainer>
         <CartBtnContainer
             onPress={rightOnPress}
-            style={{backgroundColor : styles.themeColor}}
+            style={{ backgroundColor: styles.themeColor }}
             activeOpacity={0.4}
         >
-            <Text style={{fontSize : 16, color : "white", fontWieght : "600"}}>{rightText}</Text>
+            <Text style={{ fontSize: 16, color: "white", fontWeight: "600" }}>{rightText}</Text>
         </CartBtnContainer>
     </CartBtns>
 )
