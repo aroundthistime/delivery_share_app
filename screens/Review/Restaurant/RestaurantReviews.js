@@ -6,6 +6,7 @@ import constants from "../../../constants";
 import { useRestaurant } from "../../../Contexts/RestaurantContext";
 import styles from "../../../styles";
 import { formatDateYYMMDD } from "../../../utils";
+import ImageSlider from "../../../components/ImageSlider";
 
 const RATE_DETAIL_BAR_HEIGHT = 5;
 
@@ -181,13 +182,14 @@ export default ({ navigation }) => {
                 </ReviewHeader>
                 {review.images.length && (
                     <View style={{ marginVertical: 10 }}>
-                        {review.images.map(imageUri => (
+                        {/* {review.images.map(imageUri => (
                             <Image
                                 source={{ uri: imageUri }}
                                 style={{ width: constants.width - 40, height: constants.width - 40, marginBottom: 5 }}
                                 key={imageUri}
                             />
-                        ))}
+                        ))} */}
+                        <ImageSlider images={review.images} width={constants.width - 40} height={constants.width - 40} />
                     </View>
                 )}
             </View>
