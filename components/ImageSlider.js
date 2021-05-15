@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FlatList, Image, View } from "react-native";
+import { FlatList, Image, Platform, View } from "react-native";
 import styled from "styled-components";
 
 const IndicatorsList = styled.View`
@@ -17,7 +17,21 @@ const Indicator = ({ isCurrent }) => {
                 width: 17,
                 height: 17,
                 borderRadius: 8.5,
-                backgroundColor: "white"
+                backgroundColor: "white",
+                ...Platform.select({
+                    ios: {
+                        shadowColor: "rgb(50, 50, 50)",
+                        shadowOpacity: 0.5,
+                        shadowRadius: 5,
+                        shadowOffset: {
+                            height: -1,
+                            width: 0,
+                        },
+                    },
+                    android: {
+                        elevation: 3,
+                    },
+                })
             }}
         />
     } else {
@@ -26,7 +40,21 @@ const Indicator = ({ isCurrent }) => {
                 width: 10,
                 height: 10,
                 borderRadius: 5,
-                backgroundColor: "white"
+                backgroundColor: "white",
+                ...Platform.select({
+                    ios: {
+                        shadowColor: "rgb(50, 50, 50)",
+                        shadowOpacity: 0.5,
+                        shadowRadius: 5,
+                        shadowOffset: {
+                            height: -1,
+                            width: 0,
+                        },
+                    },
+                    android: {
+                        elevation: 3,
+                    },
+                })
             }}
         />
     }
@@ -49,7 +77,6 @@ export default ({ images, width, height }) => {
                 showsHorizontalScrollIndicator={false}
                 pagingEnabled={true}
                 onMomentumScrollEnd={(event) => setCurrent(event.nativeEvent.contentOffset.x / width)}
-            // onScroll={() => slideImage(flatlistRef.current)}
             />
             <IndicatorsList style={{
                 width: (images.length) * 10 + 7 + (images.length - 1) * 10,

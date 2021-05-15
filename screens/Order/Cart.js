@@ -69,53 +69,59 @@ const MenuFooter = styled.View`
     padding-left : 5;
 `
 
+const EmptyImage = styled.Image`
+    width : 150;
+    height : ${150 * 363 / 410};
+    margin-bottom : 25;
+`
+
 const EmptyMessage = styled.Text`
-    font-size : 16;
+    font-size : 17;
     color : #333131;
 `
 
-export default ({navigation}) => {
+export default ({ navigation }) => {
     const cart = useCart();
     const deleteMenu = useDeleteMenuFromCart();
     const decreaseMenu = useDecreaseMenuInCart();
     const increaseMenu = useIncreaseMenuInCart();
     const getTotalPrice = () => (
-        cart.menus.reduce(function(accumulator, currentValue){
+        cart.menus.reduce(function (accumulator, currentValue) {
             return accumulator + currentValue.price
         }, cart.restaurant.deliveryTip / 2)
     )
     return <>
         {cart.menus.length > 0 ? (
-            <View style={{flex : 1, backgroundColor : styles.bgColor}}>
-                <RestaurantRow onPress={()=>navigation.navigate("Restaurant", {id : cart.restaurant.id})}>
+            <View style={{ flex: 1, backgroundColor: styles.bgColor }}>
+                <RestaurantRow onPress={() => navigation.navigate("Restaurant", { id: cart.restaurant.id })}>
                     <RestaurantName>{cart.restaurant.name}</RestaurantName>
                 </RestaurantRow>
-                <View  style={{paddingBottom : 140}}>
+                <View style={{ paddingBottom: 140 }}>
                     <ScrollView>
                         {cart.menus.map(menu => (
                             <CartMenu>
                                 <MenuHeader>
-                                    <Text style={{fontSize : 16, fontWeight : "600"}}>{menu.name}</Text>
-                                    <DeleteBtn onPress={() => deleteMenu(menu)}/>
+                                    <Text style={{ fontSize: 16, fontWeight: "600" }}>{menu.name}</Text>
+                                    <DeleteBtn onPress={() => deleteMenu(menu)} />
                                 </MenuHeader>
                                 <MenuOptions>
                                     {menu.options.map(option => (
                                         <MenuOption>
-                                            <Text style={{opacity : OPTION_ITEM_OPACITY, marginRight : 5}}>-</Text>
+                                            <Text style={{ opacity: OPTION_ITEM_OPACITY, marginRight: 5 }}>-</Text>
                                             <OptionCategory>{option.category} : </OptionCategory>
                                             <OptionItem>{option.items.join(", ")}</OptionItem>
                                         </MenuOption>
                                     ))}
                                 </MenuOptions>
                                 <MenuFooter>
-                                    <Text style={{fontWeight : "600", fontSize : 15.5}}>{menu.price}원</Text>
+                                    <Text style={{ fontWeight: "600", fontSize: 15.5 }}>{menu.price}원</Text>
                                     <MenuCountController
-                                        onDecrease={()=>{
-                                            if (menu.count > 1){
+                                        onDecrease={() => {
+                                            if (menu.count > 1) {
                                                 decreaseMenu(menu)
                                             }
                                         }}
-                                        onIncrease={()=>increaseMenu(menu)}
+                                        onIncrease={() => increaseMenu(menu)}
                                         count={menu.count}
                                     />
                                 </MenuFooter>
@@ -123,25 +129,27 @@ export default ({navigation}) => {
                         ))}
                         <CartMenu>
                             <MenuHeader>
-                                <Text style={{fontSize : 16, fontWeight : "600"}}>배달팁</Text>
+                                <Text style={{ fontSize: 16, fontWeight: "600" }}>배달팁</Text>
                             </MenuHeader>
                             <MenuFooter>
-                                <Text style={{fontWeight : "600", fontSize : 15.5}}>{cart.restaurant.deliveryTip / 2}원</Text>
+                                <Text style={{ fontWeight: "600", fontSize: 15.5 }}>{cart.restaurant.deliveryTip / 2}원</Text>
                             </MenuFooter>
                         </CartMenu>
                     </ScrollView>
                 </View>
                 <BinaryBtnFooter
                     leftText={"메뉴 추가"}
-                    leftOnPress={()=>navigation.navigate("Restaurant", {id : cart.restaurant.id})}
+                    leftOnPress={() => navigation.navigate("Restaurant", { id: cart.restaurant.id })}
                     rightText={`${getTotalPrice()}원 콜 요청하기`}
-                    rightOnPress={()=>navigation.navigate("CallMakeForm")}
+                    rightOnPress={() => navigation.navigate("CallMakeForm")}
                 />
             </View>
         ) : (
             <ViewContainer>
+                <EmptyImage source={require("../../assets/EmptyCart.png")} />
                 <EmptyMessage>장바구니가 텅 비어있습니다.</EmptyMessage>
             </ViewContainer>
-        )}
+        )
+        }
     </>
 }
