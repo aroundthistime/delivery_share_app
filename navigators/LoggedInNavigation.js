@@ -12,6 +12,7 @@ import Cart from "../screens/Order/Cart";
 import Categories from "../screens/Order/Categories";
 import Order from "../screens/Order/Order";
 import Restaurants from "../screens/Order/Restaurants";
+import Search from "../screens/Order/Search";
 import Restaurant from "../screens/Restaurant/Restaurant";
 import Menu from "../screens/Restaurant/Menu";
 import ClearBtn from "../components/ClearBtn";
@@ -20,6 +21,15 @@ import constants from "../constants";
 import CallMakeForm from "../screens/Order/CallMakeForm";
 import SelectLocation from "../screens/Order/SelectLocation";
 
+const LinksContainer = styled.View`
+    flex-direction : row;
+`
+
+const SearchLink = ({ onPress }) => (
+    <TouchableOpacity onPress={onPress} style={{ marginRight: 8 }}>
+        <Ionicons name="search" size={27} color="black" />
+    </TouchableOpacity>
+)
 
 const CartLink = ({ onPress }) => (
     <TouchableOpacity onPress={onPress} style={{ marginRight: constants.headerRightMargin }}>
@@ -109,7 +119,10 @@ export default ({ navigation, route }) => {
                 options={({ navigation }) => ({
                     title: "음식 카테고리 선택",
                     headerTitleAlign: "center",
-                    headerRight: () => <CartLink onPress={() => navigation.navigate("Cart")} />
+                    headerRight: () => <LinksContainer>
+                        <SearchLink onPress={() => navigation.navigate("Search")} />
+                        <CartLink onPress={() => navigation.navigate("Cart")} />
+                    </LinksContainer>
                 })}
             />
             <LoggedInNavigation.Screen
@@ -125,7 +138,10 @@ export default ({ navigation, route }) => {
                 component={Restaurants}
                 options={({ navigation }) => ({
                     headerTitleAlign: "center",
-                    headerRight: () => <CartLink onPress={() => navigation.navigate("Cart")} />
+                    headerRight: () => <LinksContainer>
+                        <SearchLink onPress={() => navigation.navigate("Search")} />
+                        <CartLink onPress={() => navigation.navigate("Cart")} />
+                    </LinksContainer>
                 })}
             />
             <LoggedInNavigation.Screen
@@ -134,7 +150,10 @@ export default ({ navigation, route }) => {
                 options={({ navigation }) => ({
                     title: "음식 카테고리 선택",
                     headerTitleAlign: "center",
-                    headerRight: () => <CartLink onPress={() => navigation.navigate("Cart")} />
+                    headerRight: () => <LinksContainer>
+                        <SearchLink onPress={() => navigation.navigate("Search")} />
+                        <CartLink onPress={() => navigation.navigate("Cart")} />
+                    </LinksContainer>
                 })}
             />
             <LoggedInNavigation.Screen
@@ -142,7 +161,10 @@ export default ({ navigation, route }) => {
                 component={Menu}
                 options={({ navigation }) => ({
                     headerTitleAlign: "center",
-                    headerRight: () => <CartLink onPress={() => navigation.navigate("Cart")} />
+                    headerRight: () => <LinksContainer>
+                        <SearchLink onPress={() => navigation.navigate("Search")} />
+                        <CartLink onPress={() => navigation.navigate("Cart")} />
+                    </LinksContainer>
                 })}
             />
             <LoggedInNavigation.Screen
@@ -159,6 +181,13 @@ export default ({ navigation, route }) => {
                 options={{
                     title: "수령장소 선택",
                     headerTitleAlign: "center"
+                }}
+            />
+            <LoggedInNavigation.Screen
+                name="Search"
+                component={Search}
+                options={{
+                    headerShown: false
                 }}
             />
         </LoggedInNavigation.Navigator>
