@@ -8,10 +8,10 @@ import constants from "../../constants";
 import { formatAmPm, getOpponent } from "../../utils";
 import styles from "../../styles";
 import Message from "../../components/Message";
+import useInput from "../../Hooks/useInput";
 
 const FONT_SIZE = 16;
 const NUMBER_OF_LINES = 2;
-const REPORT_REASONS = ["사진도용", "신상정보 거짓기입", "욕설/성희롱/혐오발언", "부적절한 용도로 어플사용"];
 
 const ChatNotice = styled.Text`
     text-align : center;
@@ -84,6 +84,14 @@ const ModalCloseBtn = styled.TouchableOpacity`
     align-items : center;
 `
 
+const ModalBackBtn = styled.TouchableOpacity`
+    position : absolute;
+    top : 10;
+    left : 10;
+    width : 25;
+    height : 25;
+`
+
 const ModalTitle = styled.Text`
     font-size : 17.3;
 `
@@ -121,9 +129,67 @@ const ModalOption = styled.TouchableOpacity`
     background-color : ${styles.bgColor};
 `
 
+const DetailModalColumns = styled.View`
+    margin-top : 20;
+    width : 260;
+`
+
+const DetailModalColumn = styled.View`
+    flex-direction: row;
+    margin-bottom : 3;
+`
+
+const DetailModalColumnTitle = styled.Text`
+    padding-top : 5;
+    padding-bottom : 5;
+    background-color : #c9cbcc;
+    font-size : 15.5;
+    text-align : center;
+    text-align-vertical : center;
+    opacity : 0.7;
+    width : 75;
+`
+
+const DetailModalColumnContent = styled.Text`
+    padding-top : 5;
+    padding-bottom : 5;
+    padding-left : 5;
+    padding-right : 5;
+    font-size : 15.5;
+    opacity : 0.7;
+    width : 185;
+    border-width : 1;
+    border-left-width : 0;
+    border-color : #c9cbcc;
+`
+
+const ReportContentInput = styled.TextInput`
+    padding-top : 5;
+    padding-bottom : 5;
+    padding-left : 5;
+    padding-right : 5;
+    width : 185;
+    height : 120;
+    opacity : 0.7;
+    border-width : 1;
+    border-left-width : 0;
+    border-color : #c9cbcc;
+    text-align-vertical : top;
+`
+
+const ReportSubmitBtn = styled.TouchableOpacity`
+    margin-top : 7.5;
+    justify-content : center;
+    align-items : center;
+    width : 85;
+    height : 35;
+    border-radius : 3;
+`
 
 export default ({ navigation, route }) => {
     const [messageValue, setMessageValue] = useState("");
+    // const reportContentInput = useInput("");
+    const [reportContentValue, setReportContentValue] = useState("");
     const scrollViewRef = useRef();
     const [viewScrollBottomBtn, setViewScrollBottomBtn] = useState(false);
     // const [sendMessageMutation] = useMutation(SEND_MESSAGE);
@@ -131,7 +197,9 @@ export default ({ navigation, route }) => {
     const [opponent, setOpponent] = useState();
     const [modalVisible, setModalVisible] = useState(false);
     const [reportModalVisible, setReportModalVisible] = useState(false);
+    const [reportDetailModalVisible, setReportDetailModalVisible] = useState(false);
     const [isFocused, setIsFocused] = useState(true);
+    const [reportReason, setReportReason] = useState();
     const [chatInputScroll, setChatInputScroll] = useState({
         showing: false,
         top: 0
@@ -266,15 +334,15 @@ export default ({ navigation, route }) => {
             setOpponent(getOpponent(data.getChat.participants, userObj.id))
         }
     }, []); //data 리스트 안에 넣어야됨
-    // useEffect(() => {
-    //     if (route.params && route.params.showModal) {
-    //         setModalVisible(true);
-    //         navigation.setParams({
-    //             ...route.params,
-    //             showModal: false
-    //         })
-    //     }
-    // }, [route])
+    useEffect(() => {
+        if (route.params && route.params.showModal) {
+            setModalVisible(true);
+            navigation.setParams({
+                ...route.params,
+                showModal: false
+            })
+        }
+    }, [route])
     // if (isFocused && messages.length > 0 && messages[messages.length - 1].from.id !== userObj.id) {
     //     readMessageMutation({
     //         variables: {
@@ -355,7 +423,7 @@ export default ({ navigation, route }) => {
     const confirmReportUser = (reason) => (
         Alert.alert(
             `${opponentName}님을 '${reason}'으로 신고하시겠습니까?`,
-            "신고시 더 이상 해당 유저로부터 메시지가 수신되지 않으며 채팅목록에서 삭제됩니다. 참고로 무분별한 신고는 정지 사유가 될 수 있으니 주의바랍니다.",
+            "신고시 더 이상 해당 유저로부터 메시지가 수신되지 않으며 채팅목록에서 삭제됩니다.",
             [
                 {
                     text: "확인",
@@ -373,7 +441,7 @@ export default ({ navigation, route }) => {
     const confirmQuitChat = () => (
         Alert.alert(
             `정말로 ${opponentName}님과의 채팅을 종료하시겠습니까?`,
-            "채팅종료시 더 이상 해당 유저로부터 메시지가 수신되지 않으며 채팅목록에서 삭제됩니다.",
+            "",
             [
                 {
                     text: "확인",
@@ -388,12 +456,17 @@ export default ({ navigation, route }) => {
             { cancelable: false }
         )
     )
+    const canSubmitReport = () => reportReason !== "기타" || reportContentValue !== ""
+    const submitReport = () => {
+        setReportDetailModalVisible(false);
+        // reportContentValue, reason, 현재 유저 정보, 상대 유저 정보 전송(id)
+    }
     return (
         <Suspense fallback={<Loader />}>
             {data && data.getChat ? (
                 <>
                     <KeyboardAwareScrollView
-                        style={{ flex: 1, backgroundColor: styles.pastelBg, paddingBottom: FONT_SIZE * NUMBER_OF_LINES + 30 }}
+                        style={{ flex: 1, paddingBottom: FONT_SIZE * NUMBER_OF_LINES + 30 }}
                         ref={scrollViewRef}
                         // contentContainerStyle={{flexGrow: 1}}
                         onScroll={({ nativeEvent }) => {
@@ -497,7 +570,7 @@ export default ({ navigation, route }) => {
                             onScroll={(e) => {
                                 setChatInputScroll({
                                     ...chatInputScroll,
-                                    top: 92 * (e.nativeEvent.contentOffset.y / chatInputContentSize) + 5
+                                    top: 82 * (e.nativeEvent.contentOffset.y / chatInputContentSize) + 5
                                 })
                             }}
                             onLayout={e => {
@@ -598,12 +671,84 @@ export default ({ navigation, route }) => {
                                 </ModalCloseBtn>
                                 <ModalTitle>신고 사유를 선택해주세요</ModalTitle>
                                 <ReportModalOptions>
-                                    {REPORT_REASONS.map(reason => (
-                                        <ReportModalOption onPress={() => { setReportModalVisible(false); confirmReportUser(reason); }}>
+                                    {constants.reportReasons.map(reason => (
+                                        <ReportModalOption onPress={() => {
+                                            setReportModalVisible(false);
+                                            setReportReason(reason);
+                                            setReportDetailModalVisible(true);
+                                        }}>
                                             <Text>{reason}</Text>
                                         </ReportModalOption>
                                     ))}
                                 </ReportModalOptions>
+                            </View>
+                        </View>
+                    </Modal>
+                    <Modal
+                        animationType="none"
+                        transparent={true}
+                        visible={reportDetailModalVisible}
+                        onRequestClose={() => setReportDetailModalVisible(false)}
+                    >
+                        <View style={{
+                            flex: 1, justifyContent: "center", alignItems: "center"
+                        }}>
+                            <View style={{
+                                shadowColor: "#000",
+                                shadowOffset: {
+                                    width: 0,
+                                    height: 2
+                                },
+                                width: 300,
+                                height: 300,
+                                shadowOpacity: 0.25,
+                                shadowRadius: 3.84,
+                                elevation: 5,
+                                paddingVertical: 30,
+                                alignItems: "center",
+                                backgroundColor: styles.bgColor,
+                            }}>
+                                <ModalBackBtn onPress={() => { setReportModalVisible(true); setReportDetailModalVisible(false) }}>
+                                    <Ionicons name="arrow-back-outline" size={25} color="#E0E0E0" />
+                                </ModalBackBtn>
+                                <ModalCloseBtn onPress={() => setReportDetailModalVisible(false)}>
+                                    <Ionicons name="close" size={22} color="#fcfcfc" />
+                                </ModalCloseBtn>
+                                <ModalTitle style={{
+                                    position: "absolute",
+                                    top: 15,
+                                    opacity: 0.7
+                                }}>유저 신고</ModalTitle>
+                                <DetailModalColumns>
+                                    <DetailModalColumn>
+                                        <DetailModalColumnTitle>유저명</DetailModalColumnTitle>
+                                        <DetailModalColumnContent>{opponentName}</DetailModalColumnContent>
+                                    </DetailModalColumn>
+                                    <DetailModalColumn>
+                                        <DetailModalColumnTitle>신고사유</DetailModalColumnTitle>
+                                        <DetailModalColumnContent>{reportReason}</DetailModalColumnContent>
+                                    </DetailModalColumn>
+                                    <DetailModalColumn>
+                                        <DetailModalColumnTitle>내용</DetailModalColumnTitle>
+                                        <ReportContentInput
+                                            value={reportContentValue}
+                                            onChangeText={setReportContentValue}
+                                            multiline
+                                            maxHeight={120}
+                                            scrollEnabled
+                                            placeholder={"구체적인 내용을 입력해주세요. (신고사유 기타 선택시 필수 작성)"}
+                                        />
+                                    </DetailModalColumn>
+                                </DetailModalColumns>
+                                <ReportSubmitBtn
+                                    style={{ backgroundColor: canSubmitReport() ? styles.themeColor : styles.lightThemeColor }}
+                                    activeOpacity={canSubmitReport() ? 0.2 : 1}
+                                    onPress={submitReport}
+                                >
+                                    <Text style={{ color: "white", fontSize: 14 }}>
+                                        신고 제출
+                                    </Text>
+                                </ReportSubmitBtn>
                             </View>
                         </View>
                     </Modal>
