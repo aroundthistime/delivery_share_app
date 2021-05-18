@@ -16,7 +16,7 @@ const ListBar = styled.TouchableOpacity`
     height : 90;
     padding-left : 20;
     padding-right : 20;
-    background-color : ${styles.bgColor};
+    background-color : white;
     margin-bottom : ${styles.grayBorderWidth};
 `
 
@@ -42,22 +42,22 @@ const BlurText = styled.Text`
     font-size : 12.5;
 `
 
-const RestaurantRate = ({rate, reviewCounts}) => (
-    <View style={{flexDirection : "row", alignItems : "center"}}>
-        <FontAwesome name="star" size={11.5} color={styles.yellowColor}  />
+const RestaurantRate = ({ rate, reviewCounts }) => (
+    <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <FontAwesome name="star" size={11.5} color={styles.yellowColor} />
         {/* <Ionicons name="md-star" size={16} color={styles.yellowColor} /> */}
-        <Text style={{marginLeft : 5, fontSize : 12}}><Text style={{fontWeight : "600"}}>{rate}</Text> ({reviewCounts})</Text>
+        <Text style={{ marginLeft: 5, fontSize: 12 }}><Text style={{ fontWeight: "600" }}>{rate}</Text> ({reviewCounts})</Text>
     </View>
 )
 
 
-const RestaurantBar = ({thumbnail, name, rate, reviewCounts, popular, minOrder, onPress}) => {
+const RestaurantBar = ({ thumbnail, name, rate, reviewCounts, popular, minOrder, onPress }) => {
     return (
         <ListBar onPress={onPress}>
-            <RestaurantImg source={{uri : thumbnail}} />
+            <RestaurantImg source={{ uri: thumbnail }} />
             <RestaurantInfos>
                 <RestaurantName numberOfLines={1}>{name}</RestaurantName>
-                <RestaurantRate rate={rate} reviewCounts={formatReviewCounts(reviewCounts)}/>
+                <RestaurantRate rate={rate} reviewCounts={formatReviewCounts(reviewCounts)} />
                 <BlurText>최소주문금액 {minOrder}원</BlurText>
                 <BlurText numberOfLines={1}>{popular.join(", ")}</BlurText>
             </RestaurantInfos>

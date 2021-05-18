@@ -1,8 +1,9 @@
 import React from "react";
 import { Text, View } from "react-native";
+import ScreenHeader from "../../components/ScreenHeader";
 
 export default () => {
-    return <View>
-        <Text>찜한가게</Text>
-    </View>
+    return <>
+        <ScreenHeader title={'찜한 가게'} />
+    </>
 }

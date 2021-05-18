@@ -5,14 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import ViewContainer from "../../components/ViewContainer";
 import styles from "../../styles";
 import { getTimeStamp, getOpponent } from "../../utils";
-
-const ChatsHeader = styled.Text`
-    background-color : white;
-    height : 56;
-    padding-left : 20;
-    font-size : 20;
-    text-align-vertical : center;
-`
+import ScreenHeader from "../../components/ScreenHeader";
 
 const ChatTabsContainer = styled.View`
     background-color : rgba(0, 0, 0, 0.1);
@@ -145,22 +138,7 @@ export default ({ navigation }) => {
     )
     return (
         <>
-            <ChatsHeader style={{
-                ...Platform.select({
-                    ios: {
-                        shadowColor: "rgb(50, 50, 50)",
-                        shadowOpacity: 0.5,
-                        shadowRadius: 5,
-                        shadowOffset: {
-                            height: -1,
-                            width: 0,
-                        },
-                    },
-                    android: {
-                        elevation: 5,
-                    },
-                })
-            }}>채팅</ChatsHeader>
+            <ScreenHeader title={"채팅"} />
             {sortedChats.length > 0 ? (
                 <ScrollView style={{ flex: 1, backgroundColor: styles.bgColor }}>
                     <ChatTabsContainer>

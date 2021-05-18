@@ -456,7 +456,7 @@ export default ({ navigation, route }) => {
             { cancelable: false }
         )
     )
-    const canSubmitReport = () => reportReason !== "기타" || reportContentValue !== ""
+    const canSubmitReport = () => reportReason !== "기타" || reportContentValue.replace(/\s|\n/g, "") !== ""
     const submitReport = () => {
         setReportDetailModalVisible(false);
         // reportContentValue, reason, 현재 유저 정보, 상대 유저 정보 전송(id)
@@ -743,7 +743,11 @@ export default ({ navigation, route }) => {
                                 <ReportSubmitBtn
                                     style={{ backgroundColor: canSubmitReport() ? styles.themeColor : styles.lightThemeColor }}
                                     activeOpacity={canSubmitReport() ? 0.2 : 1}
-                                    onPress={submitReport}
+                                    onPress={() => {
+                                        if (canSubmitReport()) {
+                                            submitReport()
+                                        }
+                                    }}
                                 >
                                     <Text style={{ color: "white", fontSize: 14 }}>
                                         신고 제출
