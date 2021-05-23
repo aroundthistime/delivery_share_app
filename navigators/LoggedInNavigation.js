@@ -16,6 +16,7 @@ import UserReviews from "../screens/Review/User/UserReviews";
 import WriteUserReview from "../screens/Review/User/WriteUserReview";
 import Confirm from "../screens/Payment/Confirm";
 import Payment from "../screens/Payment/Payment";
+import Kakaopay from "../screens/Payment/Kakaopay";
 
 const CartLink = ({ onPress }) => (
   <TouchableOpacity onPress={onPress} style={{ marginRight: 10 }}>
@@ -131,6 +132,12 @@ export default ({ navigation, route }) => (
       name="Payment"
       component={Payment}
       options={{ title: "결제창", headerTitleAlign: "center" }}
+    />
+
+    <LoggedInNavigation.Screen
+      name="Kakaopay"
+      component={Kakaopay}
+      options={{ title: "카카오페이", headerTitleAlign: "center" }}
     />
   </LoggedInNavigation.Navigator>
 );
