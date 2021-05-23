@@ -18,6 +18,7 @@ import { Divider } from "../Call/styled";
  * 3. 배달장소 정보 연동 필요
  * 4. 요청사항 메시지 형태 디자인 변경 ?
  * 5. 추가로 필요한 부가 정보 있는지 검토
+ * 6. 결제진행 클릭 시 Kakaopay API 호출 - 백엔드 연동 필요
  */
 
 const Confirm = ({ navigation, route }) => {
@@ -93,7 +94,7 @@ const Confirm = ({ navigation, route }) => {
           background={styles.themeColor}
           navigation={navigation}
           params={[
-            "Payment",
+            "Kakaopay",
             {
               requestForStore,
               requestForDelivery,
