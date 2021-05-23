@@ -68,4 +68,6 @@ const headerRightMargin = 10;
 
 const requestMaxLength = 60;
 
-export default { width, height, categories, headerRightMargin, requestMaxLength, reportReasons };
+const restaurantImageSize = 66;
+
+export default { width, height, categories, headerRightMargin, requestMaxLength, reportReasons, restaurantImageSize };

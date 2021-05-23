@@ -7,8 +7,6 @@ import constants from "../constants";
 import styles from "../styles";
 import { formatReviewCounts } from "../utils";
 
-const RESTAURANT_IMAGE_SIZE = 66;
-
 const ListBar = styled.TouchableOpacity`
     flex-direction : row;
     align-items : center;
@@ -21,20 +19,20 @@ const ListBar = styled.TouchableOpacity`
 `
 
 const RestaurantImg = styled.Image`
-    width : ${RESTAURANT_IMAGE_SIZE};
-    height : ${RESTAURANT_IMAGE_SIZE};
-    border-radius : ${RESTAURANT_IMAGE_SIZE / 2};
+    width : ${constants.restaurantImageSize};
+    height : ${constants.restaurantImageSize};
+    border-radius : ${constants.restaurantImageSize / 2};
     margin-right : 15;
 `
 
 const RestaurantInfos = styled.View`
-    width : ${constants.width - 55 - RESTAURANT_IMAGE_SIZE};
+    width : ${constants.width - 55 - constants.restaurantImageSize};
 `
 
 const RestaurantName = styled.Text`
     font-size : 15;
     font-weight : 600;
-    width : ${constants.width - 55 - RESTAURANT_IMAGE_SIZE};
+    width : ${constants.width - 55 - constants.restaurantImageSize};
 `
 
 const BlurText = styled.Text`
