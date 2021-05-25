@@ -122,6 +122,22 @@ export default ({ navigation }) => {
         popular: ["김치찌개", "볶음밥"],
         minOrder: 13000
     };
+    const confirmClearHistory = () => (
+        Alert.alert(
+            "최근 검색어를 모두 삭제하시겠습니까?",
+            "",
+            [
+                {
+                    text: "확인",
+                    onPress: clearHistory
+                },
+                {
+                    text: "취소",
+                    onPress: () => 1
+                },
+            ],
+        )
+    )
     const addHistory = async (word) => {
         const filteredHistory = history.filter(keyword => keyword !== word);
         if (filteredHistory.length >= 10) {
@@ -185,7 +201,7 @@ export default ({ navigation }) => {
                 <SectionHeader>
                     <SectionTitle>최근 검색어</SectionTitle>
                     {history.length > 0 && (
-                        <HistoryClearBtn activeOpacity={0.25} onPress={clearHistory}>
+                        <HistoryClearBtn activeOpacity={0.25} onPress={confirmClearHistory}>
                             <Text>전체삭제</Text>
                         </HistoryClearBtn>
                     )}
