@@ -5,6 +5,8 @@ import ContainerWrapper from "../../../components/ContainerWrapper";
 import { Ionicons } from "@expo/vector-icons";
 import styles from "../../../styles";
 import Slider from "@react-native-community/slider";
+import RateStars from "../../../components/RateStars";
+import constants from "../../../constants";
 
 /**
  * TODO *
@@ -13,6 +15,8 @@ import Slider from "@react-native-community/slider";
  * 3. 작성된 내용 바로 화면에 반영 (로딩창 필요할 수도 - useEffect 고려)
  * 4. API 구현 시 작성 내용 데이터베이스에 반영하도록 연동 - handleSubmit 구현
  */
+
+const STARS_ROW_WIDTH = 220;
 
 export default ({ navigation }) => {
   const [starValue, setStarValue] = useState(3);
@@ -57,9 +61,20 @@ export default ({ navigation }) => {
       </ContainerWrapper>
 
       <ContainerWrapper>
-        <TextTitle>⭐ 유저 별점</TextTitle>
-        <View style={{ flexDirection: "row" }}>
+        <TextTitle style={{ paddingBottom: 50 }}>⭐ 유저 별점</TextTitle>
+        <View style={{ flexDirection: "row", position: "absolute", top: 60, left: (constants.width - STARS_ROW_WIDTH) / 2 }}>
+          <RateStars rate={starValue} size={45} width={STARS_ROW_WIDTH} />
+        </View>
+        <View style={{ flexDirection: "row", position: "absolute", top: 60, left: (constants.width - STARS_ROW_WIDTH) / 2 }}>
           <Slider
+            style={{ width: STARS_ROW_WIDTH, height: 50, opacity: 0 }}
+            value={starValue}
+            onValueChange={(value) => setStarValue(value)}
+            minimumValue={1}
+            maximumValue={5}
+            step={0.5}
+          />
+          {/* <Slider
             style={{ width: "80%" }}
             value={starValue}
             onValueChange={(value) => setStarValue(value)}
@@ -79,7 +94,7 @@ export default ({ navigation }) => {
             }}
           >
             {starValue}
-          </Text>
+          </Text> */}
         </View>
       </ContainerWrapper>
 
@@ -102,8 +117,8 @@ export default ({ navigation }) => {
       </ContainerWrapper>
 
       <SubmitButton onPress={clickSubmitButton}>
-        <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 22 }}>
-          작 성
+        <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 17 }}>
+          완료
         </Text>
       </SubmitButton>
     </ScrollView>
@@ -127,7 +142,10 @@ const SubmitButton = styled.TouchableOpacity`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px 0;
+  padding: 15px 0;
+  margin-left : 15;
+  margin-right : 15;
+  border-radius : 5;
   margin-bottom: 20px;
   background-color: ${styles.themeColor};
 `;
