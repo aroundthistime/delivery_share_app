@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Text, Touchable, TouchableOpacity, View } from "react-native";
 import styled from "styled-components";
 import { FontAwesome } from '@expo/vector-icons';
 import ScreenHeader from "../../components/ScreenHeader";
@@ -10,7 +10,7 @@ import { getTimeStamp } from "../../utils";
 const OrderListBar = styled.View`
     background-color : white;
     margin-top : 7.5;
-    margin-bottom : 7.5;
+    margin-bottom : 12;
 `
 
 const OrderHeader = styled.View`
@@ -80,11 +80,40 @@ const BlurText = styled.Text`
     font-size : 12.5;
 `
 
-
-const ReviewBtnContainer = styled.Text`
-    justify-content : center;
+const OrderFooter = styled.View`
+    flex-direction : row;
+    justify-content : space-between;
     align-items : center;
+    margin-top : 10;
+    margin-bottom : 15;
+    padding-top : 1;
+    padding-bottom : 1;
+    padding-left : 20;
+    padding-right : 20;
 `
+
+const FooterBtnContainer = styled.Text`
+    text-align : center;
+    text-align-vertical : center;
+    color : rgba(0, 0, 0, 0.75);
+    width : ${(constants.width - 40) / 3 - 5};
+    height : 40;
+    border-radius : 5;
+    border-color : ${styles.lightGrayColor};
+    border-width : 1.3;
+`
+
+const FooterBtn = ({ isAvailable, text, onPress }) => (
+    isAvailable ? (
+        <TouchableOpacity onPress={onPress}>
+            <FooterBtnContainer>{text}</FooterBtnContainer>
+        </TouchableOpacity>
+    ) : (
+        <TouchableOpacity activeOpacity={1}>
+            <FooterBtnContainer style={{ color: "rgba(0, 0, 0, 0.2)", borderColor: "#f2eded" }}>{text}</FooterBtnContainer>
+        </TouchableOpacity>
+    )
+)
 
 const orders = [
     {
@@ -131,35 +160,89 @@ export default ({ navigation }) => {
     return <>
         <ScreenHeader title={'주문내역'} />
         {orders && orders.length > 0 ? (
-            <OrderListBar>
-                <OrderHeader>
-                    <OrderDate>{getTimeStamp(new Date())}</OrderDate>
-                    <OrderStatus>배달완료</OrderStatus>
-                </OrderHeader>
-                <OrderBody>
-                    <TouchableOpacity onPress={() => navigation.navigate("Restaurant", { id: 1 })}>
-                        <RestaurantImg source={{ uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRoOsH_0x__G2WJCrUlq3XU_cSrog0fkGS2EA&usqp=CAU" }} />
-                    </TouchableOpacity>
-                    <OrderInfos>
-                        <TouchableOpacity>
-                            <RestaurantName numberOfLines={1}>BH11g111111111111111111111111C</RestaurantName>
+            <>
+                <OrderListBar>
+                    <OrderHeader>
+                        <OrderDate>{getTimeStamp(new Date())}</OrderDate>
+                        <OrderStatus>배달완료</OrderStatus>
+                    </OrderHeader>
+                    <OrderBody>
+                        <TouchableOpacity onPress={() => navigation.navigate("Restaurant", { id: 1 })}>
+                            <RestaurantImg source={{ uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxFnfMMuOyds6KPs2b51clDv-S3agSe84D4w&usqp=CAU" }} />
                         </TouchableOpacity>
-                        {/* <TouchableOpacity onPress={() => navigation.navigate("UserReviews", {userId : dfd})}> */}
-                        <TouchableOpacity>
-                            <OpponentContainer>
-                                <FontAwesome name="user" size={15} color="rgba(0, 0, 0, 0.6)" />
-                                <OpponentName>콘요맘떼</OpponentName>
-                            </OpponentContainer>
-                        </TouchableOpacity>
-                        <OrderContent>
-                            {/* {} */}
+                        <OrderInfos>
+                            <TouchableOpacity>
+                                <RestaurantName numberOfLines={1}>BH11g111111111111111111111111C</RestaurantName>
+                            </TouchableOpacity>
+                            {/* <TouchableOpacity onPress={() => navigation.navigate("UserReviews", {userId : dfd})}> */}
+                            <TouchableOpacity>
+                                <OpponentContainer>
+                                    <FontAwesome name="user" size={15} color="rgba(0, 0, 0, 0.6)" />
+                                    <OpponentName>콘요맘떼</OpponentName>
+                                </OpponentContainer>
+                            </TouchableOpacity>
+                            <OrderContent>
+                                {/* {} */}
                             김치볶음밥 외 1개
                         </OrderContent>
-                    </OrderInfos>
-                </OrderBody>
-            </OrderListBar>
-        ) : (
-            <></>
-        )}
+                        </OrderInfos>
+                    </OrderBody>
+                    <OrderFooter>
+                        <TouchableOpacity>
+                            <FooterBtnContainer>주문상세</FooterBtnContainer>
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                            <FooterBtnContainer>식당리뷰쓰기</FooterBtnContainer>
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                            <FooterBtnContainer>유저리뷰쓰기</FooterBtnContainer>
+                        </TouchableOpacity>
+                    </OrderFooter>
+                </OrderListBar>
+                <OrderListBar>
+                    <OrderHeader>
+                        <OrderDate>{getTimeStamp(new Date())}</OrderDate>
+                        <OrderStatus>배달완료</OrderStatus>
+                    </OrderHeader>
+                    <OrderBody>
+                        <TouchableOpacity onPress={() => navigation.navigate("Restaurant", { id: 1 })}>
+                            <RestaurantImg source={{ uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxFnfMMuOyds6KPs2b51clDv-S3agSe84D4w&usqp=CAU" }} />
+                        </TouchableOpacity>
+                        <OrderInfos>
+                            <TouchableOpacity>
+                                <RestaurantName numberOfLines={1}>BH11g111111111111111111111111C</RestaurantName>
+                            </TouchableOpacity>
+                            {/* <TouchableOpacity onPress={() => navigation.navigate("UserReviews", {userId : dfd})}> */}
+                            <TouchableOpacity>
+                                <OpponentContainer>
+                                    <FontAwesome name="user" size={15} color="rgba(0, 0, 0, 0.6)" />
+                                    <OpponentName>콘요맘떼</OpponentName>
+                                </OpponentContainer>
+                            </TouchableOpacity>
+                            <OrderContent>
+                                {/* {} */}
+                        김치볶음밥 외 1개
+                    </OrderContent>
+                        </OrderInfos>
+                    </OrderBody>
+                    <OrderFooter>
+                        {/* <TouchableOpacity>
+                            <FooterBtnContainer>주문상세</FooterBtnContainer>
+                        </TouchableOpacity> */}
+                        <FooterBtn isAvailable={false} text={"주문상세"} onPress={() => navigation.navigate("Order", { orderId: 1 })} />
+                        <TouchableOpacity>
+                            <FooterBtnContainer>식당리뷰쓰기</FooterBtnContainer>
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                            <FooterBtnContainer>유저리뷰쓰기</FooterBtnContainer>
+                        </TouchableOpacity>
+                    </OrderFooter>
+                </OrderListBar>
+            </>
+        ) :
+            (
+                <></>
+            )
+        }
     </>
 }
