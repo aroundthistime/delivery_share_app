@@ -20,176 +20,302 @@ import { useCart, useClearCart } from "../Contexts/CartContext";
 import constants from "../constants";
 import CallMakeForm from "../screens/Order/CallMakeForm";
 import SelectLocation from "../screens/Order/SelectLocation";
+import UserReviews from "../screens/Review/User/UserReviews";
+import WriteUserReview from "../screens/Review/User/WriteUserReview";
+import Confirm from "../screens/Payment/Confirm";
+import Payment from "../screens/Payment/Payment";
+import Kakaopay from "../screens/Payment/Kakaopay";
 
 const LinksContainer = styled.View`
     flex-direction : row;
 `
 
 const SearchLink = ({ onPress }) => (
-    <TouchableOpacity onPress={onPress} style={{ marginRight: 8 }}>
-        <Ionicons name="search" size={27} color="black" />
-    </TouchableOpacity>
+  <TouchableOpacity onPress={onPress} style={{ marginRight: 8 }}>
+    <Ionicons name="search" size={27} color="black" />
+  </TouchableOpacity>
 )
 
 const CartLink = ({ onPress }) => (
-    <TouchableOpacity onPress={onPress} style={{ marginRight: constants.headerRightMargin }}>
-        <Ionicons name="cart" size={28} color="black" />
-    </TouchableOpacity>
+  <TouchableOpacity onPress={onPress} style={{ marginRight: constants.headerRightMargin }}>
+    <Ionicons name="cart" size={28} color="black" />
+  </TouchableOpacity>
 )
 
+const CartLink = ({ onPress }) => (
+  <TouchableOpacity onPress={onPress} style={{ marginRight: 10 }}>
+    <Ionicons name="cart" size={28} color="black" />
+  </TouchableOpacity>
+);
+
 const ShowModalsLink = ({ onPress }) => (
-    <HeaderRightContainer onPress={onPress}>
-        <Ionicons name="ellipsis-vertical" size={24} color="rgba(0, 0, 0, 0.5)" />
-    </HeaderRightContainer>
+  <HeaderRightContainer onPress={onPress}>
+    <Ionicons name="ellipsis-vertical" size={24} color="rgba(0, 0, 0, 0.5)" />
+  </HeaderRightContainer>
 )
 
 const LoggedInNavigation = createStackNavigator();
 
 export default ({ navigation, route }) => {
-    const cart = useCart();
-    const clearCart = useClearCart();
-    const clearCartAlert = () => {
-        Alert.alert(
-            "장바구니에 담긴 모든 메뉴를 삭제하시겠습니까?",
-            "",
-            [
-                {
-                    text: "취소",
-                    onPress: () => 1,
-                    style: "cancel"
-                },
-                {
-                    text: "확인",
-                    onPress: () => clearCart()
-                }
-            ]
-        )
-    }
-    return (
-        <LoggedInNavigation.Navigator
-            initialRouteName="TabNavigation"
-        >
-            <LoggedInNavigation.Screen
-                name="TabNavigation"
-                component={TabNavigation}
-                options={{
-                    headerShown: false,
-                }}
-            />
-            <LoggedInNavigation.Screen
-                name="Calls"
-                component={Calls}
-                options={{
-                    title: "주변 콜 찾기",
-                    headerTitleAlign: "center"
-                }}
-            />
-            <LoggedInNavigation.Screen
-                name="Call"
-                component={Call}
-            />
-            <LoggedInNavigation.Screen
-                name="Chat"
-                component={Chat}
-                options={({ navigation, route }) => ({
-                    headerRight: () => <ShowModalsLink onPress={() => {
-                        navigation.setParams({
-                            ...route.params,
-                            showModal: true
-                        })
-                    }} />
-                })}
-            />
-            <LoggedInNavigation.Screen
-                name="Cart"
-                component={Cart}
-                options={{
-                    title: "장바구니",
-                    headerTitleAlign: "center",
-                    headerRight: () => cart.menus.length > 0 ? (
-                        <ClearBtn onPress={clearCartAlert} marginRight={constants.headerRightMargin + 5} />
-                    ) : (
-                        <ClearBtn onPress={() => 1} marginRight={constants.headerRightMargin + 5} isDisabled={true} />
-                    )
-                }}
-            />
-            <LoggedInNavigation.Screen
-                name="Categories"
-                component={Categories}
-                options={({ navigation }) => ({
-                    title: "음식 카테고리 선택",
-                    headerTitleAlign: "center",
-                    headerRight: () => <LinksContainer>
-                        <SearchLink onPress={() => navigation.navigate("Search")} />
-                        <CartLink onPress={() => navigation.navigate("Cart")} />
-                    </LinksContainer>
-                })}
-            />
-            <LoggedInNavigation.Screen
-                name="Order"
-                component={Order}
-                options={{
-                    title: "주문내역",
-                    headerTitleAlign: "center"
-                }}
-            />
-            <LoggedInNavigation.Screen
-                name="Restaurants"
-                component={Restaurants}
-                options={({ navigation }) => ({
-                    headerTitleAlign: "center",
-                    headerRight: () => <LinksContainer>
-                        <SearchLink onPress={() => navigation.navigate("Search")} />
-                        <CartLink onPress={() => navigation.navigate("Cart")} />
-                    </LinksContainer>
-                })}
-            />
-            <LoggedInNavigation.Screen
-                name="Restaurant"
-                component={Restaurant}
-                options={({ navigation }) => ({
-                    title: "음식 카테고리 선택",
-                    headerTitleAlign: "center",
-                    headerRight: () => <LinksContainer>
-                        <SearchLink onPress={() => navigation.navigate("Search")} />
-                        <CartLink onPress={() => navigation.navigate("Cart")} />
-                    </LinksContainer>
-                })}
-            />
-            <LoggedInNavigation.Screen
-                name="Menu"
-                component={Menu}
-                options={({ navigation }) => ({
-                    headerTitleAlign: "center",
-                    headerRight: () => <LinksContainer>
-                        <SearchLink onPress={() => navigation.navigate("Search")} />
-                        <CartLink onPress={() => navigation.navigate("Cart")} />
-                    </LinksContainer>
-                })}
-            />
-            <LoggedInNavigation.Screen
-                name="CallMakeForm"
-                component={CallMakeForm}
-                options={{
-                    title: "콜 요청하기",
-                    headerTitleAlign: "center"
-                }}
-            />
-            <LoggedInNavigation.Screen
-                name="SelectLocation"
-                component={SelectLocation}
-                options={{
-                    title: "수령장소 선택",
-                    headerTitleAlign: "center"
-                }}
-            />
-            <LoggedInNavigation.Screen
-                name="Search"
-                component={Search}
-                options={{
-                    headerShown: false
-                }}
-            />
-        </LoggedInNavigation.Navigator>
+  const cart = useCart();
+  const clearCart = useClearCart();
+  const clearCartAlert = () => {
+    Alert.alert(
+      "장바구니에 담긴 모든 메뉴를 삭제하시겠습니까?",
+      "",
+      [
+        {
+          text: "취소",
+          onPress: () => 1,
+          style: "cancel"
+        },
+        {
+          text: "확인",
+          onPress: () => clearCart()
+        }
+      ]
     )
+  }
+  return (
+    <LoggedInNavigation.Navigator
+      initialRouteName="TabNavigation"
+    >
+      <LoggedInNavigation.Screen
+        name="TabNavigation"
+        component={TabNavigation}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <LoggedInNavigation.Screen
+        name="Calls"
+        component={Calls}
+        options={{
+          title: "주변 콜 찾기",
+          headerTitleAlign: "center"
+        }}
+      />
+      <LoggedInNavigation.Screen
+        name="Call"
+        component={Call}
+      />
+      <LoggedInNavigation.Screen
+        name="Chat"
+        component={Chat}
+        options={({ navigation, route }) => ({
+          headerRight: () => <ShowModalsLink onPress={() => {
+            navigation.setParams({
+              ...route.params,
+              showModal: true
+            })
+          }} />
+        })}
+      />
+      <LoggedInNavigation.Screen
+        name="Cart"
+        component={Cart}
+        options={{
+          title: "장바구니",
+          headerTitleAlign: "center",
+          headerRight: () => cart.menus.length > 0 ? (
+            <ClearBtn onPress={clearCartAlert} marginRight={constants.headerRightMargin + 5} />
+          ) : (
+            <ClearBtn onPress={() => 1} marginRight={constants.headerRightMargin + 5} isDisabled={true} />
+          )
+        }}
+      />
+      <LoggedInNavigation.Screen
+        name="Categories"
+        component={Categories}
+        options={({ navigation }) => ({
+          title: "음식 카테고리 선택",
+          headerTitleAlign: "center",
+          headerRight: () => <LinksContainer>
+            <SearchLink onPress={() => navigation.navigate("Search")} />
+            <CartLink onPress={() => navigation.navigate("Cart")} />
+          </LinksContainer>
+        })}
+      />
+      <LoggedInNavigation.Screen
+        name="Order"
+        component={Order}
+        options={{
+          title: "주문내역",
+          headerTitleAlign: "center"
+        }}
+      />
+      <LoggedInNavigation.Screen
+        name="Restaurants"
+        component={Restaurants}
+        options={({ navigation }) => ({
+          headerTitleAlign: "center",
+          headerRight: () => <LinksContainer>
+            <SearchLink onPress={() => navigation.navigate("Search")} />
+            <CartLink onPress={() => navigation.navigate("Cart")} />
+          </LinksContainer>
+        })}
+      />
+      <LoggedInNavigation.Screen
+        name="Restaurant"
+        component={Restaurant}
+        options={({ navigation }) => ({
+          title: "음식 카테고리 선택",
+          headerTitleAlign: "center",
+          headerRight: () => <LinksContainer>
+            <SearchLink onPress={() => navigation.navigate("Search")} />
+            <CartLink onPress={() => navigation.navigate("Cart")} />
+          </LinksContainer>
+        })}
+      />
+      <LoggedInNavigation.Screen
+        name="Menu"
+        component={Menu}
+        options={({ navigation }) => ({
+          headerTitleAlign: "center",
+          headerRight: () => <LinksContainer>
+            <SearchLink onPress={() => navigation.navigate("Search")} />
+            <CartLink onPress={() => navigation.navigate("Cart")} />
+          </LinksContainer>
+        })}
+      />
+      <LoggedInNavigation.Screen
+        name="CallMakeForm"
+        component={CallMakeForm}
+        options={{
+          title: "콜 요청하기",
+          headerTitleAlign: "center"
+        }}
+      />
+      <LoggedInNavigation.Screen
+        name="SelectLocation"
+        component={SelectLocation}
+        options={{
+          title: "수령장소 선택",
+          headerTitleAlign: "center"
+        }}
+      />
+      <LoggedInNavigation.Screen
+        name="Search"
+        component={Search}
+        options={{
+          headerShown: false
+        }}
+      />
+    </LoggedInNavigation.Navigator>
+  )
 }
+export default ({ navigation, route }) => (
+  <LoggedInNavigation.Navigator initialRouteName="TabNavigation">
+    <LoggedInNavigation.Screen
+      name="TabNavigation"
+      component={TabNavigation}
+      options={{
+        headerShown: false,
+      }}
+    />
+    <LoggedInNavigation.Screen
+      name="Calls"
+      component={Calls}
+      options={{
+        title: "주변 콜 찾기",
+        headerTitleAlign: "center",
+      }}
+    />
+    <LoggedInNavigation.Screen name="Call" component={Call} />
+    <LoggedInNavigation.Screen name="Chat" component={Chat} />
+    <LoggedInNavigation.Screen
+      name="Cart"
+      component={Cart}
+      options={{
+        title: "장바구니",
+        headerTitleAlign: "center",
+      }}
+    />
+    <LoggedInNavigation.Screen
+      name="Categories"
+      component={Categories}
+      options={({ navigation }) => ({
+        title: "음식 카테고리 선택",
+        headerTitleAlign: "center",
+        headerRight: () => (
+          <CartLink onPress={() => navigation.navigate("Cart")} />
+        ),
+      })}
+    />
+    <LoggedInNavigation.Screen
+      name="Order"
+      component={Order}
+      options={{
+        title: "주문내역",
+        headerTitleAlign: "center",
+      }}
+    />
+    <LoggedInNavigation.Screen
+      name="Restaurants"
+      component={Restaurants}
+      options={({ navigation }) => ({
+        headerTitleAlign: "center",
+        headerRight: () => (
+          <CartLink onPress={() => navigation.navigate("Cart")} />
+        ),
+      })}
+    />
+    <LoggedInNavigation.Screen
+      name="Restaurant"
+      component={Restaurant}
+      options={({ navigation }) => ({
+        title: "음식 카테고리 선택",
+        headerTitleAlign: "center",
+        headerRight: () => (
+          <CartLink onPress={() => navigation.navigate("Cart")} />
+        ),
+      })}
+    />
+    <LoggedInNavigation.Screen
+      name="Menu"
+      component={Menu}
+      options={({ navigation }) => ({
+        headerTitleAlign: "center",
+        headerRight: () => (
+          <CartLink onPress={() => navigation.navigate("Cart")} />
+        ),
+      })}
+    />
+
+    <LoggedInNavigation.Screen
+      name="UserReviews"
+      component={UserReviews}
+      options={{
+        title: "유저리뷰",
+        headerTitleAlign: "center",
+      }}
+    />
+
+    <LoggedInNavigation.Screen
+      name="WriteUserReview"
+      component={WriteUserReview}
+      options={{
+        title: "유저리뷰작성",
+        headerTitleAlign: "center",
+      }}
+    />
+
+    <LoggedInNavigation.Screen
+      name="Confirm"
+      component={Confirm}
+      options={{ title: "최종확인", headerTitleAlign: "center" }}
+    />
+
+    <LoggedInNavigation.Screen
+      name="Payment"
+      component={Payment}
+      options={{ title: "결제창", headerTitleAlign: "center" }}
+    />
+
+    <LoggedInNavigation.Screen
+      name="Kakaopay"
+      component={Kakaopay}
+      options={{ title: "카카오페이", headerTitleAlign: "center" }}
+    />
+  </LoggedInNavigation.Navigator>
+);
