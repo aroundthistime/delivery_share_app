@@ -1,7 +1,9 @@
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
+import { FontAwesome } from '@expo/vector-icons';
 import styled from "styled-components";
-import { translateStars } from "../utils";
+import styles from "../styles";
+import RateStars from "./RateStars";
 
 /**
  * TODO *
@@ -16,9 +18,8 @@ const CallListBar = ({ userId, userImg, stars, content }) => {
       <View style={{ flex: 1, marginLeft: 15 }}>
         <UserNickname>
           <Text style={{ color: "#3f3f3f", fontWeight: "bold" }}>{userId}</Text>
-          <Text>{translateStars(stars)}</Text>
+          <RateStars rate={stars} />
         </UserNickname>
-
         <Text>{content}</Text>
       </View>
     </MenuContainer>

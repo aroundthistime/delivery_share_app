@@ -38,14 +38,14 @@ export default ({ leftOnPress, rightOnPress, leftText, rightText }) => (
             }}
             activeOpacity={0.4}
         >
-            <Text style={{ fontSize: 16, color: styles.themeColor, fontWeight: "600" }}>{leftText}</Text>
+            <Text style={{ fontSize: 16, color: styles.themeColor, fontWeight: "bold" }}>{leftText}</Text>
         </CartBtnContainer>
         <CartBtnContainer
             onPress={rightOnPress}
             style={{ backgroundColor: styles.themeColor }}
             activeOpacity={0.4}
         >
-            <Text style={{ fontSize: 16, color: "white", fontWeight: "600" }}>{rightText}</Text>
+            <Text style={{ fontSize: 16, color: "white", fontWeight: "bold" }}>{rightText}</Text>
         </CartBtnContainer>
     </CartBtns>
 )

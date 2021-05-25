@@ -23,7 +23,7 @@ const RestaurantRow = styled.TouchableOpacity`
 
 const RestaurantName = styled.Text`
     font-size : 20;
-    font-weight : 600;
+    font-weight : bold;
 `
 
 const CartMenu = styled.View`
@@ -101,7 +101,7 @@ export default ({ navigation }) => {
                         {cart.menus.map(menu => (
                             <CartMenu>
                                 <MenuHeader>
-                                    <Text style={{ fontSize: 16, fontWeight: "600" }}>{menu.name}</Text>
+                                    <Text style={{ fontSize: 16, fontWeight: "bold" }}>{menu.name}</Text>
                                     <DeleteBtn onPress={() => deleteMenu(menu)} />
                                 </MenuHeader>
                                 <MenuOptions>
@@ -114,7 +114,7 @@ export default ({ navigation }) => {
                                     ))}
                                 </MenuOptions>
                                 <MenuFooter>
-                                    <Text style={{ fontWeight: "600", fontSize: 15.5 }}>{menu.price}원</Text>
+                                    <Text style={{ fontWeight: "bold", fontSize: 15.5 }}>{menu.price}원</Text>
                                     <MenuCountController
                                         onDecrease={() => {
                                             if (menu.count > 1) {
@@ -129,10 +129,10 @@ export default ({ navigation }) => {
                         ))}
                         <CartMenu>
                             <MenuHeader>
-                                <Text style={{ fontSize: 16, fontWeight: "600" }}>배달팁</Text>
+                                <Text style={{ fontSize: 16, fontWeight: "bold" }}>배달팁</Text>
                             </MenuHeader>
                             <MenuFooter>
-                                <Text style={{ fontWeight: "600", fontSize: 15.5 }}>{cart.restaurant.deliveryTip / 2}원</Text>
+                                <Text style={{ fontWeight: "bold", fontSize: 15.5 }}>{cart.restaurant.deliveryTip / 2}원</Text>
                             </MenuFooter>
                         </CartMenu>
                     </ScrollView>

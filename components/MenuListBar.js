@@ -29,7 +29,7 @@ const MenuInfos = styled.View`
 
 const MenuName = styled.Text`
     font-size : 15;
-    font-weight : 600;
+    font-weight : bold;
     margin-bottom : 2;
 `
 
@@ -54,55 +54,57 @@ const MenuBadgeContainer = styled.Text`
     font-size : 12;
 `
 
-const MenuBadge = ({isBestMenu}) => (
+const MenuBadge = ({ isBestMenu }) => (
     isBestMenu ?
-    (
-        <MenuBadgeContainer
-            style={{
-                backgroundColor : styles.themeColor,
-                ...Platform.select({
-                ios: {
-                    shadowColor: "rgb(50, 50, 50)",
-                    shadowOpacity: 0.5,
-                    shadowRadius: 5,
-                    shadowOffset: {
-                    height: -1,
-                    width: 0,
-                    },
-                },
-                android: {
-                    elevation: 3,
-                },
-            })}}
-        >인기</MenuBadgeContainer>
-    ) : (
-        <MenuBadgeContainer
-            style={{
-                backgroundColor : "gray",
-                ...Platform.select({
-                ios: {
-                    shadowColor: "rgb(50, 50, 50)",
-                    shadowOpacity: 0.5,
-                    shadowRadius: 5,
-                    shadowOffset: {
-                    height: -1,
-                    width: 0,
-                    },
-                },
-                android: {
-                    elevation: 3,
-                },
-            })}}
-        >품절</MenuBadgeContainer>
-    )
+        (
+            <MenuBadgeContainer
+                style={{
+                    backgroundColor: styles.themeColor,
+                    ...Platform.select({
+                        ios: {
+                            shadowColor: "rgb(50, 50, 50)",
+                            shadowOpacity: 0.5,
+                            shadowRadius: 5,
+                            shadowOffset: {
+                                height: -1,
+                                width: 0,
+                            },
+                        },
+                        android: {
+                            elevation: 3,
+                        },
+                    })
+                }}
+            >인기</MenuBadgeContainer>
+        ) : (
+            <MenuBadgeContainer
+                style={{
+                    backgroundColor: "gray",
+                    ...Platform.select({
+                        ios: {
+                            shadowColor: "rgb(50, 50, 50)",
+                            shadowOpacity: 0.5,
+                            shadowRadius: 5,
+                            shadowOffset: {
+                                height: -1,
+                                width: 0,
+                            },
+                        },
+                        android: {
+                            elevation: 3,
+                        },
+                    })
+                }}
+            >품절</MenuBadgeContainer>
+        )
 )
 
-export default ({name, description, thumbnail, isAvailable, price, isBestMenu, onPress}) => (
-    <ListBar onPress={isAvailable ? onPress : ()=>1} activeOpacity={0.3}>
+export default ({ name, description, thumbnail, isAvailable, price, isBestMenu, onPress }) => (
+    <ListBar onPress={isAvailable ? onPress : () => 1} activeOpacity={0.3}>
         {isAvailable ? (
-            <MenuImage source={{uri : thumbnail}}/>
+            <MenuImage source={{ uri: thumbnail }} />
         ) : (
-            <MenuImage source={{uri : thumbnail}} style={{opacity : 0.3}} />
+            <MenuImage source={{ uri: thumbnail }} style={{ opacity: 0.3 }} />
         )}
         <MenuInfos>
             <MenuName numberOfLines={1}>{name}</MenuName>

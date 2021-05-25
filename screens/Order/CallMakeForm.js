@@ -19,7 +19,7 @@ const SectionContainer = styled.View`
 
 const SectionHeader = styled.Text`
     font-size : 18;
-    font-weight : 600;
+    font-weight : bold;
     margin-bottom : 15;
 `
 
@@ -29,30 +29,30 @@ const RequestInputTitle = styled.Text`
     opacity : 0.8;
 `
 
-export default ({navigation, route}) => {
+export default ({ navigation, route }) => {
     const restaurantRequestInput = useInput("", 10);
     const opponentRequestInput = useInput("", 10);
     const timeLimitInput = useNumInput("", CALL_MAX_LIMIT);
     const onSubmit = () => {
-        if (timeLimitInput.value === "" || parseInt(timeLimitInput.value) < CALL_MIN_LIMIT){
+        if (timeLimitInput.value === "" || parseInt(timeLimitInput.value) < CALL_MIN_LIMIT) {
             Alert.alert(`콜 시간제한을 제대로 설정해주세요. (최소5분 ~ 최대${CALL_MAX_LIMIT}분)`)
         } else {
             navigation.navigate("SelectLocation", {
-                timeLimit : parseInt(timeLimitInput.value),
-                restaurantRequest : restaurantRequestInput.value,
-                opponentRequest : opponentRequestInput.value
+                timeLimit: parseInt(timeLimitInput.value),
+                restaurantRequest: restaurantRequestInput.value,
+                opponentRequest: opponentRequestInput.value
             })
         }
     }
     return (
         <View style={{
-            flex : 1,
-            backgroundColor : "white",
-            paddingHorizontal : 15
+            flex: 1,
+            backgroundColor: "white",
+            paddingHorizontal: 15
         }}>
             <SectionContainer>
                 <SectionHeader>요청사항</SectionHeader>
-                <View style={{marginBottom : 10}}>
+                <View style={{ marginBottom: 10 }}>
                     <RequestInputTitle>가게 사장님께</RequestInputTitle>
                     <RequestInput
                         {...restaurantRequestInput}
@@ -61,7 +61,7 @@ export default ({navigation, route}) => {
                         multiline
                     />
                 </View>
-                <View style={{marginBottom : 10}}>
+                <View style={{ marginBottom: 10 }}>
                     <RequestInputTitle>매칭 상대에게</RequestInputTitle>
                     <RequestInput
                         {...opponentRequestInput}
@@ -72,15 +72,15 @@ export default ({navigation, route}) => {
                 </View>
             </SectionContainer>
             <SectionContainer style={{
-                flexDirection : "row",
-                justifyContent : "space-between",
-                alignItems : "center"
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center"
             }}>
                 <SectionHeader>{`콜 시간제한 (최대 ${CALL_MAX_LIMIT}분)`}</SectionHeader>
-                <View  style={{
-                    flexDirection : "row",
-                    justifyContent : "space-between",
-                    alignItems : "center"
+                <View style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center"
                 }}>
                     <NumInput
                         {...timeLimitInput}
@@ -88,10 +88,10 @@ export default ({navigation, route}) => {
                         textAlign={"right"}
                         placeholder={"예)20"}
                     />
-                    <Text style={{marginLeft : 5, fontSize : 15}}>분</Text>
+                    <Text style={{ marginLeft: 5, fontSize: 15 }}>분</Text>
                 </View>
             </SectionContainer>
-            <FooterBtn text="수령장소 선택하기" onPress={onSubmit} needStyle/>
+            <FooterBtn text="수령장소 선택하기" onPress={onSubmit} needStyle />
         </View>
     )
 }

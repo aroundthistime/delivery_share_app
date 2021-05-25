@@ -40,7 +40,7 @@ const SectionHeader = styled.View`
 `
 const SectionTitle = styled.Text`
     font-size : 17.5;
-    font-weight : 600;
+    font-weight : bold;
 `
 
 const HistoryClearBtn = styled.TouchableOpacity`

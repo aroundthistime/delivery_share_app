@@ -9,6 +9,7 @@ import {
   Divider,
   InputContainer,
   MenuContainer,
+  TextContainer,
   TextInputBox,
   TextTitle,
 } from "./styled";
@@ -29,11 +30,11 @@ import ContainerWrapper from "../../components/ContainerWrapper";
 
 export default ({ navigation, route }) => {
   const {
-    params: { image, brandName, userId, menus, dist },
+    params: { image, brandName, userId, menus, dist, requestToRestaurant, requestToUser },
   } = route;
 
-  const [requestForStore, setRequestForStore] = useState("");
-  const [requestForDelivery, setRequestForDelivery] = useState("");
+  // const [requestForStore, setRequestForStore] = useState("");
+  // const [requestForDelivery, setRequestForDelivery] = useState("");
 
   const getAmountOfMenus = () => {
     return splitNumberPerThousand(
@@ -80,7 +81,7 @@ export default ({ navigation, route }) => {
 
         <NavigationButton
           navigation={navigation}
-          params={["Restaurant", { category: "떡볶이" }]}
+          params={["Restaurant"]}
           flaticon={{
             type: "Ionicons",
             name: "restaurant-outline",
@@ -106,20 +107,22 @@ export default ({ navigation, route }) => {
 
         <InputContainer>
           <TextTitle>• 가게측 요청사항</TextTitle>
-          <TextInputBox
+          {/* <TextInputBox
             value={requestForStore}
             onChangeText={(text) => setRequestForStore(text)}
             placeholder="가게측 요청사항이 있다면 적어주세요."
-          ></TextInputBox>
+          ></TextInputBox> */}
+          <TextContainer>{requestToRestaurant ? requestToRestaurant : "없음"}</TextContainer>
         </InputContainer>
 
         <InputContainer>
-          <TextTitle>• 배달측 요청사항</TextTitle>
-          <TextInputBox
+          <TextTitle>• 매칭용 요청사항</TextTitle>
+          <TextContainer>{requestToUser ? requestToUser : "없음"}</TextContainer>
+          {/* <TextInputBox
             value={requestForDelivery}
             onChangeText={(text) => setRequestForDelivery(text)}
             placeholder="배달측 요청사항이 있다면 적어주세요."
-          ></TextInputBox>
+          ></TextInputBox> */}
         </InputContainer>
       </ContainerWrapper>
 
@@ -129,13 +132,15 @@ export default ({ navigation, route }) => {
         params={[
           "Confirm",
           {
-            requestForStore,
-            requestForDelivery,
+            // requestForStore,
+            // requestForDelivery,
+            requestToRestaurant,
+            requestToUser,
             menus,
             userId,
           },
         ]}
-        text="주 문 진 행"
+        text="메뉴 추가"
       />
     </ScrollView>
   );

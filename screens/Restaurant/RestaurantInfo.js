@@ -15,7 +15,7 @@ const Section = styled.View`
 `
 
 const SectionTitle = styled.Text`
-    font-weight : 600;
+    font-weight : bold;
     font-size : 17;
     margin-bottom : 10;
 `

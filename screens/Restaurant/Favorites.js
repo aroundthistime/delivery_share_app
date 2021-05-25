@@ -19,7 +19,7 @@ const FavoritesCount = styled.Text`
     padding-left : 15;
     padding-top : 10;
     padding-bottom : 10;
-    font-weight : 600;
+    font-weight : bold;
     background-color : white;
 `
 

@@ -11,9 +11,11 @@ const dummyCallsData = [
     menus: [
       { id: "#&112233", name: "아이스 아메리카노", price: 25000 },
       { id: "#&342233", name: "핫 아메리카노", price: 10000 },
-      { id: "#&534633", name: "바닐라 아메리카노", price: 6000 },
+      { id: "#&534633", name: "바닐라 아메리카노", price: 600 },
     ],
     dist: 10,
+    requestToRestaurant: "",
+    requestToUser: "저는 반찬 필요 없어요"
   },
   {
     image:
@@ -22,31 +24,37 @@ const dummyCallsData = [
     brandName: "커피빈",
     menus: [
       { id: "#&534633", name: "핫 아메리카노", price: 10000 },
-      { id: "#&534643", name: "바닐라 아메리카노", price: 6000 },
+      { id: "#&534643", name: "바닐라 아메리카노", price: 600 },
     ],
     dist: 20,
+    requestToRestaurant: "",
+    requestToUser: "저는 반찬 필요 없어요"
   },
   {
     image:
-      "https://user-images.githubusercontent.com/48883344/116443345-854a6600-a88e-11eb-9684-4ef24d1ed275.PNG",
+      "https://user-images.githubusercontent.com/48883344/116443345-854a6bold-a88e-11eb-9684-4ef24d1ed275.PNG",
     userId: "검은튤립",
     brandName: "앤젤인어스",
     menus: [
-      { id: "#&534633", name: "바닐라 아메리카노", price: 6000 },
+      { id: "#&534633", name: "바닐라 아메리카노", price: 600 },
       { id: "#&134633", name: "수박 아메리카노", price: 4500 },
     ],
     dist: 30,
+    requestToRestaurant: "",
+    requestToUser: "저는 반찬 필요 없어요"
   },
   {
     image:
-      "https://user-images.githubusercontent.com/48883344/116443349-854a6600-a88e-11eb-87e0-36f0404304e6.PNG",
+      "https://user-images.githubusercontent.com/48883344/116443349-854a6bold-a88e-11eb-87e0-36f0404304e6.PNG",
     userId: "빨강수선화",
     brandName: "탐앤탐스",
     menus: [
       { id: "#&534633", name: "수박 아메리카노", price: 4500 },
-      { id: "#&15533", name: "바닐라 아메리카노", price: 6000 },
+      { id: "#&15533", name: "바닐라 아메리카노", price: 600 },
     ],
     dist: 40,
+    requestToRestaurant: "",
+    requestToUser: "저는 반찬 필요 없어요"
   },
   {
     image:
@@ -58,6 +66,8 @@ const dummyCallsData = [
       { id: "#&543633", name: "수박 아메리카노", price: 4500 },
     ],
     dist: 50,
+    requestToRestaurant: "",
+    requestToUser: "저는 반찬 필요 없어요"
   },
   {
     image:
@@ -69,6 +79,8 @@ const dummyCallsData = [
       { id: "#&53113", name: "버섯 아메리카노", price: 4500 },
     ],
     dist: 60,
+    requestToRestaurant: "",
+    requestToUser: "저는 반찬 필요 없어요"
   },
   {
     image:
@@ -77,6 +89,8 @@ const dummyCallsData = [
     brandName: "이디야",
     menus: [{ id: "#534633", name: "버섯 아메리카노", price: 4500 }],
     dist: 70,
+    requestToRestaurant: "",
+    requestToUser: "저는 반찬 필요 없어요"
   },
   {
     image:
@@ -88,6 +102,8 @@ const dummyCallsData = [
       { id: "#&542333", name: "버섯 아메리카노", price: 4500 },
     ],
     dist: 80,
+    requestToRestaurant: "",
+    requestToUser: "저는 반찬 필요 없어요"
   },
   {
     image:
@@ -99,6 +115,8 @@ const dummyCallsData = [
       { id: "#&124633", name: "버섯 아메리카노", price: 4500 },
     ],
     dist: 90,
+    requestToRestaurant: "",
+    requestToUser: "저는 반찬 필요 없어요"
   },
 ];
 

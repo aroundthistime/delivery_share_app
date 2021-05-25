@@ -25,6 +25,7 @@ import WriteUserReview from "../screens/Review/User/WriteUserReview";
 import Confirm from "../screens/Payment/Confirm";
 import Payment from "../screens/Payment/Payment";
 import Kakaopay from "../screens/Payment/Kakaopay";
+import WriteRestaurantReview from "../screens/Review/Restaurant/WriteRestaurantReview";
 
 const LinksContainer = styled.View`
     flex-direction : row;
@@ -41,12 +42,6 @@ const CartLink = ({ onPress }) => (
     <Ionicons name="cart" size={28} color="black" />
   </TouchableOpacity>
 )
-
-const CartLink = ({ onPress }) => (
-  <TouchableOpacity onPress={onPress} style={{ marginRight: 10 }}>
-    <Ionicons name="cart" size={28} color="black" />
-  </TouchableOpacity>
-);
 
 const ShowModalsLink = ({ onPress }) => (
   <HeaderRightContainer onPress={onPress}>
@@ -98,6 +93,10 @@ export default ({ navigation, route }) => {
       <LoggedInNavigation.Screen
         name="Call"
         component={Call}
+        options={{
+          title: "콜 확인하기",
+          headerTitleAlign: "center"
+        }}
       />
       <LoggedInNavigation.Screen
         name="Chat"
@@ -201,121 +200,48 @@ export default ({ navigation, route }) => {
           headerShown: false
         }}
       />
+      <LoggedInNavigation.Screen
+        name="UserReviews"
+        component={UserReviews}
+        options={{
+          title: "유저리뷰",
+          headerTitleAlign: "center",
+        }}
+      />
+
+      <LoggedInNavigation.Screen
+        name="WriteUserReview"
+        component={WriteUserReview}
+        options={{
+          title: "유저리뷰작성",
+          headerTitleAlign: "center",
+        }}
+      />
+      <LoggedInNavigation.Screen
+        name="WriteRestaurantReview"
+        component={WriteRestaurantReview}
+        options={{
+          title: "식당리뷰작성",
+          headerTitleAlign: "center",
+        }}
+      />
+      <LoggedInNavigation.Screen
+        name="Confirm"
+        component={Confirm}
+        options={{ title: "최종확인", headerTitleAlign: "center" }}
+      />
+
+      <LoggedInNavigation.Screen
+        name="Payment"
+        component={Payment}
+        options={{ title: "결제창", headerTitleAlign: "center" }}
+      />
+
+      <LoggedInNavigation.Screen
+        name="Kakaopay"
+        component={Kakaopay}
+        options={{ title: "카카오페이", headerTitleAlign: "center" }}
+      />
     </LoggedInNavigation.Navigator>
   )
 }
-export default ({ navigation, route }) => (
-  <LoggedInNavigation.Navigator initialRouteName="TabNavigation">
-    <LoggedInNavigation.Screen
-      name="TabNavigation"
-      component={TabNavigation}
-      options={{
-        headerShown: false,
-      }}
-    />
-    <LoggedInNavigation.Screen
-      name="Calls"
-      component={Calls}
-      options={{
-        title: "주변 콜 찾기",
-        headerTitleAlign: "center",
-      }}
-    />
-    <LoggedInNavigation.Screen name="Call" component={Call} />
-    <LoggedInNavigation.Screen name="Chat" component={Chat} />
-    <LoggedInNavigation.Screen
-      name="Cart"
-      component={Cart}
-      options={{
-        title: "장바구니",
-        headerTitleAlign: "center",
-      }}
-    />
-    <LoggedInNavigation.Screen
-      name="Categories"
-      component={Categories}
-      options={({ navigation }) => ({
-        title: "음식 카테고리 선택",
-        headerTitleAlign: "center",
-        headerRight: () => (
-          <CartLink onPress={() => navigation.navigate("Cart")} />
-        ),
-      })}
-    />
-    <LoggedInNavigation.Screen
-      name="Order"
-      component={Order}
-      options={{
-        title: "주문내역",
-        headerTitleAlign: "center",
-      }}
-    />
-    <LoggedInNavigation.Screen
-      name="Restaurants"
-      component={Restaurants}
-      options={({ navigation }) => ({
-        headerTitleAlign: "center",
-        headerRight: () => (
-          <CartLink onPress={() => navigation.navigate("Cart")} />
-        ),
-      })}
-    />
-    <LoggedInNavigation.Screen
-      name="Restaurant"
-      component={Restaurant}
-      options={({ navigation }) => ({
-        title: "음식 카테고리 선택",
-        headerTitleAlign: "center",
-        headerRight: () => (
-          <CartLink onPress={() => navigation.navigate("Cart")} />
-        ),
-      })}
-    />
-    <LoggedInNavigation.Screen
-      name="Menu"
-      component={Menu}
-      options={({ navigation }) => ({
-        headerTitleAlign: "center",
-        headerRight: () => (
-          <CartLink onPress={() => navigation.navigate("Cart")} />
-        ),
-      })}
-    />
-
-    <LoggedInNavigation.Screen
-      name="UserReviews"
-      component={UserReviews}
-      options={{
-        title: "유저리뷰",
-        headerTitleAlign: "center",
-      }}
-    />
-
-    <LoggedInNavigation.Screen
-      name="WriteUserReview"
-      component={WriteUserReview}
-      options={{
-        title: "유저리뷰작성",
-        headerTitleAlign: "center",
-      }}
-    />
-
-    <LoggedInNavigation.Screen
-      name="Confirm"
-      component={Confirm}
-      options={{ title: "최종확인", headerTitleAlign: "center" }}
-    />
-
-    <LoggedInNavigation.Screen
-      name="Payment"
-      component={Payment}
-      options={{ title: "결제창", headerTitleAlign: "center" }}
-    />
-
-    <LoggedInNavigation.Screen
-      name="Kakaopay"
-      component={Kakaopay}
-      options={{ title: "카카오페이", headerTitleAlign: "center" }}
-    />
-  </LoggedInNavigation.Navigator>
-);

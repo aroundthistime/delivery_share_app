@@ -85,7 +85,7 @@ const RateDetail = ({ point, count, total }) => (
 
 const SortingMethod = ({ text, isSelected, onPress }) => (
     <TouchableOpacity onPress={onPress} activeOpacity={0.7}>
-        <Text style={{ opacity: isSelected ? 1 : 0.45, marginLeft: 15, fontWeight: "600" }}>{text}</Text>
+        <Text style={{ opacity: isSelected ? 1 : 0.45, marginLeft: 15, fontWeight: "bold" }}>{text}</Text>
     </TouchableOpacity>
 )
 
@@ -106,7 +106,7 @@ const ReviewUserImage = ({ uri, onPress }) => (
 
 const ReviewUserName = ({ onPress, name }) => (
     <TouchableOpacity onPress={onPress}>
-        <Text style={{ fontSize: 15.5, fontWeight: "600", marginRight: 5 }}>{name}</Text>
+        <Text style={{ fontSize: 15.5, fontWeight: "bold", marginRight: 5 }}>{name}</Text>
     </TouchableOpacity>
 )
 
@@ -114,18 +114,6 @@ const ReviewDate = styled.Text`
     opacity : 0.45;
     font-size : 12.5;
 `
-
-const ReviewStars = ({ rate }) => (
-    <View style={{ flexDirection: "row" }}>
-        {[1, 2, 3, 4, 5].map(n =>
-            rate >= n ? (
-                <FontAwesome name="star" size={13} color={styles.yellowColor} />
-            ) : (
-                <FontAwesome name="star-o" size={13} color={styles.yellowColor} />
-            )
-        )}
-    </View>
-)
 
 const ReviewReply = styled.View`
     margin-top : 25;
@@ -195,7 +183,7 @@ export default ({ navigation }) => {
                         <ReviewUserName name={review.user.username} onPress={() => 1} />
                         <ReviewDate>{formatDateYYMMDD(review.createdAt)}</ReviewDate>
                     </View>
-                    <ReviewStars rate={review.rate} />
+                    <RateStars rate={review.rate} />
                 </View>
             </ReviewHeader>
             {review.images.length && (
@@ -208,7 +196,7 @@ export default ({ navigation }) => {
                 <ReviewReply>
                     <SpeechBubbleEdge />
                     <ReplyText>
-                        <Text style={{ fontSize: 15.2, fontWeight: "600", marginBottom: 10 }}>사장님 댓글</Text>
+                        <Text style={{ fontSize: 15.2, fontWeight: "bold", marginBottom: 10 }}>사장님 댓글</Text>
                         <Text>{review.reply.content}</Text>
                     </ReplyText>
                 </ReviewReply>

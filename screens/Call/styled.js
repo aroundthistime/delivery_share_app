@@ -2,6 +2,8 @@ import styled from "styled-components";
 
 export const ButtonContainer = styled.View`
   margin-top: 30px;
+  padding-left : 5;
+  padding-right : 5;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -35,3 +37,11 @@ export const TextTitle = styled.Text`
   font-weight: bold;
   margin-bottom: 15px;
 `;
+
+export const TextContainer = styled.Text`
+  border-color: #ededed;
+  border-bottom-width: 1px;
+  padding-left : 10;
+  padding-right : 10;
+  padding-bottom : 10;
+`

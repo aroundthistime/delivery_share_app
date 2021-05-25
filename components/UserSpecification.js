@@ -1,6 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import { Text, View } from "react-native";
+import { FontAwesome } from '@expo/vector-icons';
+import styles from "../styles";
 
 /**
  * TODO *
@@ -21,7 +23,8 @@ const UserSpecification = ({ userId }) => {
         <Text style={{ marginBottom: 10, fontWeight: "bold", fontSize: 18 }}>
           {userId}
         </Text>
-        <Text>유저평점: ⭐⭐⭐⭐</Text>
+        {/* <Text>유저평점: ⭐⭐⭐⭐</Text> */}
+        <Text style={{ textAlignVertical: "center" }}>유저평점 : <FontAwesome name="star" size={13.5} color={styles.yellowColor} /> 3.6</Text>
       </View>
     </UserSpecs>
   );

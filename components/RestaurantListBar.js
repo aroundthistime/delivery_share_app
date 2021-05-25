@@ -31,7 +31,7 @@ const RestaurantInfos = styled.View`
 
 const RestaurantName = styled.Text`
     font-size : 15;
-    font-weight : 600;
+    font-weight : bold;
     width : ${constants.width - 55 - constants.restaurantImageSize};
 `
 
@@ -44,7 +44,7 @@ const RestaurantRate = ({ rate, reviewCounts }) => (
     <View style={{ flexDirection: "row", alignItems: "center" }}>
         <FontAwesome name="star" size={11.5} color={styles.yellowColor} />
         {/* <Ionicons name="md-star" size={16} color={styles.yellowColor} /> */}
-        <Text style={{ marginLeft: 5, fontSize: 12 }}><Text style={{ fontWeight: "600" }}>{rate}</Text> ({reviewCounts})</Text>
+        <Text style={{ marginLeft: 5, fontSize: 12 }}><Text style={{ fontWeight: "bold" }}>{rate}</Text> ({reviewCounts})</Text>
     </View>
 )
 

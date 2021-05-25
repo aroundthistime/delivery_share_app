@@ -26,12 +26,12 @@ const Btn = styled.TouchableOpacity`
 const BtnText = styled.Text`
     color : #fcfcfc;
     font-size : 16;
-    font-weight : 600;
+    font-weight : bold;
 `
 
-export default ({text, onPress, header, needStyle=false}) => 
+export default ({ text, onPress, header, needStyle = false }) =>
     needStyle ? (
-        <BtnContainer style={{position : "absolute", bottom : 0, left : 0}}>
+        <BtnContainer style={{ position: "absolute", bottom: 0, left: 0 }}>
             {header && header}
             <Btn onPress={onPress} activeOpacity={0.5}>
                 <BtnText>{text}</BtnText>

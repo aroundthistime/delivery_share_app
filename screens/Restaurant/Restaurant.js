@@ -36,7 +36,7 @@ const RestaurantBrief = styled.View`
 
 const RestaruantName = styled.Text`
     font-size : 23;
-    font-weight : 600;
+    font-weight : bold;
 `
 
 const RestaurantRate = ({ rate }) => (
@@ -63,7 +63,7 @@ const RestaurantLikes = ({ likeCount, isLiked, onPress }) => (
 const RestaurantInfoColumn = styled.View`
     flex-direction : row;
     margin-bottom : 2;
-    font-weight : 600;
+    font-weight : bold;
 `
 
 const RestaurantInfoColumnTitle = styled.Text`
@@ -72,7 +72,7 @@ const RestaurantInfoColumnTitle = styled.Text`
 
 export default ({ navigation, route }) => {
     const {
-        params: { category: id }
+        params: { id }
     } = route;
     const [isLikedState, setIsLikedState] = useState(false);
     const [likeCountState, setLikeCountState] = useState(0);

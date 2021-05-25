@@ -40,7 +40,7 @@ const MenuBrief = styled.View`
 
 const MenuName = styled.Text`
     font-size : 23;
-    font-weight : 600;
+    font-weight : bold;
     margin-bottom : 5;
 `
 
@@ -70,7 +70,7 @@ const Option = styled.View`
 
 const OptionTitle = styled.Text`
     font-size : 18;
-    font-weight : 600;
+    font-weight : bold;
     margin-bottom : 5;
 `
 
@@ -109,13 +109,13 @@ const OptionBtnMultipleContainer = styled.View`
     margin-right : 5;
 `
 
-const OptionBtnMultiple = ({isSelected}) => (
+const OptionBtnMultiple = ({ isSelected }) => (
     isSelected ? (
-        <OptionBtnMultipleContainer style={{backgroundColor : styles.themeColor}}>
+        <OptionBtnMultipleContainer style={{ backgroundColor: styles.themeColor }}>
             <FontAwesome5 name="check" size={14} color="white" />
         </OptionBtnMultipleContainer>
     ) : (
-        <OptionBtnMultipleContainer style={{backgroundColor : "lightgray"}}>
+        <OptionBtnMultipleContainer style={{ backgroundColor: "lightgray" }}>
             <FontAwesome5 name="check" size={14} color="white" />
         </OptionBtnMultipleContainer>
     )
@@ -138,28 +138,28 @@ const OptionBtnSingleDot = styled.View`
     borderRadius : ${OPTION_BTN_SIZE / 4};
 `
 
-const OptionBtnSingle = ({isSelected}) => (
+const OptionBtnSingle = ({ isSelected }) => (
     isSelected ? (
         <OptionBtnSingleContainer>
             <OptionBtnSingleDot style={{
-                backgroundColor : styles.themeColor
-            }}/>
+                backgroundColor: styles.themeColor
+            }} />
         </OptionBtnSingleContainer>
     ) : (
         <OptionBtnSingleContainer>
-            <OptionBtnSingleDot  style={{
-            backgroundColor : "#c1bdbd"
-        }}/>
+            <OptionBtnSingleDot style={{
+                backgroundColor: "#c1bdbd"
+            }} />
         </OptionBtnSingleContainer>
     )
 )
 
-const OptionItem = ({isMultiple, isSelected, onPress, content, price=0}) => {
+const OptionItem = ({ isMultiple, isSelected, onPress, content, price = 0 }) => {
     if (isMultiple) {
-        if (isSelected){
+        if (isSelected) {
             return (
                 <OptionItemContainer activeOpacity={1} onPress={onPress}>
-                    <OptionBtnMultiple isSelected={true}/>
+                    <OptionBtnMultiple isSelected={true} />
                     <OptionItemContent>{content}</OptionItemContent>
                     <OptionItemPrice>+ {price}원</OptionItemPrice>
                 </OptionItemContainer>
@@ -167,25 +167,25 @@ const OptionItem = ({isMultiple, isSelected, onPress, content, price=0}) => {
         } else {
             return (
                 <OptionItemContainer activeOpacity={1} onPress={onPress}>
-                    <OptionBtnMultiple isSelected={false}/>
+                    <OptionBtnMultiple isSelected={false} />
                     <OptionItemContent>{content}</OptionItemContent>
                     <OptionItemPrice>+ {price}원</OptionItemPrice>
                 </OptionItemContainer>
             )
         }
     } else {
-        if (isSelected){
+        if (isSelected) {
             return (
                 <OptionItemContainer activeOpacity={1} onPress={onPress}>
-                    <OptionBtnSingle isSelected={true}/>
+                    <OptionBtnSingle isSelected={true} />
                     <OptionItemContent>{content}</OptionItemContent>
                     <OptionItemPrice>+ {price}원</OptionItemPrice>
                 </OptionItemContainer>
             )
-        } else{
+        } else {
             return (
                 <OptionItemContainer activeOpacity={1} onPress={onPress}>
-                    <OptionBtnSingle isSelected={false}/>
+                    <OptionBtnSingle isSelected={false} />
                     <OptionItemContent>{content}</OptionItemContent>
                     <OptionItemPrice>+ {price}원</OptionItemPrice>
                 </OptionItemContainer>
@@ -208,9 +208,9 @@ const CurrentPrice = styled.Text`
     opacity : 0.75;
 `
 
-export default ({navigation, route}) => {
+export default ({ navigation, route }) => {
     const {
-        params : {menuId, restaurant}
+        params: { menuId, restaurant }
     } = route;
     const [menu, setMenu] = useState({});
     const [loading, setLoading] = useState(true);
@@ -227,41 +227,41 @@ export default ({navigation, route}) => {
     // }
     // const requiredOptions = menu.options.filter(option => option.isRequired);
     const menuData = {
-        name : "로제떡볶이",
-        id : 2,
-        thumbnail : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSigAD5XWPpDiv4k6yVbCLnUEFSD829OgpWng&usqp=CAU",
-        description : "색다른 기분을 위한 로제 떡볶이(1~2인)",
-        price : 12000,
-        isAvailable : true,
-        isBestMenu : false,
-        options : [
+        name: "로제떡볶이",
+        id: 2,
+        thumbnail: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSigAD5XWPpDiv4k6yVbCLnUEFSD829OgpWng&usqp=CAU",
+        description: "색다른 기분을 위한 로제 떡볶이(1~2인)",
+        price: 12000,
+        isAvailable: true,
+        isBestMenu: false,
+        options: [
             {
-                category : "맵기선택",
-                isRequired : true,
-                isMultiple : false,
-                items : [
+                category: "맵기선택",
+                isRequired: true,
+                isMultiple: false,
+                items: [
                     {
-                        content : "0단계",
-                        price : 0
+                        content: "0단계",
+                        price: 0
                     },
                     {
-                        content : "1단계",
-                        price : 1
+                        content: "1단계",
+                        price: 1
                     }
                 ]
             },
             {
-                category : "추가토핑",
-                isRequired : false,
-                isMultiple : true,
-                items : [
+                category: "추가토핑",
+                isRequired: false,
+                isMultiple: true,
+                items: [
                     {
-                        content : "베이컨 추가",
-                        price : 1000
+                        content: "베이컨 추가",
+                        price: 1000
                     },
                     {
-                        content : "치즈 추가",
-                        price : 1500
+                        content: "치즈 추가",
+                        price: 1500
                     }
                 ]
             }
@@ -270,67 +270,67 @@ export default ({navigation, route}) => {
     useEffect(() => {
         setMenu({
             ...menuData,
-            count : 1,
-            options : menuData.options.map(option => {
+            count: 1,
+            options: menuData.options.map(option => {
                 return ({
                     ...option,
-                    selected : option.isRequired ? [option.items[0]] : [],
+                    selected: option.isRequired ? [option.items[0]] : [],
                 })
             })
         });
         setLoading(false);
     }, [])
-    navigation.setOptions({title : menu.name});
+    navigation.setOptions({ title: menu.name });
     const toggleOption = (currentOption, currentItem, isMultiple, isSelected) => {
-        if (isMultiple){
-            if (isSelected){
+        if (isMultiple) {
+            if (isSelected) {
                 setMenu({
                     ...menu,
-                    price : menu.price - currentItem.price * menu.count,
-                    options : menu.options.map(option => {
-                        if (option.category === currentOption.category){
+                    price: menu.price - currentItem.price * menu.count,
+                    options: menu.options.map(option => {
+                        if (option.category === currentOption.category) {
                             return {
                                 ...option,
-                                selected : option.selected.filter(item => item.content !== currentItem.content)
+                                selected: option.selected.filter(item => item.content !== currentItem.content)
                             }
-                        } else{
+                        } else {
                             return option
                         }
                     }),
                 })
-            } else{
+            } else {
                 setMenu({
                     ...menu,
-                    price : menu.price + currentItem.price * menu.count,
-                    options : menu.options.map(option => {
-                        if (option.category === currentOption.category){
+                    price: menu.price + currentItem.price * menu.count,
+                    options: menu.options.map(option => {
+                        if (option.category === currentOption.category) {
                             return {
                                 ...option,
-                                selected : option.selected.concat([currentItem])
+                                selected: option.selected.concat([currentItem])
                             }
-                        } else{
+                        } else {
                             return option
                         }
                     }),
                 })
             }
         } else {
-            if (isSelected){
+            if (isSelected) {
                 return
-            } else{
+            } else {
                 setMenu({
                     ...menu,
-                    options : menu.options.map(option => {
-                        if (option.category === currentOption.category){
+                    options: menu.options.map(option => {
+                        if (option.category === currentOption.category) {
                             return {
                                 ...option,
-                                selected : [currentItem]
+                                selected: [currentItem]
                             }
-                        } else{
+                        } else {
                             return option
                         }
                     }),
-                    price : menu.price + currentItem.price * menu.count - currentOption.selected[0].price * menu.count,
+                    price: menu.price + currentItem.price * menu.count - currentOption.selected[0].price * menu.count,
                 })
             }
         }
@@ -339,8 +339,8 @@ export default ({navigation, route}) => {
     const decreaseCount = () => {
         setMenu({
             ...menu,
-            count : menu.count > 1 ? menu.count - 1 : menu.count,
-            price : menu.count > 1
+            count: menu.count > 1 ? menu.count - 1 : menu.count,
+            price: menu.count > 1
                 ? menu.price * (menu.count - 1) / menu.count
                 : menu.price
         })
@@ -348,29 +348,29 @@ export default ({navigation, route}) => {
     const increaseCount = () => {
         setMenu({
             ...menu,
-            count : menu.count + 1,
-            price : menu.price * (menu.count + 1) / menu.count
+            count: menu.count + 1,
+            price: menu.price * (menu.count + 1) / menu.count
         });
     }
     const extractSelectedMenu = () => {
         return {
-            name : menu.name,
-            id : menu.id,
-            price : menu.price,
-            count : menu.count,
-            options : menu.options.filter(option => option.selected.length > 0).map(option => ({
-                category : option.category,
-                items : [...option.selected].map(item => item.content)
+            name: menu.name,
+            id: menu.id,
+            price: menu.price,
+            count: menu.count,
+            options: menu.options.filter(option => option.selected.length > 0).map(option => ({
+                category: option.category,
+                items: [...option.selected].map(item => item.content)
             }))
         }
     }
     const addSelectedMenuToCart = () => {
         const selectedMenu = extractSelectedMenu();
         const result = addMenuToCart(selectedMenu, restaurant);
-        if (result === 1){
+        if (result === 1) {
             showToast("해당 메뉴가 장바구니에 추가되었습니다", false)
             navigation.pop()
-        } else if (result === 0){
+        } else if (result === 0) {
             showToast("장바구니에 있는 동일 메뉴의 수량을 증가했습니다", false)
             navigation.pop()
         } else {
@@ -379,13 +379,13 @@ export default ({navigation, route}) => {
                 "기존에 담겨있던 메뉴를 삭제하시고 선택하신 메뉴를 추가하시겠습니까?",
                 [
                     {
-                        text : "취소",
-                        onPress : ()=>1,
-                        style : "cancel"
+                        text: "취소",
+                        onPress: () => 1,
+                        style: "cancel"
                     },
                     {
-                        text : "예",
-                        onPress : async() => {
+                        text: "예",
+                        onPress: async () => {
                             await clearCart();
                             addMenuToCart(selectedMenu, restaurant);
                             showToast("해당 메뉴가 장바구니에 추가되었습니다", false)
@@ -403,17 +403,17 @@ export default ({navigation, route}) => {
             <ViewContainer>
                 <ScrollView
                     showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{flexGrow : 1, alignItems : "center"}}
+                    contentContainerStyle={{ flexGrow: 1, alignItems: "center" }}
                 >
                     <MenuBrief>
-                        <MenuImage source={{uri : menu.thumbnail}}/>
+                        <MenuImage source={{ uri: menu.thumbnail }} />
                         <MenuName>{menu.name}</MenuName>
                         <MenuDescription>{menu.description}</MenuDescription>
                     </MenuBrief>
                     <OptionsList>
                         {menu.options.map((option, index) => {
                             return (
-                                <Option style={{borderBottomWidth : index === menu.options.length - 1 ? 0 : styles.grayBorderWidth}}>
+                                <Option style={{ borderBottomWidth: index === menu.options.length - 1 ? 0 : styles.grayBorderWidth }}>
                                     <OptionTitle>{option.category}</OptionTitle>
                                     <OptionItems>
                                         {option.items.map((item) => {
@@ -422,7 +422,7 @@ export default ({navigation, route}) => {
                                                 <OptionItem
                                                     isMultiple={option.isMultiple}
                                                     isSelected={isSelected}
-                                                    onPress={()=>toggleOption(option, item, option.isMultiple, isSelected)}
+                                                    onPress={() => toggleOption(option, item, option.isMultiple, isSelected)}
                                                     {...item}
                                                 />
                                             )
@@ -442,7 +442,7 @@ export default ({navigation, route}) => {
                         />
                         <CurrentPrice>{menu.price} 원</CurrentPrice>
                     </AddBtnHeader>
-                )}/>
+                )} />
             </ViewContainer>
         )
     )
