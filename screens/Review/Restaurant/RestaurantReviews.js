@@ -7,6 +7,7 @@ import { useRestaurant } from "../../../Contexts/RestaurantContext";
 import styles from "../../../styles";
 import { formatDateYYMMDD } from "../../../utils";
 import ImageSlider from "../../../components/ImageSlider";
+import RateStars from "../../../components/RateStars";
 
 const RATE_DETAIL_BAR_HEIGHT = 5;
 

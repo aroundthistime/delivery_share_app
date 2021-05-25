@@ -23,7 +23,7 @@ export default ({ rate, size = 13, width }) => (
                 })}
             </View>
         ) : (
-            <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+            <View style={{ flexDirection: "row" }}>
                 {[1, 2, 3, 4, 5].map(n => {
                     // rate >= n ? (
                     //     <FontAwesome name="star" size={13} color={styles.yellowColor} />
