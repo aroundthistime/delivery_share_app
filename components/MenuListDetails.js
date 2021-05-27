@@ -6,7 +6,7 @@ export const MenuListWithName = ({ menus }) => {
   return (
     <>
       {menus.length &&
-        menus.map((menu) => <Text key={menu.id}>- {menu.name}</Text>)}
+        menus.map((menu) => <Text style={{ marginBottom: 2 }} key={menu.id}>- {menu.name}</Text>)}
     </>
   );
 };

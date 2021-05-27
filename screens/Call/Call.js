@@ -81,7 +81,7 @@ export default ({ navigation, route }) => {
 
         <NavigationButton
           navigation={navigation}
-          params={["Restaurant"]}
+          params={["Restaurant", { id: 1 }]}
           flaticon={{
             type: "Ionicons",
             name: "restaurant-outline",
