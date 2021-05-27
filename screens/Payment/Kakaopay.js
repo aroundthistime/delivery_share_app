@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Text, View } from "react-native";
 import styled from "styled-components";
 
@@ -6,12 +6,36 @@ import styled from "styled-components";
  * TODO *
  * 1. 결제완료 시 유저 결제여부 값 DB에 true로 반영
  * 2. 반영된 값을 넘겨주어 결제 대기창에서 로딩 적용 및 해제 판단해야함
+ * 3. 결제 완료 시 내 카카오페이 완료 여부 DB에 반영
  */
 
 const Kakaopay = ({ navigation, route }) => {
   const {
     params: { requestForStore, requestForDelivery, menus, userId },
   } = route;
+  const [modalState, setModalState] = useState(false);
+  const [isPayCompleted, setIsPayCompleted] = useState(false);
+
+  const handlePress = () => {
+    setModalState(true);
+    updateMyPayStatus();
+    setTimeout(() => {
+      navigation.navigate("Payment", {
+        requestForStore,
+        requestForDelivery,
+        menus,
+        userId,
+      });
+      setModalState(false);
+    }, 2000);
+  };
+
+  const updateMyPayStatus = () => {
+    setIsPayCompleted(true);
+
+    // some graphQL request to server
+    // update my kakaopay status
+  };
 
   return (
     <View style={{ height: "100%", backgroundColor: "#fff" }}>
@@ -25,23 +49,13 @@ const Kakaopay = ({ navigation, route }) => {
           <Text style={{ fontWeight: "bold" }}>결제 완료</Text> 버튼을
           눌러주세요.
         </KakaopayText>
-        <Text style={{ color: "#ff9100", fontSize: 12 }}>
+        <Text style={{ color: "#ff9100", fontSize: 12, marginTop: 6 }}>
           최신 버전의 카카오톡이 필요합니다.
         </Text>
       </KakaopayContent>
 
       <KakaopayButtons>
-        <KakaoButton
-          background="#fdd835"
-          onPress={() =>
-            navigation.navigate("Payment", {
-              requestForStore,
-              requestForDelivery,
-              menus,
-              userId,
-            })
-          }
-        >
+        <KakaoButton background="#fdd835" onPress={handlePress}>
           <KakaoComplete>결제완료</KakaoComplete>
         </KakaoButton>
         <KakaoButton>
@@ -54,11 +68,32 @@ const Kakaopay = ({ navigation, route }) => {
           카카오페이가 실행되지 않거나 창을 닫으셨나요?
         </Text>
       </KakaopayNotice>
+
+      {modalState && (
+        <ScreenLoader>
+          <Loading source={require("../../assets/loading.gif")} />
+        </ScreenLoader>
+      )}
     </View>
   );
 };
 
 export default Kakaopay;
+
+const ScreenLoader = styled.View`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0.75;
+  background-color: #000;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Loading = styled.Image`
+  width: 50px;
+  height: 50px;
+`;
 
 const KakaoTitle = styled.View`
   width: 100%;

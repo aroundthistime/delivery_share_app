@@ -16,8 +16,8 @@ import { Divider } from "../Call/styled";
  * 1. component 단위로 modularization (✔)
  * 2. 주문 내역 map 을 통해 list 형태 리턴 (✔)
  * 3. 배달장소 정보 연동 필요
- * 4. 요청사항 메시지 형태 디자인 변경 ?
- * 5. 추가로 필요한 부가 정보 있는지 검토
+ * 4. 요청사항 메시지 형태 디자인 변경 (✔)
+ * 5. 추가로 필요한 부가 정보 있는지 검토 (✔)
  * 6. 결제진행 클릭 시 Kakaopay API 호출 - 백엔드 연동 필요
  */
 
@@ -63,14 +63,12 @@ const Confirm = ({ navigation, route }) => {
           {userId}
           <Text style={{ fontSize: 14, fontWeight: "100" }}>님의 요청</Text>
         </TextTitle>
-        <View>
+        <View style={{ marginBottom: 30 }}>
           <RequestDetails
             requestForStore="뻘라 만들어주세요!!"
             requestForDelivery="조심히 후딱 오셔요!"
           />
         </View>
-
-        <Divider />
 
         <TextTitle
           style={{
@@ -82,8 +80,8 @@ const Confirm = ({ navigation, route }) => {
         </TextTitle>
         <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
           <RequestDetails
-            requestForStore={requestForStore}
-            requestForDelivery={requestForDelivery}
+            requestForStore={requestForStore || "없음"}
+            requestForDelivery={requestForDelivery || "없음"}
             background="#FFB800"
           />
         </View>
@@ -114,7 +112,7 @@ export default Confirm;
 const BillCheck = styled.View`
   background-color: #fff;
   border-radius: 10px;
-  padding: 30px 15px 5px 15px;
+  padding: 30px 25px 5px 25px;
   margin-bottom: 30px;
 `;
 
