@@ -10,6 +10,7 @@ import Heart from "../../components/Heart";
 import RestaurantNavigation from "../../navigators/RestaurantNavigation";
 import { ScrollView } from "react-native-gesture-handler";
 import { RestaurantProvider } from "../../Contexts/RestaurantContext";
+import FooterBtn from "../../components/FooterBtn";
 
 const RESTAURANT_ICON_INFO_SIZE = 17.5;
 
@@ -96,6 +97,7 @@ export default ({ navigation, route }) => {
         rate1Count: 37,
         rate2Count: 4,
         rate3Count: 17,
+        isOpen: false,
         rate4Count: 33,
         rate5Count: 44,
         reviews: [
@@ -315,6 +317,13 @@ export default ({ navigation, route }) => {
                     <RestaurantNavigation />
                 </View>
             </ScrollView>
+            {!restaurant.isOpen && (
+                <FooterBtn
+                    text={"영업 준비중입니다"}
+                    needStyle={true}
+                    isAvailable={false}
+                />
+            )}
         </ViewContainer>
     </RestaurantProvider>
     // return <Loader />

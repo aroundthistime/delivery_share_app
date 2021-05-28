@@ -1,6 +1,5 @@
 import React from "react";
 import { Text, View } from "react-native";
-// import { Ionicons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import styled from "styled-components";
 import constants from "../constants";
@@ -23,6 +22,19 @@ const RestaurantImg = styled.Image`
     height : ${constants.restaurantImageSize};
     border-radius : ${constants.restaurantImageSize / 2};
     margin-right : 15;
+`
+
+const RestaurantClosed = styled.Text`
+    width : ${constants.restaurantImageSize};
+    height : ${constants.restaurantImageSize};
+    border-radius : ${constants.restaurantImageSize / 2};
+    text-align : center;
+    text-align-vertical : center;
+    color : #fcfcfc;
+    background-color : rgba(0, 0, 0, 0.5);
+    position : absolute;
+    top : ${(90 - constants.restaurantImageSize) / 2};
+    left : 20;
 `
 
 const RestaurantInfos = styled.View`
@@ -49,11 +61,12 @@ const RestaurantRate = ({ rate, reviewCounts }) => (
 )
 
 
-const RestaurantBar = ({ thumbnail, name, rate, reviewCounts, popular, minOrder, onPress }) => {
+const RestaurantBar = ({ thumbnail, name, rate, reviewCounts, popular, minOrder, onPress, isOpen }) => {
     return (
         <ListBar onPress={onPress}>
             <RestaurantImg source={{ uri: thumbnail }} />
-            <RestaurantInfos>
+            {!isOpen && <RestaurantClosed>준비중</RestaurantClosed>}
+            <RestaurantInfos style={{ opacity: isOpen ? 1 : 0.45 }}>
                 <RestaurantName numberOfLines={1}>{name}</RestaurantName>
                 <RestaurantRate rate={rate} reviewCounts={formatReviewCounts(reviewCounts)} />
                 <BlurText>최소주문금액 {minOrder}원</BlurText>

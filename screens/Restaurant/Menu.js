@@ -154,21 +154,21 @@ const OptionBtnSingle = ({ isSelected }) => (
     )
 )
 
-const OptionItem = ({ isMultiple, isSelected, onPress, content, price = 0 }) => {
+const OptionItem = ({ isMultiple, isSelected, onPress, content, price = 0, isOpen }) => {
     if (isMultiple) {
         if (isSelected) {
             return (
                 <OptionItemContainer activeOpacity={1} onPress={onPress}>
-                    <OptionBtnMultiple isSelected={true} />
-                    <OptionItemContent>{content}</OptionItemContent>
+                    {isOpen && <OptionBtnMultiple isSelected={true} />}
+                    <OptionItemContent style={{ marginLeft: isOpen ? 0 : -3 }}>{content}</OptionItemContent>
                     <OptionItemPrice>+ {price}원</OptionItemPrice>
                 </OptionItemContainer>
             )
         } else {
             return (
                 <OptionItemContainer activeOpacity={1} onPress={onPress}>
-                    <OptionBtnMultiple isSelected={false} />
-                    <OptionItemContent>{content}</OptionItemContent>
+                    {isOpen && <OptionBtnMultiple isSelected={false} />}
+                    <OptionItemContent style={{ marginLeft: isOpen ? 0 : -3 }}>{content}</OptionItemContent>
                     <OptionItemPrice>+ {price}원</OptionItemPrice>
                 </OptionItemContainer>
             )
@@ -177,16 +177,16 @@ const OptionItem = ({ isMultiple, isSelected, onPress, content, price = 0 }) => 
         if (isSelected) {
             return (
                 <OptionItemContainer activeOpacity={1} onPress={onPress}>
-                    <OptionBtnSingle isSelected={true} />
-                    <OptionItemContent>{content}</OptionItemContent>
+                    {isOpen && <OptionBtnSingle isSelected={true} />}
+                    <OptionItemContent style={{ marginLeft: isOpen ? 0 : -3 }}>{content}</OptionItemContent>
                     <OptionItemPrice>+ {price}원</OptionItemPrice>
                 </OptionItemContainer>
             )
         } else {
             return (
                 <OptionItemContainer activeOpacity={1} onPress={onPress}>
-                    <OptionBtnSingle isSelected={false} />
-                    <OptionItemContent>{content}</OptionItemContent>
+                    {isOpen && <OptionBtnSingle isSelected={false} />}
+                    <OptionItemContent style={{ marginLeft: isOpen ? 0 : -3 }}>{content}</OptionItemContent>
                     <OptionItemPrice>+ {price}원</OptionItemPrice>
                 </OptionItemContainer>
             )
@@ -423,6 +423,7 @@ export default ({ navigation, route }) => {
                                                     isMultiple={option.isMultiple}
                                                     isSelected={isSelected}
                                                     onPress={() => toggleOption(option, item, option.isMultiple, isSelected)}
+                                                    isOpen={restaurant.isOpen}
                                                     {...item}
                                                 />
                                             )
@@ -433,16 +434,18 @@ export default ({ navigation, route }) => {
                         })}
                     </OptionsList>
                 </ScrollView>
-                <FooterBtn text={"장바구니에 담기"} onPress={addSelectedMenuToCart} header={(
-                    <AddBtnHeader>
-                        <MenuCountController
-                            onDecrease={decreaseCount}
-                            onIncrease={increaseCount}
-                            count={menu.count}
-                        />
-                        <CurrentPrice>{menu.price} 원</CurrentPrice>
-                    </AddBtnHeader>
-                )} />
+                {restaurant.isOpen && (
+                    <FooterBtn text={"장바구니에 담기"} onPress={addSelectedMenuToCart} header={(
+                        <AddBtnHeader>
+                            <MenuCountController
+                                onDecrease={decreaseCount}
+                                onIncrease={increaseCount}
+                                count={menu.count}
+                            />
+                            <CurrentPrice>{menu.price} 원</CurrentPrice>
+                        </AddBtnHeader>
+                    )} />
+                )}
             </ViewContainer>
         )
     )

@@ -1,5 +1,5 @@
 import React from "react";
-import { FlatList } from "react-native";
+import { FlatList, View } from "react-native";
 import MenuListBar from "../../components/MenuListBar";
 import { useRestaurant } from "../../Contexts/RestaurantContext";
 
@@ -15,14 +15,22 @@ export default ({ navigation }) => {
           id: restaurant.id,
           name: restaurant.name,
           minOrder: restaurant.minOrder,
-          deliveryTip: restaurant.deliveryTip
+          deliveryTip: restaurant.deliveryTip,
+          isOpen: restaurant.isOpen
         }
       })} />
   )
-  return <FlatList
-    data={menus}
-    renderItem={renderMenuBar}
-    nestedScrollEnabled
-  >
-  </FlatList>
+  return (
+    <>
+      <FlatList
+        data={menus}
+        renderItem={renderMenuBar}
+        nestedScrollEnabled
+      />
+      {!restaurant.isOpen && (
+        <View style={{ marginBottom: 70 }} />
+      )}
+    </>
+  )
+
 }

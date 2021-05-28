@@ -205,7 +205,7 @@ export default ({ navigation }) => {
         </ReviewItem>
     )
     return (
-        <>
+        <View style={{ marginBottom: restaurant.isOpen ? 0 : 45 }}>
             {
                 restaurant.reviews.length > 0 ? (
                     <View>
@@ -241,7 +241,7 @@ export default ({ navigation }) => {
                             <FlatList
                                 data={restaurant.reviews}
                                 renderItem={renderReviewItem}
-                                style={{ paddingVertical: 20 }}
+                                style={{ paddingTop: 20 }}
                             />
                         </Section>
                     </View>
@@ -252,6 +252,6 @@ export default ({ navigation }) => {
                     </NoReview>
                 )
             }
-        </>
+        </View>
     )
 }

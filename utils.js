@@ -95,3 +95,20 @@ export const showToast = (text, isBottom) => {
 
 export const splitNumberPerThousand = (number) =>
     number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+export const extractLocationInfos = (locObj) => {
+    const address = locObj.road_address.address_name;
+    let si;
+    const dong = locObj.address.region_3depth_name;
+    if (locObj.address.region_2depth_name.slice(-1) === "구") {
+        si = locObj.address.region_1depth_name;
+    } else {
+        si = locObj.address.region_1depth_name;
+    }
+    return {
+        address,
+        si,
+        dong
+    }
+    // if (locObj.address.region_1depth_name.slice(-1) === "시")
+}

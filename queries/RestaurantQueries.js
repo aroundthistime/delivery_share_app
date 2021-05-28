@@ -5,9 +5,15 @@ export const GET_RESTAURANTS = gql`
         Restaurant(category: $category, si: $si, dong: $dong){
             name
             rate
-            introduction
-            delivery_tip
             min_order
+            thumbnail
+            seq
+            rate1count
+            rate2count
+            rate3count
+            rate4count
+            rate5count
+            is_open
         }
     }
 `

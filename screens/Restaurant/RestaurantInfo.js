@@ -91,7 +91,7 @@ export default () => {
         ))
     }
     const runTimeList = getFormattedRunTimeList();
-    return <View>
+    return <View style={{ paddingBottom: restaurant.isOpen ? 0 : 45 }}>
         <Section>
             <SectionTitle>가게 소개글</SectionTitle>
             <Text>{restaurant.introduction}</Text>

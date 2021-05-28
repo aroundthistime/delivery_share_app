@@ -5,8 +5,9 @@ import { Alert, FlatList, ScrollView, Text, View } from "react-native";
 import constants from "../../constants";
 import styles from "../../styles";
 import RestaurantListBar from "../../components/RestaurantListBar";
-import { useQuery } from "@apollo/client";
+import { useQuery, useReactiveVar } from "@apollo/client";
 import { GET_RESTAURANTS } from "../../queries/RestaurantQueries";
+import { locationVar } from "../../reactiveVars";
 
 const Container = styled.View`
     flex : 1;
@@ -51,7 +52,8 @@ const FAKE_RESTAURANT = {
     id: 13,
     reviewCounts: 130,
     popular: ["김치찌개", "볶음밥"],
-    minOrder: 13000
+    minOrder: 13000,
+    isOpen: false
 }
 
 export default ({ navigation, route }) => {
@@ -59,29 +61,22 @@ export default ({ navigation, route }) => {
         params: { category: currentCategory }
     } = route;
     navigation.setOptions({ title: currentCategory });
+    const locObj = useReactiveVar(locationVar);
     const renderRestaurantBar = ({ item }) => (
         <RestaurantListBar {...item}
             onPress={() => navigation.navigate("Restaurant", { id: item.id })}
         />
     );
-    const { loading, data, error } = useQuery(GET_RESTAURANTS, {
-        variables: {
-            category: "중식",
-            si: "고양시",
-            dong: "주엽동"
-        }
-    });
-    if (loading) {
-        Alert.alert("2");
-    }
-    if (data) {
-        Alert.alert("!!")
-        console.log("!");
-        console.log(data);
-    }
-    if (error) {
-        Alert.alert(error);
-    }
+    // const { loading, data, error } = useQuery(GET_RESTAURANTS, {
+    //     variables: {
+    //         category: currentCategory,
+    //         si: locObj.si,
+    //         dong: locObj.dong
+    //     }
+    // });
+    // if (data) {
+    //     console.log(data);
+    // }
     return <Container>
         <View style={{ height: 55 }}>
             <ScrollView
