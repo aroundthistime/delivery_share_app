@@ -32,13 +32,11 @@ export default function App() {
       ...apolloOptions
     })
     setClient(client);
-    console.log("@@@@@@@@@@@@@@@@@@");
     let { status } = await Location.requestPermissionsAsync();
     if (status !== 'granted') {
       Alert.alert("위치 정보 획득에 실패하였습니다. 위치 권한을 허용해 주십시오.")
       return;
     }
-    console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     let location = await Location.getCurrentPositionAsync({});
     const latitude = location.coords.latitude;
     const longitude = location.coords.longitude;

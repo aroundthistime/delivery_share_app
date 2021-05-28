@@ -13,7 +13,7 @@ export const GET_RESTAURANTS = gql`
             rate3count
             rate4count
             rate5count
-            is_open
+            isopen
         }
     }
 `
