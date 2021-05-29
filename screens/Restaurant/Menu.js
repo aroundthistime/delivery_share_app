@@ -216,6 +216,7 @@ export default ({ navigation, route }) => {
     const [loading, setLoading] = useState(true);
     const addMenuToCart = useAddMenuToCart();
     const clearCart = useClearCart();
+    // const isCallReceiver = 
     // const [orderMenu, setMenu] = useState({
     //     count : 0,
     //     price : 0,

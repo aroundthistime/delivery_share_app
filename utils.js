@@ -97,7 +97,7 @@ export const splitNumberPerThousand = (number) =>
     number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
 export const extractLocationInfos = (locObj) => {
-    const address = locObj.road_address.address_name;
+    const address = locObj.address.address_name;
     let si;
     const dong = locObj.address.region_3depth_name;
     if (locObj.address.region_2depth_name.slice(-1) === "구") {

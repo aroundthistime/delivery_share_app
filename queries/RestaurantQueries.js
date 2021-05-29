@@ -17,3 +17,12 @@ export const GET_RESTAURANTS = gql`
         }
     }
 `
+
+// export const GET_RESTAURANT = gql`
+//     query getRestaurant ($seq : Int!){
+//         Restaurant(seq : $seq){
+//             name
+
+//         }
+//     }
+// `

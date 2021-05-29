@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { Ionicons } from "@expo/vector-icons"
 import styles from "../../styles";
 import { Text } from "react-native";
+import { isCallReiceiverVar } from "../../reactiveVars";
 
 const View = styled.View`
     flex : 1;
@@ -35,17 +36,23 @@ const OptionTitle = styled.Text`
     margin-top : 20;
 `
 
-export default ({navigation}) => {
+export default ({ navigation }) => {
     return <View>
-        <Text style={{fontSize : 23, marginBottom : 25, color : styles.blackColor}}>주문방식 선택</Text>
+        <Text style={{ fontSize: 23, marginBottom: 25, color: styles.blackColor }}>주문방식 선택</Text>
         <OptionsContainer>
-            <Option onPress={() => navigation.navigate("Categories")}>
+            <Option onPress={() => {
+                isCallReiceiverVar(false);
+                navigation.navigate("Categories");
+            }}>
                 <Ionicons name="call" size={80} color={styles.blackColor} />
                 <OptionTitle>콜 요청하기</OptionTitle>
             </Option>
             <Border />
-            <Option onPress={() => navigation.navigate("Calls")}>
-            <Ionicons name="location-sharp" size={80} color={styles.blackColor} />
+            <Option onPress={() => {
+                isCallReiceiverVar(true);
+                navigation.navigate("Calls");
+            }}>
+                <Ionicons name="location-sharp" size={80} color={styles.blackColor} />
                 <OptionTitle>주변 콜 찾기</OptionTitle>
             </Option>
         </OptionsContainer>

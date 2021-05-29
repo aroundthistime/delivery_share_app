@@ -46,7 +46,7 @@ export default function App() {
       }
     });
     const addressObj = extractLocationInfos(result.data.documents[0]);
-    locationVar({
+    await locationVar({
       latitude,
       longitude,
       ...addressObj

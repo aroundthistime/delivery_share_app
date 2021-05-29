@@ -1,7 +1,7 @@
 import { StackActions } from "@react-navigation/routers";
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import styled from "styled-components";
-import { Alert, FlatList, ScrollView, Text, View } from "react-native";
+import { FlatList, ScrollView, Text, View } from "react-native";
 import constants from "../../constants";
 import styles from "../../styles";
 import RestaurantListBar from "../../components/RestaurantListBar";
@@ -87,8 +87,8 @@ export default ({ navigation, route }) => {
     navigation.setOptions({ title: currentCategory });
     const locObj = useReactiveVar(locationVar);
     const renderRestaurantBar = ({ item }) => (
-        <RestaurantListBar {...item}
-            onPress={() => navigation.navigate("Restaurant", { id: item.id })}
+        <RestaurantListBar {...item} id={item.seq}
+            onPress={() => navigation.navigate("Restaurant", { id: item.seq })}
         />
     );
     const { loading, data, error } = useQuery(GET_RESTAURANTS, {

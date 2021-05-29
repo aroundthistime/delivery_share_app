@@ -11,6 +11,7 @@ import RestaurantNavigation from "../../navigators/RestaurantNavigation";
 import { ScrollView } from "react-native-gesture-handler";
 import { RestaurantProvider } from "../../Contexts/RestaurantContext";
 import FooterBtn from "../../components/FooterBtn";
+import { useQuery } from "@apollo/client";
 
 const RESTAURANT_ICON_INFO_SIZE = 17.5;
 
@@ -77,6 +78,7 @@ export default ({ navigation, route }) => {
     } = route;
     const [isLikedState, setIsLikedState] = useState(false);
     const [likeCountState, setLikeCountState] = useState(0);
+    // const { loading, data, error } = useQuery()
     const toggleLike = () => {
         if (isLikedState) {
             setIsLikedState(false);
