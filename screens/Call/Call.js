@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { ScrollView, Text, View } from "react-native";
 import "./styled";
 import styles from "../../styles";
+import { currentCallVar } from "../../reactiveVars";
 import UserSpecification from "../../components/UserSpecification";
 import NavigationButton from "../../components/NavigationButton";
 import {
@@ -35,12 +36,47 @@ export default ({ navigation, route }) => {
 
   // const [requestForStore, setRequestForStore] = useState("");
   // const [requestForDelivery, setRequestForDelivery] = useState("");
-
+  const call = {
+    cart: {
+      menus: [
+        {
+          menu: {
+            id: 2,
+            name: "로제떡볶이"
+          },
+          count: 1,
+          options: [
+            {
+              category: "맵기선택",
+              items: [
+                "0단계"
+              ]
+            }
+          ],
+          isSeperated: true
+        }
+      ]
+    },
+    restaurant: {
+      seq: 2
+    },
+    seq: 3
+  }
   const getAmountOfMenus = () => {
     return splitNumberPerThousand(
       menus.reduce((acc, cur) => acc + cur.price, 0)
     );
   };
+
+  const setCurrentCall = (call) => {
+    currentCallVar({
+      id: call.seq,
+      restaurantId: call.restaurant.seq,
+      cart: {
+        menus: call.cart.menus
+      },
+    })
+  }
 
   return (
     <ScrollView
@@ -87,6 +123,7 @@ export default ({ navigation, route }) => {
             name: "restaurant-outline",
           }}
           text="상세정보"
+          additionalMethod={() => setCurrentCall(call)}
         />
       </ContainerWrapper>
 
@@ -129,18 +166,9 @@ export default ({ navigation, route }) => {
       <NavigationButton
         background={styles.themeColor}
         navigation={navigation}
-        params={[
-          "Confirm",
-          {
-            // requestForStore,
-            // requestForDelivery,
-            requestToRestaurant,
-            requestToUser,
-            menus,
-            userId,
-          },
-        ]}
+        params={["Restaurant", { id: 1 }]}
         text="메뉴 추가"
+        additionalMethod={() => setCurrentCall(call)}
       />
     </ScrollView>
   );

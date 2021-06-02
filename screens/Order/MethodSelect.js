@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Ionicons } from "@expo/vector-icons"
 import styles from "../../styles";
 import { Text } from "react-native";
-import { isCallReiceiverVar } from "../../reactiveVars";
+import { isCallReceiverVar } from "../../reactiveVars";
 
 const View = styled.View`
     flex : 1;
@@ -41,7 +41,7 @@ export default ({ navigation }) => {
         <Text style={{ fontSize: 23, marginBottom: 25, color: styles.blackColor }}>주문방식 선택</Text>
         <OptionsContainer>
             <Option onPress={() => {
-                isCallReiceiverVar(false);
+                isCallReceiverVar(false);
                 navigation.navigate("Categories");
             }}>
                 <Ionicons name="call" size={80} color={styles.blackColor} />
@@ -49,7 +49,7 @@ export default ({ navigation }) => {
             </Option>
             <Border />
             <Option onPress={() => {
-                isCallReiceiverVar(true);
+                isCallReceiverVar(true);
                 navigation.navigate("Calls");
             }}>
                 <Ionicons name="location-sharp" size={80} color={styles.blackColor} />

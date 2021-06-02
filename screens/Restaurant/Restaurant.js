@@ -76,6 +76,7 @@ export default ({ navigation, route }) => {
     const {
         params: { id }
     } = route;
+    console.log(route.params);
     const [isLikedState, setIsLikedState] = useState(false);
     const [likeCountState, setLikeCountState] = useState(0);
     // const { loading, data, error } = useQuery()
@@ -99,7 +100,7 @@ export default ({ navigation, route }) => {
         rate1Count: 37,
         rate2Count: 4,
         rate3Count: 17,
-        isOpen: false,
+        isOpen: true,
         rate4Count: 33,
         rate5Count: 44,
         reviews: [
@@ -173,6 +174,7 @@ export default ({ navigation, route }) => {
                 price: 12000,
                 isAvailable: true,
                 isBestMenu: true,
+                isSeperatable: true,
                 options: [
                     {
                         category: "맵기",

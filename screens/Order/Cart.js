@@ -1,12 +1,14 @@
+import { useReactiveVar } from "@apollo/client";
 import React from "react";
-import { ScrollView, Text, View } from "react-native";
+import { Alert, ScrollView, Text, View } from "react-native";
 import styled from "styled-components";
 import BinaryBtnFooter from "../../components/BinaryBtnFooter";
 import DeleteBtn from "../../components/DeleteBtn";
 import MenuCountController from "../../components/MenuCountController";
 import ViewContainer from "../../components/ViewContainer";
 import constants from "../../constants";
-import { useCart, useDecreaseMenuInCart, useDeleteMenuFromCart, useIncreaseMenuInCart } from "../../Contexts/CartContext";
+import { useAlreadyInCart, useCart, useDecreaseMenuInCart, useDeleteMenuFromCart, useIncreaseMenuInCart } from "../../Contexts/CartContext";
+import { currentCallVar, isCallReceiverVar } from "../../reactiveVars";
 import styles from "../../styles";
 
 const OPTION_ITEM_OPACITY = 0.55;
@@ -85,11 +87,59 @@ export default ({ navigation }) => {
     const deleteMenu = useDeleteMenuFromCart();
     const decreaseMenu = useDecreaseMenuInCart();
     const increaseMenu = useIncreaseMenuInCart();
+    const isCallReceiver = useReactiveVar(isCallReceiverVar);
+    const currentCall = useReactiveVar(currentCallVar);
+    const checkCanMakeOrder = async () => {
+        console.log(currentCall.cart.menus, cart.menus)
+        for (let i = 0; i < currentCall.cart.menus.length; i++) {
+            const menuObj = currentCall.cart.menus[i];
+            console.log(menuObj)
+            if (menuObj.isSeperated
+                && (!await cart.menus.some(myMenuObj =>
+                    menuObj.menu.id === myMenuObj.menu.id
+                    && myMenuObj.isSeperated
+                    && menuObj.options.length === myMenuObj.options.length
+                    && (menuObj.count + myMenuObj.count) % 2 === 0
+                    && JSON.stringify(menuObj.options) === JSON.stringify(myMenuObj.options)
+                ))) {
+                return false
+            }
+        }
+        for (let i = 0; i < cart.menus.length; i++) {
+            const myMenuObj = cart.menus[i];
+            console.log(myMenuObj)
+            if (myMenuObj.isSeperated
+                && (!await currentCall.cart.menus.some(menuObj =>
+                    menuObj.menu.id === myMenuObj.menu.id
+                    && menuObj.isSeperated
+                    && menuObj.options.length === myMenuObj.options.length
+                    && (menuObj.count + myMenuObj.count) % 2 === 0
+                    && JSON.stringify(menuObj.options) === JSON.stringify(myMenuObj.options)
+                ))) {
+                return false
+            }
+        }
+        return true
+    }
     const getTotalPrice = () => (
         cart.menus.reduce(function (accumulator, currentValue) {
             return accumulator + currentValue.price
         }, cart.restaurant.deliveryTip / 2)
     )
+    const onFinishCart = async () => {
+        if (isCallReceiver) {
+            const canMakeOrder = await checkCanMakeOrder();
+            if (canMakeOrder === true) {
+                navigation.navigate("CallMakeForm")
+            } else {
+                Alert.alert(
+                    "나눠먹어요 옵션 선택시 해당 메뉴가 짝수만큼 주문되어야 합니다."
+                )
+            }
+        } else {
+            navigation.navigate("CallMakeForm")
+        }
+    }
     return <>
         {cart.menus.length > 0 ? (
             <View style={{ flex: 1, backgroundColor: styles.bgColor }}>
@@ -101,10 +151,16 @@ export default ({ navigation }) => {
                         {cart.menus.map(menu => (
                             <CartMenu>
                                 <MenuHeader>
-                                    <Text style={{ fontSize: 16, fontWeight: "bold" }}>{menu.name}</Text>
+                                    <Text style={{ fontSize: 16, fontWeight: "bold" }}>{menu.menu.name}</Text>
                                     <DeleteBtn onPress={() => deleteMenu(menu)} />
                                 </MenuHeader>
                                 <MenuOptions>
+                                    {menu.isSeperated && (
+                                        <MenuOption>
+                                            <Text style={{ opacity: OPTION_ITEM_OPACITY, marginRight: 5 }}>-</Text>
+                                            <OptionCategory>나눠먹어요</OptionCategory>
+                                        </MenuOption>
+                                    )}
                                     {menu.options.map(option => (
                                         <MenuOption>
                                             <Text style={{ opacity: OPTION_ITEM_OPACITY, marginRight: 5 }}>-</Text>
@@ -141,7 +197,7 @@ export default ({ navigation }) => {
                     leftText={"메뉴 추가"}
                     leftOnPress={() => navigation.navigate("Restaurant", { id: cart.restaurant.id })}
                     rightText={`${getTotalPrice()}원 콜 요청하기`}
-                    rightOnPress={() => navigation.navigate("CallMakeForm")}
+                    rightOnPress={onFinishCart}
                 />
             </View>
         ) : (

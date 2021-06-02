@@ -18,6 +18,7 @@ const NavigationButton = ({
   params,
   text,
   background,
+  additionalMethod = () => 1
 }) => {
   const setVectorIcons = (flaticon) => {
     const config = {
@@ -49,7 +50,10 @@ const NavigationButton = ({
     <ButtonBackground
       disabled={disabled}
       background={background}
-      onPress={() => navigation.navigate(...params)}
+      onPress={() => {
+        additionalMethod()
+        navigation.navigate(...params);
+      }}
     >
       {setButtonContent(background)}
     </ButtonBackground>
@@ -57,7 +61,10 @@ const NavigationButton = ({
     <NavigationBtn
       bgColor={bgColor}
       disabled={disabled}
-      onPress={() => navigation.navigate(...params)}
+      onPress={() => {
+        additionalMethod()
+        navigation.navigate(...params);
+      }}
     >
       {setButtonContent(background)}
     </NavigationBtn>

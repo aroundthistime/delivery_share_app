@@ -2,35 +2,35 @@ import React, { createContext, useContext, useState } from "react";
 
 export const CartContext = createContext();
 
-export const CartProvider = ({children}) => {
+export const CartProvider = ({ children }) => {
     const [cart, setCart] = useState({
-        restaurant : undefined,
-        menus : []
+        restaurant: undefined,
+        menus: []
     })
     const isSameMenu = (menu1, menu2) => (
         menu1.id === menu2.id
         && JSON.stringify(menu1.options) === JSON.stringify(menu2.options)
     )
-    const alreadyInCart = (menuObj) => cart.menus.some(menu => 
+    const alreadyInCart = (menuObj) => cart.menus.some(menu =>
         isSameMenu(menu, menuObj)
     );
     const getMenuIncreasedCart = (menuObj) => cart.menus.map(menu => {
-        if (isSameMenu(menu, menuObj)){
+        if (isSameMenu(menu, menuObj)) {
             return {
                 ...menu,
-                price : menu.price / menu.count * (menu.count + 1),
-                count : menu.count + 1,
+                price: menu.price / menu.count * (menu.count + 1),
+                count: menu.count + 1,
             }
         } else {
             return menu
         }
     })
-    const getMenuDecreasedCart = (menuObj) =>  cart.menus.map(menu => {
-        if (isSameMenu(menu, menuObj)){
+    const getMenuDecreasedCart = (menuObj) => cart.menus.map(menu => {
+        if (isSameMenu(menu, menuObj)) {
             return {
                 ...menu,
-                price : menu.price / menu.count * (menu.count - 1),
-                count : menu.count - 1,
+                price: menu.price / menu.count * (menu.count - 1),
+                count: menu.count - 1,
             }
         } else {
             return menu
@@ -39,26 +39,26 @@ export const CartProvider = ({children}) => {
     const increaseMenuInCart = (menu) => {
         const menuIncreasedCart = getMenuIncreasedCart(menu);
         setCart({
-            restaurant : cart.restaurant,
-            menus : menuIncreasedCart
+            restaurant: cart.restaurant,
+            menus: menuIncreasedCart
         })
     }
     const decreaseMenuInCart = (menu) => {
         const menuDecreasedCart = getMenuDecreasedCart(menu);
         setCart({
-            restaurant : cart.restaurant,
-            menus : menuDecreasedCart
+            restaurant: cart.restaurant,
+            menus: menuDecreasedCart
         })
     }
     const addMenuToCart = (menu, restaurant) => {
-        if (!cart.restaurant || cart.restaurant.id === restaurant.id){
+        if (!cart.restaurant || cart.restaurant.id === restaurant.id) {
             if (alreadyInCart(menu)) {
                 increaseMenuInCart(menu);
                 return 0
             } else {
                 setCart({
                     restaurant,
-                    menus : cart.menus.concat([menu])
+                    menus: cart.menus.concat([menu])
                 })
                 return 1
             }
@@ -67,24 +67,24 @@ export const CartProvider = ({children}) => {
         }
     }
     const deleteMenuFromCart = (menuObj) => {
-        try{
-            if (cart.menus.length === 1 && isSameMenu(cart.menus[0], menuObj)){
-               clearCart();
+        try {
+            if (cart.menus.length === 1 && isSameMenu(cart.menus[0], menuObj)) {
+                clearCart();
             } else {
                 setCart({
                     ...cart,
-                    menus : cart.menus.filter(menu => !isSameMenu(menu, menuObj))
+                    menus: cart.menus.filter(menu => !isSameMenu(menu, menuObj))
                 })
             }
-        }catch{}
+        } catch { }
     }
     const clearCart = () => {
         setCart({
-            restaurant : undefined,
-            menus : []
+            restaurant: undefined,
+            menus: []
         })
     }
-    return <CartContext.Provider value={{cart, increaseMenuInCart, decreaseMenuInCart, addMenuToCart, deleteMenuFromCart, clearCart}}>{children}</CartContext.Provider>
+    return <CartContext.Provider value={{ cart, increaseMenuInCart, decreaseMenuInCart, addMenuToCart, deleteMenuFromCart, clearCart }}>{children}</CartContext.Provider>
 }
 
 export const useCart = () => {

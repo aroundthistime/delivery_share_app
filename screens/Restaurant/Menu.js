@@ -11,6 +11,8 @@ import Loader from "../../components/Loader";
 import { useAddMenuToCart, useClearCart } from "../../Contexts/CartContext";
 import { showToast } from "../../utils";
 import MenuCountController from "../../components/MenuCountController";
+import { useReactiveVar } from "@apollo/client";
+import { isCallReceiverVar } from "../../reactiveVars";
 
 const OPTION_BTN_SIZE = 25;
 
@@ -161,7 +163,11 @@ const OptionItem = ({ isMultiple, isSelected, onPress, content, price = 0, isOpe
                 <OptionItemContainer activeOpacity={1} onPress={onPress}>
                     {isOpen && <OptionBtnMultiple isSelected={true} />}
                     <OptionItemContent style={{ marginLeft: isOpen ? 0 : -3 }}>{content}</OptionItemContent>
-                    <OptionItemPrice>+ {price}원</OptionItemPrice>
+                    {typeof price === "number" ? (
+                        <OptionItemPrice>+ {price}원</OptionItemPrice>
+                    ) : (
+                        <OptionItemPrice>{price}</OptionItemPrice>
+                    )}
                 </OptionItemContainer>
             )
         } else {
@@ -169,7 +175,11 @@ const OptionItem = ({ isMultiple, isSelected, onPress, content, price = 0, isOpe
                 <OptionItemContainer activeOpacity={1} onPress={onPress}>
                     {isOpen && <OptionBtnMultiple isSelected={false} />}
                     <OptionItemContent style={{ marginLeft: isOpen ? 0 : -3 }}>{content}</OptionItemContent>
-                    <OptionItemPrice>+ {price}원</OptionItemPrice>
+                    {typeof price === "number" ? (
+                        <OptionItemPrice>+ {price}원</OptionItemPrice>
+                    ) : (
+                        <OptionItemPrice>{price}</OptionItemPrice>
+                    )}
                 </OptionItemContainer>
             )
         }
@@ -216,7 +226,7 @@ export default ({ navigation, route }) => {
     const [loading, setLoading] = useState(true);
     const addMenuToCart = useAddMenuToCart();
     const clearCart = useClearCart();
-    // const isCallReceiver = 
+    const isCallReceiver = useReactiveVar(isCallReceiverVar);
     // const [orderMenu, setMenu] = useState({
     //     count : 0,
     //     price : 0,
@@ -235,6 +245,7 @@ export default ({ navigation, route }) => {
         price: 12000,
         isAvailable: true,
         isBestMenu: false,
+        isSeperatable: true,
         options: [
             {
                 category: "맵기선택",
@@ -272,6 +283,7 @@ export default ({ navigation, route }) => {
         setMenu({
             ...menuData,
             count: 1,
+            isSeperated: false,
             options: menuData.options.map(option => {
                 return ({
                     ...option,
@@ -287,7 +299,7 @@ export default ({ navigation, route }) => {
             if (isSelected) {
                 setMenu({
                     ...menu,
-                    price: menu.price - currentItem.price * menu.count,
+                    price: menu.price - (menu.isSeperated ? currentItem.price / 2 : currentItem.price) * menu.count,
                     options: menu.options.map(option => {
                         if (option.category === currentOption.category) {
                             return {
@@ -302,7 +314,7 @@ export default ({ navigation, route }) => {
             } else {
                 setMenu({
                     ...menu,
-                    price: menu.price + currentItem.price * menu.count,
+                    price: menu.price + (menu.isSeperated ? currentItem.price / 2 : currentItem.price) * menu.count,
                     options: menu.options.map(option => {
                         if (option.category === currentOption.category) {
                             return {
@@ -331,7 +343,7 @@ export default ({ navigation, route }) => {
                             return option
                         }
                     }),
-                    price: menu.price + currentItem.price * menu.count - currentOption.selected[0].price * menu.count,
+                    price: menu.price + (menu.isSeperated ? currentItem.price / 2 : currentItem.price) * menu.count - (menu.isSeperated ? currentOption.selected[0].price / 2 : currentOption.selected[0].price) * menu.count,
                 })
             }
         }
@@ -355,17 +367,20 @@ export default ({ navigation, route }) => {
     }
     const extractSelectedMenu = () => {
         return {
-            name: menu.name,
-            id: menu.id,
+            menu: {
+                id: menu.id,
+                name: menu.name
+            },
             price: menu.price,
             count: menu.count,
+            isSeperated: menu.isSeperated,
             options: menu.options.filter(option => option.selected.length > 0).map(option => ({
                 category: option.category,
                 items: [...option.selected].map(item => item.content)
             }))
         }
     }
-    const addSelectedMenuToCart = () => {
+    const addSelectedMenuToCart = async () => {
         const selectedMenu = extractSelectedMenu();
         const result = addMenuToCart(selectedMenu, restaurant);
         if (result === 1) {
@@ -375,26 +390,34 @@ export default ({ navigation, route }) => {
             showToast("장바구니에 있는 동일 메뉴의 수량을 증가했습니다", false)
             navigation.pop()
         } else {
-            Alert.alert(
-                "장바구니에는 동일한 가게의 메뉴만을 담을 수 있습니다.",
-                "기존에 담겨있던 메뉴를 삭제하시고 선택하신 메뉴를 추가하시겠습니까?",
-                [
-                    {
-                        text: "취소",
-                        onPress: () => 1,
-                        style: "cancel"
-                    },
-                    {
-                        text: "예",
-                        onPress: async () => {
-                            await clearCart();
-                            addMenuToCart(selectedMenu, restaurant);
-                            showToast("해당 메뉴가 장바구니에 추가되었습니다", false)
-                            navigation.pop()
+            if (isCallReceiver) {
+                Alert.alert("장바구니에 담겨있던 다른 식당의 메뉴가 삭제되었습니다.")
+                await clearCart();
+                addMenuToCart(selectedMenu, restaurant);
+                showToast("해당 메뉴가 장바구니에 추가되었습니다", false)
+                navigation.pop()
+            } else {
+                Alert.alert(
+                    "장바구니에는 동일한 가게의 메뉴만을 담을 수 있습니다.",
+                    "기존에 담겨있던 메뉴를 삭제하시고 선택하신 메뉴를 추가하시겠습니까?",
+                    [
+                        {
+                            text: "취소",
+                            onPress: () => 1,
+                            style: "cancel"
+                        },
+                        {
+                            text: "예",
+                            onPress: async () => {
+                                await clearCart();
+                                addMenuToCart(selectedMenu, restaurant);
+                                showToast("해당 메뉴가 장바구니에 추가되었습니다", false)
+                                navigation.pop()
+                            }
                         }
-                    }
-                ]
-            )
+                    ]
+                )
+            }
         }
     }
     return (
@@ -412,6 +435,25 @@ export default ({ navigation, route }) => {
                         <MenuDescription>{menu.description}</MenuDescription>
                     </MenuBrief>
                     <OptionsList>
+                        {menu.isSeperatable && (
+                            <Option style={{ borderBottomWidth: menu.options.length > 0 ? styles.grayBorderWidth : 0 }}>
+                                <OptionTitle>나눠먹기</OptionTitle>
+                                <OptionItems>
+                                    <OptionItem
+                                        isMultiple={true}
+                                        isSelected={menu.isSeperated}
+                                        onPress={() => setMenu({
+                                            ...menu,
+                                            price: menu.isSeperated ? menu.price * 2 : menu.price / 2,
+                                            isSeperated: !menu.isSeperated,
+                                        })}
+                                        content={"나눠먹어요"}
+                                        price={"n / 2원"}
+                                        isOpen={restaurant.isOpen}
+                                    />
+                                </OptionItems>
+                            </Option>
+                        )}
                         {menu.options.map((option, index) => {
                             return (
                                 <Option style={{ borderBottomWidth: index === menu.options.length - 1 ? 0 : styles.grayBorderWidth }}>

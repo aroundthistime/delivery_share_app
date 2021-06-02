@@ -2,4 +2,6 @@ import { makeVar } from "@apollo/client";
 
 export const locationVar = makeVar();
 
-export const isCallReiceiverVar = makeVar();
+export const isCallReceiverVar = makeVar();
+
+export const currentCallVar = makeVar();
