@@ -37,22 +37,22 @@ const CategoryContainer = styled.TouchableOpacity`
     width : ${(constants.width - 30) / NUM_COLUMNS};
     justify-content : center;
     align-items : center;
-    margin-bottom : 10;
+    margin-bottom : 15;
 `
-const CategoryBtn = ({name, uri, onPress}) => (
+const CategoryBtn = ({ name, uri, onPress }) => (
     <CategoryContainer onPress={onPress}>
-        <CategoryIcon source={{uri}} />
+        <CategoryIcon source={uri} />
         <CategoryTitle>{name}</CategoryTitle>
     </CategoryContainer>
 )
 
 
-export default ({navigation}) => {
-    const renderItem = ({item : category}) => (
-        <CategoryBtn 
-                name={category.name}
-                uri={category.uri}
-                onPress={() => navigation.navigate("Restaurants", {category : category.name})}
+export default ({ navigation }) => {
+    const renderItem = ({ item: category }) => (
+        <CategoryBtn
+            name={category.name}
+            uri={category.uri}
+            onPress={() => navigation.navigate("Restaurants", { category: category.name })}
         />
     );
     return <View>

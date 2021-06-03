@@ -24,6 +24,12 @@ const Option = styled.TouchableOpacity`
     flex : 1;
 `
 
+const OptionIcon = styled.Image`
+    width : 60;
+    height : 100;
+    margin-bottom : 5;
+`
+
 
 const Border = styled.View`
     width : 1.5;
@@ -44,7 +50,7 @@ export default ({ navigation }) => {
                 isCallReceiverVar(false);
                 navigation.navigate("Categories");
             }}>
-                <Ionicons name="call" size={80} color={styles.blackColor} />
+                <OptionIcon source={require("../../assets/콜요청.png")} resizeMode={"contain"} />
                 <OptionTitle>콜 요청하기</OptionTitle>
             </Option>
             <Border />
@@ -52,7 +58,7 @@ export default ({ navigation }) => {
                 isCallReceiverVar(true);
                 navigation.navigate("Calls");
             }}>
-                <Ionicons name="location-sharp" size={80} color={styles.blackColor} />
+                <OptionIcon source={require("../../assets/콜찾기.png")} resizeMode={"contain"} />
                 <OptionTitle>주변 콜 찾기</OptionTitle>
             </Option>
         </OptionsContainer>
