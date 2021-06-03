@@ -1,14 +1,18 @@
 import React, { useState } from "react";
+import MapView, { Marker } from 'react-native-maps';
 import { ScrollView, Text, View } from "react-native";
+import * as Location from 'expo-location';
 import "./styled";
 import styles from "../../styles";
-import { currentCallVar } from "../../reactiveVars";
+import { currentCallVar, locationVar } from "../../reactiveVars";
 import UserSpecification from "../../components/UserSpecification";
 import NavigationButton from "../../components/NavigationButton";
 import {
   ButtonContainer,
   Divider,
   InputContainer,
+  MarkerIcon,
+  MarkerTitle,
   MenuContainer,
   TextContainer,
   TextInputBox,
@@ -20,6 +24,8 @@ import {
   MenuListWithPrice,
 } from "../../components/MenuListDetails";
 import ContainerWrapper from "../../components/ContainerWrapper";
+import { useReactiveVar } from "@apollo/client";
+import constants from "../../constants";
 
 /**
  * TODO *
@@ -33,14 +39,16 @@ export default ({ navigation, route }) => {
   const {
     params: { image, brandName, userId, menus, dist, requestToRestaurant, requestToUser },
   } = route;
-
+  const location = useReactiveVar(locationVar);
   // const [requestForStore, setRequestForStore] = useState("");
   // const [requestForDelivery, setRequestForDelivery] = useState("");
   const call = {
     request_R: "",
     request_call: "안녕하세요",
     callLocation: {
-      place: "서울시 어디동 저기구"
+      place: "서울시 어디동 저기구 227-30",
+      latitude: 37.59720501279483,
+      longitude: 127.05882764767271
     },
     cart: {
       menus: [
@@ -173,6 +181,34 @@ export default ({ navigation, route }) => {
             placeholder="배달측 요청사항이 있다면 적어주세요."
           ></TextInputBox> */}
         </InputContainer>
+
+        <TextTitle>• 수령장소</TextTitle>
+        <Text>- {call.callLocation.place}</Text>
+        <MapView
+          style={{ width: constants.width - 40, height: constants.width - 40, marginVertical: 15 }}
+          region={{
+            longitude: location.longitude,
+            latitude: location.latitude,
+            latitudeDelta: 0.01,
+            longitudeDelta: 0.01
+          }}
+        >
+          <Marker
+            coordinate={{ latitude: location.latitude, longitude: location.longitude }}
+            style={{ alignItems: "center" }}
+          >
+            <MarkerTitle>현위치</MarkerTitle>
+            <MarkerIcon isCurrent={true} />
+          </Marker>
+          <Marker
+            coordinate={{ latitude: call.callLocation.latitude, longitude: call.callLocation.longitude }}
+            style={{ alignItems: "center" }}
+          >
+            <MarkerTitle>수령장소</MarkerTitle>
+            <MarkerIcon isCurrent={false} />
+          </Marker>
+        </MapView>
+
       </ContainerWrapper>
 
       <NavigationButton
