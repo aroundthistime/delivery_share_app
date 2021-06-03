@@ -32,9 +32,6 @@ const RequestInputTitle = styled.Text`
 `
 
 export default ({ navigation, route }) => {
-    const {
-        params: { cartTotalPrice }
-    } = route;
     const restaurantRequestInput = useInput("", 10);
     const opponentRequestInput = useInput("", 10);
     const timeLimitInput = useNumInput("", CALL_MAX_LIMIT);
@@ -43,7 +40,6 @@ export default ({ navigation, route }) => {
         if (isCallReceiver) {
             navigation.navigate("Confirm", {
                 requestForStore: restaurantRequestInput.value,
-                cartTotalPrice
             })
         } else {
             if (timeLimitInput.value === "" || parseInt(timeLimitInput.value) < CALL_MIN_LIMIT) {
@@ -108,7 +104,11 @@ export default ({ navigation, route }) => {
                     </View>
                 </SectionContainer>
             )}
-            <FooterBtn text="수령장소 선택하기" onPress={onSubmit} needStyle />
+            {isCallReceiver ? (
+                <FooterBtn text="주문진행" onPress={onSubmit} needStyle />
+            ) : (
+                <FooterBtn text="수령장소 선택하기" onPress={onSubmit} needStyle />
+            )}
         </View>
     )
 }

@@ -30,7 +30,7 @@ const Confirm = ({ navigation, route }) => {
   } = route;
   const cart = useCart();
   const currentCall = useReactiveVar(currentCallVar);
-  const menus = cart.concat(currentCall.cart.menus);
+  const menus = cart.menus.concat(currentCall.cart.menus);
   // 1) 콜을 요청한 사람이 작성한 식당측 요청사항은 currentCall.requestForStore
   // 2) 콜을 요청한 사람 정보는 currentCall.user보면 { id: ~~, name : ~~} 있음
   // 3) 내가 작성한(콜을 받는 사람) 식당측 요청사항은 requestForStore(param으로 전달받은 것)

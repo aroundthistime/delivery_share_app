@@ -45,6 +45,12 @@ export default ({ navigation, route }) => {
   const call = {
     request_R: "",
     request_call: "안녕하세요",
+    user: [
+      {
+        id: 222,
+        name: "김팝콘"
+      }
+    ],
     callLocation: {
       place: "서울시 어디동 저기구 227-30",
       latitude: 37.59720501279483,
