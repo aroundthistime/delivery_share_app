@@ -1,3 +1,4 @@
+import { useReactiveVar } from "@apollo/client";
 import React from "react";
 import { ScrollView, Text, View } from "react-native";
 import styled from "styled-components";
@@ -7,6 +8,8 @@ import {
 } from "../../components/MenuListDetails";
 import NavigationButton from "../../components/NavigationButton";
 import RequestDetails from "../../components/RequestDetails";
+import { useCart } from "../../Contexts/CartContext";
+import { currentCallVar } from "../../reactiveVars";
 import styles from "../../styles";
 import { splitNumberPerThousand } from "../../utils";
 import { Divider } from "../Call/styled";
@@ -23,9 +26,39 @@ import { Divider } from "../Call/styled";
 
 const Confirm = ({ navigation, route }) => {
   const {
-    params: { requestForStore, requestForDelivery, menus, userId },
+    params: { requestForStore },
   } = route;
-
+  const cart = useCart();
+  const currentCall = useReactiveVar(currentCallVar);
+  const menus = cart.concat(currentCall.cart.menus);
+  // 1) 콜을 요청한 사람이 작성한 식당측 요청사항은 currentCall.requestForStore
+  // 2) 콜을 요청한 사람 정보는 currentCall.user보면 { id: ~~, name : ~~} 있음
+  // 3) 내가 작성한(콜을 받는 사람) 식당측 요청사항은 requestForStore(param으로 전달받은 것)
+  // 4) 음식 수령장소는 currentCall.callLocation.place
+  // menus = [ -> menus 구조 예시
+  //   {
+  //     menu : {
+  //       id : 2,
+  //       name : "떡볶이"
+  //     },
+  //     count : 1,
+  //     price : 12000,
+  //     options : [
+  //       {
+  //         category : "토핑추가",
+  //         items : [
+  //           "베이컨", "소세지"
+  //         ]
+  //       }.
+  //       {
+  //         category : "맵기선택",
+  //         items : [
+  //           "0단계"
+  //         ]
+  //       }
+  //     ]
+  //   }
+  // ]
   const getAmountOfMenus = () => {
     return splitNumberPerThousand(
       menus.reduce((acc, cur) => acc + cur.price, 0)
@@ -65,7 +98,7 @@ const Confirm = ({ navigation, route }) => {
         </TextTitle>
         <View style={{ marginBottom: 30 }}>
           <RequestDetails
-            requestForStore="뻘라 만들어주세요!!"
+            requestForStore="빨리 만들어주세요!!"
             requestForDelivery="조심히 후딱 오셔요!"
           />
         </View>

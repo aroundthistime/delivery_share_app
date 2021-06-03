@@ -37,6 +37,11 @@ export default ({ navigation, route }) => {
   // const [requestForStore, setRequestForStore] = useState("");
   // const [requestForDelivery, setRequestForDelivery] = useState("");
   const call = {
+    request_R: "",
+    request_call: "안녕하세요",
+    callLocation: {
+      place: "서울시 어디동 저기구"
+    },
     cart: {
       menus: [
         {
@@ -53,6 +58,7 @@ export default ({ navigation, route }) => {
               ]
             }
           ],
+          price: 12000,
           isSeperated: true
         }
       ]
@@ -71,10 +77,16 @@ export default ({ navigation, route }) => {
   const setCurrentCall = (call) => {
     currentCallVar({
       id: call.seq,
+      user: {
+        id: call.user[0].seq,
+        name: call.user[0].name
+      },
+      // restaurant
       restaurantId: call.restaurant.seq,
       cart: {
         menus: call.cart.menus
       },
+      requestForStore: call.request_R,
     })
   }
 

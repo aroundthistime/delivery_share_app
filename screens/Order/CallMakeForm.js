@@ -1,3 +1,4 @@
+import { useReactiveVar } from "@apollo/client";
 import React from "react";
 import { Alert, Text, View } from "react-native";
 import styled from "styled-components";
@@ -7,6 +8,7 @@ import RequestInput from "../../components/RequestInput";
 import constants from "../../constants";
 import useInput from "../../Hooks/useInput";
 import useNumInput from "../../Hooks/useNumInput";
+import { isCallReceiverVar } from "../../reactiveVars";
 
 const CALL_MIN_LIMIT = 5;
 
@@ -30,18 +32,29 @@ const RequestInputTitle = styled.Text`
 `
 
 export default ({ navigation, route }) => {
+    const {
+        params: { cartTotalPrice }
+    } = route;
     const restaurantRequestInput = useInput("", 10);
     const opponentRequestInput = useInput("", 10);
     const timeLimitInput = useNumInput("", CALL_MAX_LIMIT);
+    const isCallReceiver = useReactiveVar(isCallReceiverVar);
     const onSubmit = () => {
-        if (timeLimitInput.value === "" || parseInt(timeLimitInput.value) < CALL_MIN_LIMIT) {
-            Alert.alert(`콜 시간제한을 제대로 설정해주세요. (최소5분 ~ 최대${CALL_MAX_LIMIT}분)`)
-        } else {
-            navigation.navigate("SelectLocation", {
-                timeLimit: parseInt(timeLimitInput.value),
-                restaurantRequest: restaurantRequestInput.value,
-                opponentRequest: opponentRequestInput.value
+        if (isCallReceiver) {
+            navigation.navigate("Confirm", {
+                requestForStore: restaurantRequestInput.value,
+                cartTotalPrice
             })
+        } else {
+            if (timeLimitInput.value === "" || parseInt(timeLimitInput.value) < CALL_MIN_LIMIT) {
+                Alert.alert(`콜 시간제한을 제대로 설정해주세요. (최소5분 ~ 최대${CALL_MAX_LIMIT}분)`)
+            } else {
+                navigation.navigate("SelectLocation", {
+                    timeLimit: parseInt(timeLimitInput.value),
+                    restaurantRequest: restaurantRequestInput.value,
+                    opponentRequest: opponentRequestInput.value
+                })
+            }
         }
     }
     return (
@@ -61,36 +74,40 @@ export default ({ navigation, route }) => {
                         multiline
                     />
                 </View>
-                <View style={{ marginBottom: 10 }}>
-                    <RequestInputTitle>매칭 상대에게</RequestInputTitle>
-                    <RequestInput
-                        {...opponentRequestInput}
-                        placeholder={`예) 저는 반찬 필요 없어요. (최대 ${constants.requestMaxLength}자)`}
-                        autoCorrect={false}
-                        multiline
-                    />
-                </View>
+                {!isCallReceiver && (
+                    <View style={{ marginBottom: 10 }}>
+                        <RequestInputTitle>매칭 상대에게</RequestInputTitle>
+                        <RequestInput
+                            {...opponentRequestInput}
+                            placeholder={`예) 저는 반찬 필요 없어요. (최대 ${constants.requestMaxLength}자)`}
+                            autoCorrect={false}
+                            multiline
+                        />
+                    </View>
+                )}
             </SectionContainer>
-            <SectionContainer style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center"
-            }}>
-                <SectionHeader>{`콜 시간제한 (최대 ${CALL_MAX_LIMIT}분)`}</SectionHeader>
-                <View style={{
+            {!isCallReceiver && (
+                <SectionContainer style={{
                     flexDirection: "row",
                     justifyContent: "space-between",
                     alignItems: "center"
                 }}>
-                    <NumInput
-                        {...timeLimitInput}
-                        size={"small"}
-                        textAlign={"right"}
-                        placeholder={"예)20"}
-                    />
-                    <Text style={{ marginLeft: 5, fontSize: 15 }}>분</Text>
-                </View>
-            </SectionContainer>
+                    <SectionHeader>{`콜 시간제한 (최대 ${CALL_MAX_LIMIT}분)`}</SectionHeader>
+                    <View style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        alignItems: "center"
+                    }}>
+                        <NumInput
+                            {...timeLimitInput}
+                            size={"small"}
+                            textAlign={"right"}
+                            placeholder={"예)20"}
+                        />
+                        <Text style={{ marginLeft: 5, fontSize: 15 }}>분</Text>
+                    </View>
+                </SectionContainer>
+            )}
             <FooterBtn text="수령장소 선택하기" onPress={onSubmit} needStyle />
         </View>
     )

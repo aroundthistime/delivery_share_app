@@ -93,7 +93,6 @@ export default ({ navigation }) => {
         console.log(currentCall.cart.menus, cart.menus)
         for (let i = 0; i < currentCall.cart.menus.length; i++) {
             const menuObj = currentCall.cart.menus[i];
-            console.log(menuObj)
             if (menuObj.isSeperated
                 && (!await cart.menus.some(myMenuObj =>
                     menuObj.menu.id === myMenuObj.menu.id
@@ -107,7 +106,6 @@ export default ({ navigation }) => {
         }
         for (let i = 0; i < cart.menus.length; i++) {
             const myMenuObj = cart.menus[i];
-            console.log(myMenuObj)
             if (myMenuObj.isSeperated
                 && (!await currentCall.cart.menus.some(menuObj =>
                     menuObj.menu.id === myMenuObj.menu.id
