@@ -59,7 +59,7 @@ export default () => {
         }
     }
     const getFormattedRunTimeList = () => {
-        const runTime = restaurant.runTime;
+        const runTime = restaurant.runtime;
         let result = [];
         for (let i = 0; i < runTime.length; i++) {
             let inserted = false;
@@ -91,7 +91,8 @@ export default () => {
         ))
     }
     const runTimeList = getFormattedRunTimeList();
-    return <View style={{ paddingBottom: restaurant.isOpen ? 0 : 45 }}>
+    const dayOffList = JSON.parse(restaurant.dayoff);
+    return <View style={{ paddingBottom: restaurant.isopen ? 0 : 45 }}>
         <Section>
             <SectionTitle>가게 소개글</SectionTitle>
             <Text>{restaurant.introduction}</Text>
@@ -108,7 +109,7 @@ export default () => {
             </InfoRow>
             <InfoRow>
                 <InfoTitle>휴무일</InfoTitle>
-                <InfoContent>{restaurant.dayoff.length === 0 ? "연중무휴" : convertDaysList(restaurant.dayoff).map(day => {
+                <InfoContent>{dayOffList.length === 0 ? "연중무휴" : convertDaysList(dayOffList).map(day => {
                     if (day === "주중" || day === "주말" || day === "매일") {
                         return day
                     } else {
@@ -118,11 +119,11 @@ export default () => {
             </InfoRow>
             <InfoRow>
                 <InfoTitle>배달팁</InfoTitle>
-                <InfoContent>{restaurant.deliveryTip}원</InfoContent>
+                <InfoContent>{restaurant.delivery_tip}원</InfoContent>
             </InfoRow>
             <InfoRow>
                 <InfoTitle>배달지역</InfoTitle>
-                <InfoContent>{restaurant.serviceAreas.join(", ")}</InfoContent>
+                <InfoContent>{restaurant.deliveryloc.map(loc => loc.dong).join(", ")}</InfoContent>
             </InfoRow>
         </Section>
     </View>

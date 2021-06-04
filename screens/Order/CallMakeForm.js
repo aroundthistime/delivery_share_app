@@ -47,8 +47,8 @@ export default ({ navigation, route }) => {
             } else {
                 navigation.navigate("SelectLocation", {
                     timeLimit: parseInt(timeLimitInput.value),
-                    restaurantRequest: restaurantRequestInput.value,
-                    opponentRequest: opponentRequestInput.value
+                    requestToRestaurant: restaurantRequestInput.value,
+                    requestToUser: opponentRequestInput.value
                 })
             }
         }

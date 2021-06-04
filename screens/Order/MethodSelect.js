@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import { Ionicons } from "@expo/vector-icons"
 import styles from "../../styles";
 import { Text } from "react-native";
 import { isCallReceiverVar } from "../../reactiveVars";

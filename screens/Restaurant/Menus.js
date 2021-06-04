@@ -10,13 +10,13 @@ export default ({ navigation }) => {
   const renderMenuBar = ({ item }) => (
     <MenuListBar {...item} onPress={() => navigation.navigate("Menu",
       {
-        menuId: item.id,
+        menuId: item.seq,
         restaurant: {
-          id: restaurant.id,
+          id: restaurant.seq,
           name: restaurant.name,
-          minOrder: restaurant.minOrder,
-          deliveryTip: restaurant.deliveryTip,
-          isOpen: restaurant.isOpen
+          minOrder: restaurant.min_order,
+          deliveryTip: restaurant.delivery_tip,
+          isOpen: restaurant.isopen
         }
       })} />
   )
@@ -27,7 +27,7 @@ export default ({ navigation }) => {
         renderItem={renderMenuBar}
         nestedScrollEnabled
       />
-      {!restaurant.isOpen && (
+      {!restaurant.isopen && (
         <View style={{ marginBottom: 70 }} />
       )}
     </>

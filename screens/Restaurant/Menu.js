@@ -11,8 +11,9 @@ import Loader from "../../components/Loader";
 import { useAddMenuToCart, useClearCart } from "../../Contexts/CartContext";
 import { showToast } from "../../utils";
 import MenuCountController from "../../components/MenuCountController";
-import { useReactiveVar } from "@apollo/client";
+import { useQuery, useReactiveVar } from "@apollo/client";
 import { isCallReceiverVar } from "../../reactiveVars";
+import { GET_MENU } from "../../queries/RestaurantQueries";
 
 const OPTION_BTN_SIZE = 25;
 
@@ -227,73 +228,28 @@ export default ({ navigation, route }) => {
     const addMenuToCart = useAddMenuToCart();
     const clearCart = useClearCart();
     const isCallReceiver = useReactiveVar(isCallReceiverVar);
-    // const [orderMenu, setMenu] = useState({
-    //     count : 0,
-    //     price : 0,
-    //     options : []
-    // });
-    // const menu = {
-    //     ...구한거,
-    //     options : menu.
-    // }
-    // const requiredOptions = menu.options.filter(option => option.isRequired);
-    const menuData = {
-        name: "로제떡볶이",
-        id: 2,
-        thumbnail: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSigAD5XWPpDiv4k6yVbCLnUEFSD829OgpWng&usqp=CAU",
-        description: "색다른 기분을 위한 로제 떡볶이(1~2인)",
-        price: 12000,
-        isAvailable: true,
-        isBestMenu: false,
-        isSeperatable: true,
-        options: [
-            {
-                category: "맵기선택",
-                isRequired: true,
-                isMultiple: false,
-                items: [
-                    {
-                        content: "0단계",
-                        price: 0
-                    },
-                    {
-                        content: "1단계",
-                        price: 1
-                    }
-                ]
-            },
-            {
-                category: "추가토핑",
-                isRequired: false,
-                isMultiple: true,
-                items: [
-                    {
-                        content: "베이컨 추가",
-                        price: 1000
-                    },
-                    {
-                        content: "치즈 추가",
-                        price: 1500
-                    }
-                ]
-            }
-        ]
-    };
+    const { loading: queryLoading, data, error } = useQuery(GET_MENU, {
+        variables: {
+            seq: menuId
+        }
+    });
     useEffect(() => {
-        setMenu({
-            ...menuData,
-            count: 1,
-            isSeperated: false,
-            options: menuData.options.map(option => {
-                return ({
-                    ...option,
-                    selected: option.isRequired ? [option.items[0]] : [],
+        if (!loading && data && data.Menu) {
+            navigation.setOptions({ title: data.Menu.name });
+            setMenu({
+                ...menuData,
+                count: 1,
+                isSeperated: false,
+                options: menuData.options.map(option => {
+                    return ({
+                        ...option,
+                        selected: option.isRequired ? [option.items[0]] : [],
+                    })
                 })
-            })
-        });
+            });
+        }
         setLoading(false);
-    }, [])
-    navigation.setOptions({ title: menu.name });
+    }, [data])
     const toggleOption = (currentOption, currentItem, isMultiple, isSelected) => {
         if (isMultiple) {
             if (isSelected) {

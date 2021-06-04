@@ -55,22 +55,21 @@ const BlurText = styled.Text`
 const RestaurantRate = ({ rate, reviewCounts }) => (
     <View style={{ flexDirection: "row", alignItems: "center" }}>
         <FontAwesome name="star" size={11.5} color={styles.yellowColor} />
-        {/* <Ionicons name="md-star" size={16} color={styles.yellowColor} /> */}
         <Text style={{ marginLeft: 5, fontSize: 12 }}><Text style={{ fontWeight: "bold" }}>{rate}</Text> ({reviewCounts})</Text>
     </View>
 )
 
 
-const RestaurantBar = ({ thumbnail, name, rate, reviewCounts, popular, minOrder, onPress, isOpen }) => {
+const RestaurantBar = ({ thumbnail, name, rate, rate1count, rate2count, rate3count, rate4count, rate5count, bestmenus, min_order, onPress, isopen }) => {
     return (
         <ListBar onPress={onPress}>
             <RestaurantImg source={{ uri: thumbnail }} />
-            {!isOpen && <RestaurantClosed>준비중</RestaurantClosed>}
-            <RestaurantInfos style={{ opacity: isOpen ? 1 : 0.45 }}>
+            {!isopen && <RestaurantClosed>준비중</RestaurantClosed>}
+            <RestaurantInfos style={{ opacity: isopen ? 1 : 0.45 }}>
                 <RestaurantName numberOfLines={1}>{name}</RestaurantName>
-                <RestaurantRate rate={rate} reviewCounts={formatReviewCounts(reviewCounts)} />
-                <BlurText>최소주문금액 {minOrder}원</BlurText>
-                <BlurText numberOfLines={1}>{popular.join(", ")}</BlurText>
+                <RestaurantRate rate={rate} reviewCounts={formatReviewCounts(rate1count + rate2count + rate3count + rate4count + rate5count)} />
+                <BlurText>최소주문금액 {min_order}원</BlurText>
+                <BlurText numberOfLines={1}>{bestmenus.map(bestmenu => bestmenu.name).join(", ")}</BlurText>
             </RestaurantInfos>
         </ListBar>
     )

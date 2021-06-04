@@ -99,7 +99,7 @@ const MenuBadge = ({ isBestMenu }) => (
         )
 )
 
-export default ({ name, description, thumbnail, isAvailable, price, isBestMenu, onPress }) => (
+export default ({ name, description, thumbnail, isAvailable, price, bestmenu, onPress }) => (
     <ListBar onPress={isAvailable ? onPress : () => 1} activeOpacity={0.3}>
         {isAvailable ? (
             <MenuImage source={{ uri: thumbnail }} />
@@ -112,6 +112,6 @@ export default ({ name, description, thumbnail, isAvailable, price, isBestMenu, 
             <MenuPrice>{price}원</MenuPrice>
         </MenuInfos>
         {!isAvailable && <MenuBadge isBestMenu={false}>품절</MenuBadge>}
-        {isAvailable && isBestMenu && <MenuBadge isBestMenu={true}>인기</MenuBadge>}
+        {isAvailable && bestmenu && <MenuBadge isBestMenu={true}>인기</MenuBadge>}
     </ListBar>
 )

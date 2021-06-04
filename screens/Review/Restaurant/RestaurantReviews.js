@@ -2,12 +2,15 @@ import React, { useState } from "react";
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 import styled from "styled-components";
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
+import Loader from "../../../components/Loader";
 import constants from "../../../constants";
 import { useRestaurant } from "../../../Contexts/RestaurantContext";
 import styles from "../../../styles";
 import { formatDateYYMMDD } from "../../../utils";
 import ImageSlider from "../../../components/ImageSlider";
 import RateStars from "../../../components/RateStars";
+import { useQuery } from "@apollo/client";
+import { GET_RESTAURANT_REVIEWS } from "../../../queries/RestaurantQueries";
 
 const RATE_DETAIL_BAR_HEIGHT = 5;
 
@@ -171,17 +174,28 @@ const NoReviewMessage = styled.Text`
 
 export default ({ navigation }) => {
     const [sorting, setSorting] = useState("최신순");
+    console.log(1);
     const restaurant = useRestaurant();
-    // const review = 
+    const { loading, data, error } = useQuery(GET_RESTAURANT_REVIEWS, {
+        variables: {
+            resseq: restaurant.seq
+        }
+    })
+    // console.log(loading, data, error);
+    const reviewsCount = restaurant.rate1count
+        + restaurant.rate2count
+        + restaurant.rate3count
+        + restaurant.rate4count
+        + restaurant.rate5count;
     const renderReviewItem = ({ item: review }) => (
         <ReviewItem>
             <ReviewHeader>
-                <ReviewUserImage uri={review.user.avatar}
-                    onPress={() => 1}
+                <ReviewUserImage uri={review.user.thumbnail}
+                    onPress={() => navigation.navigate("UserReviews", { userId: review.user.seq })}
                 />
                 <View>
                     <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 1 }}>
-                        <ReviewUserName name={review.user.username} onPress={() => 1} />
+                        <ReviewUserName name={review.user.name} onPress={() => navigation.navigate("UserReviews", { userId: review.user.seq })} />
                         <ReviewDate>{formatDateYYMMDD(review.createdAt)}</ReviewDate>
                     </View>
                     <RateStars rate={review.rate} />
@@ -189,7 +203,7 @@ export default ({ navigation }) => {
             </ReviewHeader>
             {review.images.length && (
                 <View style={{ marginBottom: 10 }}>
-                    <ImageSlider images={review.images} width={constants.width - 40} height={constants.width - 40} />
+                    <ImageSlider images={review.images.map(imageObj => imageObj.image)} width={constants.width - 40} height={constants.width - 40} />
                 </View>
             )}
             <Text>{review.content}</Text>
@@ -204,54 +218,58 @@ export default ({ navigation }) => {
             )}
         </ReviewItem>
     )
-    return (
-        <View style={{ marginBottom: restaurant.isOpen ? 0 : 45 }}>
-            {
-                restaurant.reviews.length > 0 ? (
-                    <View>
-                        <Section style={{ flexDirection: "row", justifyContent: "center", marginBottom: 5 }}>
-                            <ReviewsBrief>
-                                <ReviewsRate><FontAwesome name="star" size={23} color={styles.yellowColor} /> {restaurant.rate}</ReviewsRate>
-                                <ReviewsCount>(총 {restaurant.reviewCounts}개 리뷰)</ReviewsCount>
-                            </ReviewsBrief>
-                            <ReviewRateDetails>
-                                <RateDetail point={1} count={restaurant.rate1Count} total={restaurant.reviewCounts} />
-                                <RateDetail point={2} count={restaurant.rate2Count} total={restaurant.reviewCounts} />
-                                <RateDetail point={3} count={restaurant.rate3Count} total={restaurant.reviewCounts} />
-                                <RateDetail point={4} count={restaurant.rate4Count} total={restaurant.reviewCounts} />
-                                <RateDetail point={5} count={restaurant.rate5Count} total={restaurant.reviewCounts} />
-                            </ReviewRateDetails>
-                        </Section>
-                        <Section>
-                            <View style={{
-                                flexDirection: "row",
-                                justifyContent: "flex-end",
-                                borderBottomColor: "#e0d5d5",
-                                borderBottomWidth: 0.45,
-                                paddingBottom: 5,
-                            }}>
-                                {SORTING_METHODS_LIST.map(method => (
-                                    <SortingMethod
-                                        text={method}
-                                        isSelected={sorting === method}
-                                        onPress={() => setSorting(method)}
-                                    />
-                                ))}
-                            </View>
-                            <FlatList
-                                data={restaurant.reviews}
-                                renderItem={renderReviewItem}
-                                style={{ paddingTop: 20 }}
-                            />
-                        </Section>
-                    </View>
-                ) : (
-                    <NoReview>
-                        <NoReviewImage />
-                        <NoReviewMessage>리뷰가 존재하지 않습니다.</NoReviewMessage>
-                    </NoReview>
-                )
-            }
-        </View>
-    )
+    return <>
+        {!loading && data && data.getResReviews ? (
+            <View style={{ marginBottom: restaurant.isopen ? 0 : 45 }}>
+                {
+                    data.getResReviews.length > 0 ? (
+                        <View>
+                            <Section style={{ flexDirection: "row", justifyContent: "center", marginBottom: 5 }}>
+                                <ReviewsBrief>
+                                    <ReviewsRate><FontAwesome name="star" size={23} color={styles.yellowColor} /> {restaurant.rate}</ReviewsRate>
+                                    <ReviewsCount>(총 {reviewsCount}개 리뷰)</ReviewsCount>
+                                </ReviewsBrief>
+                                <ReviewRateDetails>
+                                    <RateDetail point={1} count={restaurant.rate1count} total={reviewsCount} />
+                                    <RateDetail point={2} count={restaurant.rate2count} total={reviewsCount} />
+                                    <RateDetail point={3} count={restaurant.rate3count} total={reviewsCount} />
+                                    <RateDetail point={4} count={restaurant.rate4count} total={reviewsCount} />
+                                    <RateDetail point={5} count={restaurant.rate5count} total={reviewsCount} />
+                                </ReviewRateDetails>
+                            </Section>
+                            <Section>
+                                <View style={{
+                                    flexDirection: "row",
+                                    justifyContent: "flex-end",
+                                    borderBottomColor: "#e0d5d5",
+                                    borderBottomWidth: 0.45,
+                                    paddingBottom: 5,
+                                }}>
+                                    {SORTING_METHODS_LIST.map(method => (
+                                        <SortingMethod
+                                            text={method}
+                                            isSelected={sorting === method}
+                                            onPress={() => setSorting(method)}
+                                        />
+                                    ))}
+                                </View>
+                                <FlatList
+                                    data={data.getResReviews}
+                                    renderItem={renderReviewItem}
+                                    style={{ paddingTop: 20 }}
+                                />
+                            </Section>
+                        </View>
+                    ) : (
+                        <NoReview>
+                            <NoReviewImage />
+                            <NoReviewMessage>리뷰가 존재하지 않습니다.</NoReviewMessage>
+                        </NoReview>
+                    )
+                }
+            </View>
+        ) : (
+            <Loader />
+        )}
+    </>
 }
