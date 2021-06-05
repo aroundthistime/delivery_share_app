@@ -18,7 +18,8 @@ import constants from "../../../constants";
 
 const STARS_ROW_WIDTH = 220;
 
-export default ({ navigation }) => {
+export default ({ navigation, route }) => {
+  console.log(route);
   const [starValue, setStarValue] = useState(3);
   const [comment, setComment] = useState("");
   const [error, setError] = useState(false);
@@ -62,10 +63,24 @@ export default ({ navigation }) => {
 
       <ContainerWrapper>
         <TextTitle style={{ paddingBottom: 50 }}>⭐ 유저 별점</TextTitle>
-        <View style={{ flexDirection: "row", position: "absolute", top: 60, left: (constants.width - STARS_ROW_WIDTH) / 2 }}>
+        <View
+          style={{
+            flexDirection: "row",
+            position: "absolute",
+            top: 60,
+            left: (constants.width - STARS_ROW_WIDTH) / 2,
+          }}
+        >
           <RateStars rate={starValue} size={45} width={STARS_ROW_WIDTH} />
         </View>
-        <View style={{ flexDirection: "row", position: "absolute", top: 60, left: (constants.width - STARS_ROW_WIDTH) / 2 }}>
+        <View
+          style={{
+            flexDirection: "row",
+            position: "absolute",
+            top: 60,
+            left: (constants.width - STARS_ROW_WIDTH) / 2,
+          }}
+        >
           <Slider
             style={{ width: STARS_ROW_WIDTH, height: 50, opacity: 0 }}
             value={starValue}
@@ -74,27 +89,6 @@ export default ({ navigation }) => {
             maximumValue={5}
             step={0.5}
           />
-          {/* <Slider
-            style={{ width: "80%" }}
-            value={starValue}
-            onValueChange={(value) => setStarValue(value)}
-            minimumValue={1}
-            maximumValue={5}
-            step={0.5}
-            minimumTrackTintColor={styles.themeColor}
-            maximumTrackTintColor="#000000"
-            thumbTintColor={styles.themeColor}
-          />
-          <Text
-            style={{
-              fontSize: 20,
-              fontWeight: "bold",
-              textAlign: "center",
-              width: "20%",
-            }}
-          >
-            {starValue}
-          </Text> */}
         </View>
       </ContainerWrapper>
 
@@ -143,9 +137,9 @@ const SubmitButton = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
   padding: 15px 0;
-  margin-left : 15;
-  margin-right : 15;
-  border-radius : 5;
+  margin-left: 15;
+  margin-right: 15;
+  border-radius: 5;
   margin-bottom: 20px;
   background-color: ${styles.themeColor};
 `;
