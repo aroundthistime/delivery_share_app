@@ -4,7 +4,6 @@ import { splitNumberPerThousand } from "../utils";
 import { v4 as uuid } from "uuid";
 
 export const MenuListWithName = ({ menus }) => {
-  console.log(menus);
   return (
     <>
       {menus.length &&

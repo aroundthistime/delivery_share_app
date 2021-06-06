@@ -2,20 +2,11 @@ import React from "react";
 import styled from "styled-components";
 import { Text } from "react-native";
 
-const RequestDetails = ({
-  background,
-  requestForStore,
-  requestForDelivery,
-}) => {
+const RequestDetails = ({ background, request }) => {
   return (
     <RequestDetail background={background}>
-      <RequestTitle>To. Store</RequestTitle>
-      <Text>{requestForStore ? requestForStore : "-"}</Text>
-
-      <Text />
-
-      <RequestTitle>To. Delivery</RequestTitle>
-      <Text>{requestForDelivery ? requestForDelivery : "-"}</Text>
+      <RequestTitle>전달사항</RequestTitle>
+      <Text>{request || "없음"}</Text>
     </RequestDetail>
   );
 };
