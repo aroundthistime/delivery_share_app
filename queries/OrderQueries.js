@@ -45,12 +45,18 @@ export const GET_ORDER = gql`
             longitude
             place
           }
+          restaurant{
+            seq
+            name
+            delivery_tip
+          }
           request_call
           cart{
             user{
               seq
               name
               thumbnail
+              rate
             }
             request
             selected_menu{

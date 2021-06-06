@@ -6,4 +6,4 @@ export const isCallReceiverVar = makeVar();
 
 export const currentCallVar = makeVar();
 
-export const myCall = makeVar();
+export const myCallVar = makeVar();

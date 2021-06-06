@@ -1,7 +1,7 @@
 import React from "react";
 import { Alert, TouchableOpacity } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import styled from "styled-components";
 import HeaderRightContainer from "../components/HeaderRightContainer";
 import TabNavigation from "./TabNavigation";
@@ -26,6 +26,11 @@ import Confirm from "../screens/Payment/Confirm";
 import Payment from "../screens/Payment/Payment";
 import Kakaopay from "../screens/Payment/Kakaopay";
 import WriteRestaurantReview from "../screens/Review/Restaurant/WriteRestaurantReview";
+import MyCall from "../screens/Order/MyCall";
+import { useQuery } from "@apollo/client";
+import { GET_MY_CALL } from "../queries/CallQueries";
+import { myCallVar } from "../reactiveVars";
+import Loader from "../components/Loader";
 
 const LinksContainer = styled.View`
     flex-direction : row;
@@ -52,6 +57,10 @@ const ShowModalsLink = ({ onPress }) => (
 const LoggedInNavigation = createStackNavigator();
 
 export default ({ navigation, route }) => {
+  const { data, loading, error } = useQuery(GET_MY_CALL);
+  if (!loading && data && data.getMYCall) {
+    myCallVar(data.getMYCall);
+  }
   const cart = useCart();
   const clearCart = useClearCart();
   const clearCartAlert = () => {
@@ -70,6 +79,9 @@ export default ({ navigation, route }) => {
         }
       ]
     )
+  }
+  if (loading || !data || !data.getMyCall) {
+    return <Loader />
   }
   return (
     <LoggedInNavigation.Navigator
@@ -138,10 +150,19 @@ export default ({ navigation, route }) => {
       <LoggedInNavigation.Screen
         name="Order"
         component={Order}
-        options={{
+        options={({ navigation, route }) => ({
           title: "주문내역",
-          headerTitleAlign: "center"
-        }}
+          headerTitleAlign: "center",
+          headerRight: () => <TouchableOpacity
+            style={{ marginRight: constants.headerRightMargin + 5 }}
+            onPress={() => navigation.setParams({
+              ...route.params,
+              refetchOrder: true
+            })}
+          >
+            <FontAwesome name="repeat" size={20} color="rgba(0, 0, 0, 0.8)" />
+          </TouchableOpacity>
+        })}
       />
       <LoggedInNavigation.Screen
         name="Restaurants"

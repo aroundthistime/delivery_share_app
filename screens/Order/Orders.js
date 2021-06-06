@@ -186,15 +186,20 @@ export default ({ navigation }) => {
         await refetch();
         setIsFetching(false);
     }
+    const ordersSortFunc = (order1, order2) => {
+        const order1Date = new Date(order1.created_at);
+        const order2Date = new Date(order2.created_at);
+        return order2Date - order1Date;
+    }
     const renderOrderItem = ({ item: order }) => {
-        // const opponent = getOpponent(order.participants, user.id);
         if (!order.call) {
             return <></>
         }
         const participants = order.call.cart.map(cartObj => cartObj.user);
-        const opponent = getOpponent(participants, "1");
+        const opponent = getOpponent(participants[0], participants[1], "1");
         const restaurant = order.call.restaurant;
-        const selectedMenus = order.call.cart[0].selected_menu.concat(order.call.cart[1].selected_menu);
+        const selectedMenus = order.call.cart.length > 1 ? order.call.cart[0].selected_menu.concat(order.call.cart[1].selected_menu) : order.call.cart[0].selected_menu;
+        // const selectedMenus = order.call.cart[0].selected_menu.concat(order.call.cart[1].selected_menu);
         let orderStatus;
         if (order.status === "pending") {
             orderStatus = "준비중"
@@ -224,11 +229,11 @@ export default ({ navigation }) => {
                             </OpponentContainer>
                         </TouchableOpacity>
                         <OrderContent>
-                            {selectedMenus.length > 1 ? (
+                            {/* {selectedMenus.length > 1 ? (
                                 `${selectedMenus[0].menu.name} 외 ${selectedMenus.length - 1}개`
                             ) : (
                                 selectedMenus[0].menu.name
-                            )}
+                            )} */}
                         </OrderContent>
                     </OrderInfos>
                 </OrderBody>
@@ -242,11 +247,11 @@ export default ({ navigation }) => {
     }
     return <>
         <ScreenHeader title={'주문내역'} />
-        {!loading && data && data.allOrders ? (
+        {!loading && !isFetching && data && data.allOrders ? (
             <>
                 {data.allOrders.length > 0 ? (
                     <FlatList
-                        data={data.allOrders}
+                        data={[...data.allOrders].sort(ordersSortFunc)}
                         renderItem={renderOrderItem}
                         refreshControl={<RefreshControl
                             colors={[styles.lightThemeColor, styles.themeColor]}

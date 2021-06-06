@@ -14,7 +14,7 @@ import FooterBtn from "../../components/FooterBtn";
 import { useMutation } from "@apollo/client";
 import { CREATE_CALL } from "../../queries/CallQueries";
 import { useCart } from "../../Contexts/CartContext";
-import { madeCall } from "../../reactiveVars";
+import { myCallVar } from "../../reactiveVars";
 
 const MarkerTitle = styled.Text`
     padding-left : 8;
@@ -181,6 +181,7 @@ export default ({ navigation, route }) => {
     }, []);
     const createCall = async () => {
         try {
+            console.log(JSON.stringify(cart));
             const { data: { createCall: result }, error } = await createCallMutation({
                 variables: {
                     cart: JSON.stringify(cart),
@@ -194,8 +195,8 @@ export default ({ navigation, route }) => {
             })
             if (result) {
                 Alert.alert("콜이 요청되었습니다.");
-                madeCall(true);
-                navigation.dispatch(StackActions.replace("MethodSelect"))
+                myCallVar(result);
+                navigation.dispatch(StackActions.replace("TabNavigation"))
             } else {
                 Alert.alert("콜 요청에 실패하였습니다. 다시 시도해주세요.");
             }

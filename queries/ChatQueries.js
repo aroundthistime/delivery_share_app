@@ -128,8 +128,8 @@ export const NEW_MESSAGE_FROM_CHAT = gql`
 `
 
 export const READ_MESSAGE = gql`
-    mutation readMessage($messageId : String!){
-        readMessage(messageId : $messageId)
+    mutation readMessage($message_seq : String!){
+        readMessage(message_seq : $message_seq)
     }
 `
 

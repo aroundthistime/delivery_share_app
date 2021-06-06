@@ -298,7 +298,7 @@ export default ({ navigation, route }) => {
     if (isFocused && messages.length > 0 && messages[messages.length - 1].from.seq !== userObj.id) {
         readMessageMutation({
             variables: {
-                messageId: messages[messages.length - 1].seq
+                message_seq: messages[messages.length - 1].seq
             }
         })
     }
@@ -459,7 +459,7 @@ export default ({ navigation, route }) => {
                                         }
                                     }
                                     if (index === array.length - 1 || !checkSameTime(message.created_at, array[index + 1].created_at) || (message.from.seq !== array[index + 1].from.seq)) {
-                                        createdAt = formatAmPm(`${message.created_at.getHours()}:${message.created_at.getMinutes()}`);
+                                        createdAt = formatAmPm(`${new Date(message.created_at).getHours()}:${new Date(message.created_at).getMinutes()}`);
                                     }
                                     if (checkSameDate(message.created_at, array[index - 1].created_at)) {
                                         return (

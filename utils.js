@@ -1,4 +1,4 @@
-import { ToastAndroid } from "react-native";
+import { Alert, ToastAndroid } from "react-native";
 
 export const formatReviewCounts = (count) => {
     if (count <= 100) {
@@ -51,8 +51,12 @@ const checkIfYesterday = (date1, date2) => {
 
 export const getTimeStamp = (timeString) => {
     const current = new Date();
-    console.log(timeString);
-    const target = new Date(timeString);
+    let target;
+    if (isNaN(new Date(timeString).getFullYear())) {
+        target = new Date(timeString.replace(/-/g, "/"))
+    } else {
+        target = new Date(timeString);
+    }
     if (//same date
         current.getFullYear() === target.getFullYear()
         && current.getMonth() === target.getMonth()
@@ -72,18 +76,14 @@ export const getTimeStamp = (timeString) => {
 
 export const getOpponent = (participant1, participant2, userId) => {
     if (participant1 && participant1.seq !== userId) {
-        return participant2;
-    } else if (partici{
-        return
-    }
-    if (participants.length > 1) {
-        if (participants[0].seq === userId) {
-            return participants[1];
-        } else {
-            return participants[0];
-        }
+        return participant1;
+    } else if (participant2 && participant2.seq !== userId) {
+        return participant2
     } else {
-        return DEFAULT_USER;
+        return {
+            thumbnail: "https://t4.ftcdn.net/jpg/02/15/84/43/240_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg",
+            name: "(알수없음)"
+        }
     }
 }
 

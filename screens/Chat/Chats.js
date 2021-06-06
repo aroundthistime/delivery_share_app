@@ -13,7 +13,6 @@ export default ({ navigation }) => {
         fetchPolicy: "network-only",
         notifyOnNetworkStatusChange: true
     });
-    console.log(loading, data, error);
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', async () => {
             await refetch();
