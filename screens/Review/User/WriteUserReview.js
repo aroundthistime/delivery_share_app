@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { ScrollView, Text, TextInput, View } from "react-native";
+import { CommonActions } from "@react-navigation/native";
 import styled from "styled-components";
 import ContainerWrapper from "../../../components/ContainerWrapper";
 import { Ionicons } from "@expo/vector-icons";
@@ -7,22 +8,29 @@ import styles from "../../../styles";
 import Slider from "@react-native-community/slider";
 import RateStars from "../../../components/RateStars";
 import constants from "../../../constants";
+import { useMutation } from "@apollo/client";
+import { CREATE_USER_REVIEW } from "../../../queries/ReviewsMutations";
 
 /**
  * TODO *
  * 1. 리뷰 작성 Form 제작 (✔)
  * 2. 별도 스크린으로 뺄건지 vs 하나의 스크린에 통합할 건 지 검토 필요 (✔)
- * 3. 작성된 내용 바로 화면에 반영 (로딩창 필요할 수도 - useEffect 고려)
- * 4. API 구현 시 작성 내용 데이터베이스에 반영하도록 연동 - handleSubmit 구현
+ * 3. 작성된 내용 바로 화면에 반영 (✔)
+ * 4. API 구현 시 작성 내용 데이터베이스에 반영하도록 연동 - handleSubmit 구현 (✔)
+ * 5. fromseq (= 현재 로그인 된 유저를 어떻게 구분해서 가져올 수 있는지 고려)
  */
 
 const STARS_ROW_WIDTH = 220;
 
 export default ({ navigation, route }) => {
-  console.log(route);
+  const {
+    params: { toseq },
+  } = route;
   const [starValue, setStarValue] = useState(3);
   const [comment, setComment] = useState("");
   const [error, setError] = useState(false);
+
+  const [createUserReview] = useMutation(CREATE_USER_REVIEW);
 
   const clickSubmitButton = () => {
     if (!checkComment()) {
@@ -31,7 +39,7 @@ export default ({ navigation, route }) => {
     }
     setError(false);
     handleSubmit();
-    navigation.navigate("UserReviews");
+    navigation.dispatch(CommonActions.goBack("UserReviews"));
   };
 
   const checkComment = () => {
@@ -39,7 +47,14 @@ export default ({ navigation, route }) => {
   };
 
   const handleSubmit = () => {
-    console.log(starValue, comment);
+    createUserReview({
+      variables: {
+        content: comment,
+        rate: starValue,
+        toseq,
+        fromseq: 10,
+      },
+    });
   };
 
   return (
