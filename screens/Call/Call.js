@@ -40,6 +40,7 @@ import constants from "../../constants";
 export default ({ navigation, route }) => {
   const {
     params: {
+      seq,
       distance,
       callLocation,
       restaurant,
@@ -54,19 +55,20 @@ export default ({ navigation, route }) => {
 
   const location = useReactiveVar(locationVar);
 
-  const setCurrentCall = (call) => {
+  const setCurrentCall = () => {
     currentCallVar({
-      id: call.seq,
+      id: seq,
       user: {
-        id: call.user[0].seq,
-        name: call.user[0].name,
+        id: user.seq,
+        name: user.name,
+        nickname: user.ID,
       },
       // restaurant
-      restaurantId: call.restaurant.seq,
+      restaurantId: restaurant.seq,
       cart: {
-        menus: call.cart.menus,
+        menus: cart[0].selected_menu,
       },
-      requestForStore: call.request_R,
+      requestForStore: cart[0].request,
     });
   };
 
@@ -127,7 +129,7 @@ export default ({ navigation, route }) => {
             name: "restaurant-outline",
           }}
           text="상세정보"
-          additionalMethod={() => setCurrentCall(call)}
+          additionalMethod={() => setCurrentCall()}
         />
       </ContainerWrapper>
 
@@ -199,13 +201,13 @@ export default ({ navigation, route }) => {
         navigation={navigation}
         params={["Restaurant", { id: 1 }]}
         text="메뉴 추가"
-        additionalMethod={() => setCurrentCall(call)}
+        additionalMethod={() => setCurrentCall()}
       />
 
       <NavigationButton
         background={styles.themeColor}
         navigation={navigation}
-        params={["Confirm", { userId: user.ID }]}
+        params={["Request", { request: cart[0].request, user, cart }]}
         text="바로 주문"
       />
     </ScrollView>

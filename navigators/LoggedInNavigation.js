@@ -26,6 +26,7 @@ import Confirm from "../screens/Payment/Confirm";
 import Payment from "../screens/Payment/Payment";
 import Kakaopay from "../screens/Payment/Kakaopay";
 import WriteRestaurantReview from "../screens/Review/Restaurant/WriteRestaurantReview";
+import RequestForm from "../screens/Call/RequestForm";
 
 const LinksContainer = styled.View`
   flex-direction: row;
@@ -92,6 +93,14 @@ export default ({ navigation, route }) => {
         component={Call}
         options={{
           title: "콜 확인하기",
+          headerTitleAlign: "center",
+        }}
+      />
+      <LoggedInNavigation.Screen
+        name="Request"
+        component={RequestForm}
+        options={{
+          title: "요청사항 기입",
           headerTitleAlign: "center",
         }}
       />
