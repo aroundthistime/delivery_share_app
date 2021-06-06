@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FlatList,
   ScrollView,
@@ -11,6 +11,7 @@ import {
 import CallListBar from "../../components/CallListBar";
 import { GET_NEAR_CALLINGS } from "../../queries/CallingsQueries";
 import { ButtonText, RefreshBtn } from "./styled";
+import { v4 as uuid } from "uuid";
 
 /**
  * TODO *
@@ -26,14 +27,12 @@ const locObj = {
 };
 
 export default ({ navigation }) => {
-  const [refresh, setRefresh] = useState(false);
   const { loading, data, refetch } = useQuery(GET_NEAR_CALLINGS, {
     variables: locObj,
   });
 
   const handleRefresh = () => {
     refetch();
-    setRefresh((prev) => !prev);
   };
 
   const renderCall = ({ item }) => (
@@ -67,6 +66,7 @@ export default ({ navigation }) => {
               .filter((call) => call.status === "isActivated")
               .sort((a, b) => a.distance - b.distance)}
             renderItem={renderCall}
+            keyExtractor={() => uuid()}
             nestedScrollEnabled
           ></FlatList>
         )}
