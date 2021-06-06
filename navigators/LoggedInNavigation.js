@@ -1,7 +1,7 @@
 import React from "react";
 import { Alert, TouchableOpacity } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from "@expo/vector-icons";
 import styled from "styled-components";
 import HeaderRightContainer from "../components/HeaderRightContainer";
 import TabNavigation from "./TabNavigation";
@@ -28,26 +28,29 @@ import Kakaopay from "../screens/Payment/Kakaopay";
 import WriteRestaurantReview from "../screens/Review/Restaurant/WriteRestaurantReview";
 
 const LinksContainer = styled.View`
-    flex-direction : row;
-`
+  flex-direction: row;
+`;
 
 const SearchLink = ({ onPress }) => (
   <TouchableOpacity onPress={onPress} style={{ marginRight: 8 }}>
     <Ionicons name="search" size={27} color="black" />
   </TouchableOpacity>
-)
+);
 
 const CartLink = ({ onPress }) => (
-  <TouchableOpacity onPress={onPress} style={{ marginRight: constants.headerRightMargin }}>
+  <TouchableOpacity
+    onPress={onPress}
+    style={{ marginRight: constants.headerRightMargin }}
+  >
     <Ionicons name="cart" size={28} color="black" />
   </TouchableOpacity>
-)
+);
 
 const ShowModalsLink = ({ onPress }) => (
   <HeaderRightContainer onPress={onPress}>
     <Ionicons name="ellipsis-vertical" size={24} color="rgba(0, 0, 0, 0.5)" />
   </HeaderRightContainer>
-)
+);
 
 const LoggedInNavigation = createStackNavigator();
 
@@ -55,26 +58,20 @@ export default ({ navigation, route }) => {
   const cart = useCart();
   const clearCart = useClearCart();
   const clearCartAlert = () => {
-    Alert.alert(
-      "장바구니에 담긴 모든 메뉴를 삭제하시겠습니까?",
-      "",
-      [
-        {
-          text: "취소",
-          onPress: () => 1,
-          style: "cancel"
-        },
-        {
-          text: "확인",
-          onPress: () => clearCart()
-        }
-      ]
-    )
-  }
+    Alert.alert("장바구니에 담긴 모든 메뉴를 삭제하시겠습니까?", "", [
+      {
+        text: "취소",
+        onPress: () => 1,
+        style: "cancel",
+      },
+      {
+        text: "확인",
+        onPress: () => clearCart(),
+      },
+    ]);
+  };
   return (
-    <LoggedInNavigation.Navigator
-      initialRouteName="TabNavigation"
-    >
+    <LoggedInNavigation.Navigator initialRouteName="TabNavigation">
       <LoggedInNavigation.Screen
         name="TabNavigation"
         component={TabNavigation}
@@ -87,7 +84,7 @@ export default ({ navigation, route }) => {
         component={Calls}
         options={{
           title: "주변 콜 찾기",
-          headerTitleAlign: "center"
+          headerTitleAlign: "center",
         }}
       />
       <LoggedInNavigation.Screen
@@ -95,19 +92,23 @@ export default ({ navigation, route }) => {
         component={Call}
         options={{
           title: "콜 확인하기",
-          headerTitleAlign: "center"
+          headerTitleAlign: "center",
         }}
       />
       <LoggedInNavigation.Screen
         name="Chat"
         component={Chat}
         options={({ navigation, route }) => ({
-          headerRight: () => <ShowModalsLink onPress={() => {
-            navigation.setParams({
-              ...route.params,
-              showModal: true
-            })
-          }} />
+          headerRight: () => (
+            <ShowModalsLink
+              onPress={() => {
+                navigation.setParams({
+                  ...route.params,
+                  showModal: true,
+                });
+              }}
+            />
+          ),
         })}
       />
       <LoggedInNavigation.Screen
@@ -116,11 +117,19 @@ export default ({ navigation, route }) => {
         options={{
           title: "장바구니",
           headerTitleAlign: "center",
-          headerRight: () => cart.menus.length > 0 ? (
-            <ClearBtn onPress={clearCartAlert} marginRight={constants.headerRightMargin + 5} />
-          ) : (
-            <ClearBtn onPress={() => 1} marginRight={constants.headerRightMargin + 5} isDisabled={true} />
-          )
+          headerRight: () =>
+            cart.menus.length > 0 ? (
+              <ClearBtn
+                onPress={clearCartAlert}
+                marginRight={constants.headerRightMargin + 5}
+              />
+            ) : (
+              <ClearBtn
+                onPress={() => 1}
+                marginRight={constants.headerRightMargin + 5}
+                isDisabled={true}
+              />
+            ),
         }}
       />
       <LoggedInNavigation.Screen
@@ -129,10 +138,12 @@ export default ({ navigation, route }) => {
         options={({ navigation }) => ({
           title: "음식 카테고리 선택",
           headerTitleAlign: "center",
-          headerRight: () => <LinksContainer>
-            <SearchLink onPress={() => navigation.navigate("Search")} />
-            <CartLink onPress={() => navigation.navigate("Cart")} />
-          </LinksContainer>
+          headerRight: () => (
+            <LinksContainer>
+              <SearchLink onPress={() => navigation.navigate("Search")} />
+              <CartLink onPress={() => navigation.navigate("Cart")} />
+            </LinksContainer>
+          ),
         })}
       />
       <LoggedInNavigation.Screen
@@ -140,7 +151,7 @@ export default ({ navigation, route }) => {
         component={Order}
         options={{
           title: "주문내역",
-          headerTitleAlign: "center"
+          headerTitleAlign: "center",
         }}
       />
       <LoggedInNavigation.Screen
@@ -148,10 +159,12 @@ export default ({ navigation, route }) => {
         component={Restaurants}
         options={({ navigation }) => ({
           headerTitleAlign: "center",
-          headerRight: () => <LinksContainer>
-            <SearchLink onPress={() => navigation.navigate("Search")} />
-            <CartLink onPress={() => navigation.navigate("Cart")} />
-          </LinksContainer>
+          headerRight: () => (
+            <LinksContainer>
+              <SearchLink onPress={() => navigation.navigate("Search")} />
+              <CartLink onPress={() => navigation.navigate("Cart")} />
+            </LinksContainer>
+          ),
         })}
       />
       <LoggedInNavigation.Screen
@@ -160,10 +173,12 @@ export default ({ navigation, route }) => {
         options={({ navigation }) => ({
           title: "음식 카테고리 선택",
           headerTitleAlign: "center",
-          headerRight: () => <LinksContainer>
-            <SearchLink onPress={() => navigation.navigate("Search")} />
-            <CartLink onPress={() => navigation.navigate("Cart")} />
-          </LinksContainer>
+          headerRight: () => (
+            <LinksContainer>
+              <SearchLink onPress={() => navigation.navigate("Search")} />
+              <CartLink onPress={() => navigation.navigate("Cart")} />
+            </LinksContainer>
+          ),
         })}
       />
       <LoggedInNavigation.Screen
@@ -171,10 +186,12 @@ export default ({ navigation, route }) => {
         component={Menu}
         options={({ navigation }) => ({
           headerTitleAlign: "center",
-          headerRight: () => <LinksContainer>
-            <SearchLink onPress={() => navigation.navigate("Search")} />
-            <CartLink onPress={() => navigation.navigate("Cart")} />
-          </LinksContainer>
+          headerRight: () => (
+            <LinksContainer>
+              <SearchLink onPress={() => navigation.navigate("Search")} />
+              <CartLink onPress={() => navigation.navigate("Cart")} />
+            </LinksContainer>
+          ),
         })}
       />
       <LoggedInNavigation.Screen
@@ -182,7 +199,7 @@ export default ({ navigation, route }) => {
         component={CallMakeForm}
         options={{
           title: "콜 요청하기",
-          headerTitleAlign: "center"
+          headerTitleAlign: "center",
         }}
       />
       <LoggedInNavigation.Screen
@@ -190,14 +207,14 @@ export default ({ navigation, route }) => {
         component={SelectLocation}
         options={{
           title: "수령장소 선택",
-          headerTitleAlign: "center"
+          headerTitleAlign: "center",
         }}
       />
       <LoggedInNavigation.Screen
         name="Search"
         component={Search}
         options={{
-          headerShown: false
+          headerShown: false,
         }}
       />
       <LoggedInNavigation.Screen
@@ -243,5 +260,5 @@ export default ({ navigation, route }) => {
         options={{ title: "카카오페이", headerTitleAlign: "center" }}
       />
     </LoggedInNavigation.Navigator>
-  )
-}
+  );
+};

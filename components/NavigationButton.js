@@ -1,5 +1,6 @@
 import React from "react";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { CommonActions } from "@react-navigation/native";
 import styled from "styled-components";
 import { Text } from "react-native";
 import constants from "../constants";
@@ -18,7 +19,7 @@ const NavigationButton = ({
   params,
   text,
   background,
-  additionalMethod = () => 1
+  additionalMethod = () => 1,
 }) => {
   const setVectorIcons = (flaticon) => {
     const config = {
@@ -35,8 +36,8 @@ const NavigationButton = ({
   const setButtonContent = (background) => {
     const styles = background
       ? {
-        style: { color: "#fff", fontWeight: "bold", fontSize: 16 },
-      }
+          style: { color: "#fff", fontWeight: "bold", fontSize: 16 },
+        }
       : { style: { color: bgColor ? "#fff" : "#111" } };
     return (
       <>
@@ -51,8 +52,8 @@ const NavigationButton = ({
       disabled={disabled}
       background={background}
       onPress={() => {
-        additionalMethod()
-        navigation.navigate(...params);
+        additionalMethod();
+        navigation.dispatch(CommonActions.navigate(...params));
       }}
     >
       {setButtonContent(background)}
@@ -62,8 +63,8 @@ const NavigationButton = ({
       bgColor={bgColor}
       disabled={disabled}
       onPress={() => {
-        additionalMethod()
-        navigation.navigate(...params);
+        additionalMethod();
+        navigation.dispatch(CommonActions.navigate(...params));
       }}
     >
       {setButtonContent(background)}
@@ -75,7 +76,8 @@ export default NavigationButton;
 
 const NavigationBtn = styled.TouchableOpacity`
   flex-direction: row;
-  border: ${({ bgColor }) => (bgColor ? "none" : `1px solid ${styles.lightGrayColor}`)};
+  border: ${({ bgColor }) =>
+    bgColor ? "none" : `1px solid ${styles.lightGrayColor}`};
   border-radius: 10px;
   padding: 10px 15px;
   width: ${constants.width / 2 - 35};
@@ -90,9 +92,9 @@ const ButtonBackground = styled.TouchableOpacity`
   align-items: center;
   background-color: #fff;
   padding: 15px 0;
-  margin-left : 10;
-  margin-right : 10;
-  border-radius : 5;
+  margin-left: 10;
+  margin-right: 10;
+  border-radius: 5;
   margin-bottom: 20px;
   background-color: ${({ background }) => (background ? background : "#fff")};
 `;

@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
-import { FontAwesome } from '@expo/vector-icons';
+import { FontAwesome } from "@expo/vector-icons";
 import styled from "styled-components";
 import styles from "../styles";
 import RateStars from "./RateStars";
@@ -11,22 +11,28 @@ import RateStars from "./RateStars";
  * 2. 또는 infinite scrolling + scrolling down 시 작성버튼 노출
  */
 
-const CallListBar = ({ userId, userImg, stars, content }) => {
+const ReviewsBar = ({ user }) => {
+  const thumbnail =
+    user.user.thumbnail ||
+    "https://user-images.githubusercontent.com/48883344/116450778-a9aa4080-a896-11eb-8515-ad4a8af7d342.png";
+
   return (
     <MenuContainer>
-      <MenuImage source={{ uri: userImg }} />
+      <MenuImage source={{ uri: thumbnail }} />
       <View style={{ flex: 1, marginLeft: 15 }}>
         <UserNickname>
-          <Text style={{ color: "#3f3f3f", fontWeight: "bold" }}>{userId}</Text>
-          <RateStars rate={stars} />
+          <Text style={{ color: "#3f3f3f", fontWeight: "bold" }}>
+            {user.user.ID}
+          </Text>
+          <RateStars rate={user.rate} />
         </UserNickname>
-        <Text>{content}</Text>
+        <Text>{user.content}</Text>
       </View>
     </MenuContainer>
   );
 };
 
-export default CallListBar;
+export default ReviewsBar;
 
 const MenuContainer = styled.View`
   display: flex;
