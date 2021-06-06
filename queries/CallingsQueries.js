@@ -3,6 +3,7 @@ import { gql } from "@apollo/client";
 export const GET_NEAR_CALLINGS = gql`
   query getNearCalls($latitude: Float, $longitude: Float) {
     getNearCalls(latitude: $latitude, longitude: $longitude) {
+      seq
       distance
       callLocation {
         latitude
