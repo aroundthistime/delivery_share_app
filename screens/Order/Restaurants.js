@@ -101,7 +101,6 @@ export default ({ navigation, route }) => {
             dong: "주엽동"
         }
     });
-    console.log(loading, data);
     return <Container>
         {!loading && data && data.getRestaurants ? (
             <>

@@ -23,7 +23,7 @@ const ChatNotice = styled.Text`
     padding-bottom : 5;
     border-radius : 10;
     font-size : 13;
-    margin-bottom : 5;
+    margin-bottom : 10;
     background-color : #c9cbcc;
     color : white;
 `
@@ -242,7 +242,7 @@ export default ({ navigation, route }) => {
     const { data, error, refetch } = useQuery(GET_CHAT, {
         suspend: true,
         variables: {
-            id: chatId
+            seq: chatId
         }
     });
     useEffect(() => {
@@ -268,7 +268,7 @@ export default ({ navigation, route }) => {
         if (messageReadData && messageReadData.detectMessageRead) {
             const readMessage = messageReadData.detectMessageRead.message;
             const updatedMessages = messages.map(message => {
-                if (message.id === readMessage.id && message.from.id === userObj.id) {
+                if (message.seq === readMessage.seq && message.from.seq === userObj.id) {
                     return ({
                         ...message,
                         isChecked: true
@@ -281,9 +281,9 @@ export default ({ navigation, route }) => {
         }
     }, [messageReadData]);
     useEffect(() => {
-        if (data && data.getChat) {
-            setMessages(data.getChat.messages);
-            setOpponent(getOpponent(data.getChat.participants, userObj.id))
+        if (data && data.Chat) {
+            setMessages(data.Chat.messages);
+            setOpponent(getOpponent(data.Chat.participant1, data.Chat.participant2, userObj.id))
         }
     }, [data]); //data 리스트 안에 넣어야됨
     useEffect(() => {
@@ -295,10 +295,10 @@ export default ({ navigation, route }) => {
             })
         }
     }, [route])
-    if (isFocused && messages.length > 0 && messages[messages.length - 1].from.id !== userObj.id) {
+    if (isFocused && messages.length > 0 && messages[messages.length - 1].from.seq !== userObj.id) {
         readMessageMutation({
             variables: {
-                messageId: messages[messages.length - 1].id
+                messageId: messages[messages.length - 1].seq
             }
         })
     }
@@ -326,8 +326,8 @@ export default ({ navigation, route }) => {
         try {
             sendMessageMutation({
                 variables: {
-                    chatId,
-                    opponentId: opponent.id,
+                    chat_seq: chatId,
+                    toseq: opponent.seq,
                     text: messageValue
                 },
             });
@@ -339,7 +339,7 @@ export default ({ navigation, route }) => {
     const quitChat = async () => {
         const { data: { quitChat: quitChatSuccess } } = await quitChatMutation({
             variables: {
-                id: chatId
+                seq: chatId
             }
         });
         if (quitChatSuccess) {
@@ -372,7 +372,7 @@ export default ({ navigation, route }) => {
             if (reportContentValue) {
                 const { data: { reportUser: reportUserSuccess } } = await reportUserMutation({
                     variables: {
-                        id: opponent.id,
+                        userId: opponent.seq,
                         chatId,
                         reason: reportReason,
                         content: reportContentValue
@@ -387,7 +387,7 @@ export default ({ navigation, route }) => {
             } else {
                 const { data: { reportUser: reportUserSuccess } } = await reportUserMutation({
                     variables: {
-                        id: opponent.id,
+                        id: opponent.seq,
                         chatId,
                         reason: reportReason,
                     }
@@ -405,7 +405,7 @@ export default ({ navigation, route }) => {
     }
     return (
         <Suspense fallback={<Loader />}>
-            {data && data.getChat ? (
+            {data && data.Chat ? (
                 <>
                     <KeyboardAwareScrollView
                         style={{ flex: 1, paddingBottom: FONT_SIZE * NUMBER_OF_LINES + 30 }}
@@ -427,17 +427,17 @@ export default ({ navigation, route }) => {
                             {messages.map((message, index, array) => {
                                 let isChecked = false;
                                 let createdAt = "";
-                                const fromMe = userObj.id === message.from.id;
+                                const fromMe = userObj.seq === message.from.seq;
                                 if (fromMe && index === array.length - 1) {
-                                    isChecked = message.isChecked;
+                                    isChecked = message.is_read;
                                 }
                                 if (index === 0) {
-                                    if (array.length === 1 || !checkSameTime(array[1].createdAt, message.createdAt) || array[1].from.id !== message.from.id) {
-                                        createdAt = formatAmPm(`${message.createdAt.getHours()}:${message.createdAt.getMinutes()}`);
+                                    if (array.length === 1 || !checkSameTime(array[1].created_at, message.created_at) || array[1].from.seq !== message.from.seq) {
+                                        createdAt = formatAmPm(`${new Date(message.created_at).getHours()}:${new Date(message.created_at).getMinutes()}`);
                                     }
                                     return (
                                         <>
-                                            <ChatNotice>{formatToFullDate(message.createdAt)}</ChatNotice>
+                                            <ChatNotice>{formatToFullDate(message.created_at)}</ChatNotice>
                                             <Message
                                                 fromMe={fromMe}
                                                 isMyFirst={true}
@@ -451,17 +451,17 @@ export default ({ navigation, route }) => {
                                 } else {
                                     let avatar;
                                     let isMyFirst = false;
-                                    if (array[index - 1].from.id !== message.from.id) {
+                                    if (array[index - 1].from.seq !== message.from.seq) {
                                         if (fromMe) {
                                             isMyFirst = true;
                                         } else {
                                             avatar = opponent.thumbnail;
                                         }
                                     }
-                                    if (index === array.length - 1 || !checkSameTime(message.createdAt, array[index + 1].createdAt) || (message.from.id !== array[index + 1].from.id)) {
-                                        createdAt = formatAmPm(`${message.createdAt.getHours()}:${message.createdAt.getMinutes()}`);
+                                    if (index === array.length - 1 || !checkSameTime(message.created_at, array[index + 1].created_at) || (message.from.seq !== array[index + 1].from.seq)) {
+                                        createdAt = formatAmPm(`${message.created_at.getHours()}:${message.created_at.getMinutes()}`);
                                     }
-                                    if (checkSameDate(message.createdAt, array[index - 1].createdAt)) {
+                                    if (checkSameDate(message.created_at, array[index - 1].created_at)) {
                                         return (
                                             <>
                                                 <Message
@@ -477,7 +477,7 @@ export default ({ navigation, route }) => {
                                     } else {
                                         return (
                                             <>
-                                                <ChatNotice>{formatToFullDate(message.createdAt)}</ChatNotice>
+                                                <ChatNotice>{formatToFullDate(message.created_at)}</ChatNotice>
                                                 <Message
                                                     fromMe={fromMe}
                                                     avatar={opponent.thumbnail}
@@ -491,13 +491,7 @@ export default ({ navigation, route }) => {
                                     }
                                 }
                             })}
-                            {data.getChat.participants.length < 2 && <ChatNotice style={{ marginTop: 30, marginBottom: 20 }}>상대방이 대화를 종료하였습니다.</ChatNotice>}
-                            {data.getChat.participants.length === 2 && opponent && opponent.isBanned && (
-                                <ChatNotice style={{ marginTop: 30, marginBottom: 20 }}>상대방의 계정이 규정위반으로 정지되었습니다</ChatNotice>
-                            )}
-                            {data.getChat.participants.length === 2 && opponent && !opponent.isBanned && opponent.isDeactivated && (
-                                <ChatNotice style={{ marginTop: 30, marginBottom: 20 }}>상대방의 계정이 비활성화되었습니다</ChatNotice>
-                            )}
+                            {!data.Chat.is_active && <ChatNotice style={{ marginTop: 30, marginBottom: 20 }}>상대방이 대화를 종료하였습니다.</ChatNotice>}
                         </ScrollView>
                     </KeyboardAwareScrollView>
                     <ChatInputContainer>
@@ -529,7 +523,7 @@ export default ({ navigation, route }) => {
                                 }
                             }}
                             onContentSizeChange={e => setChatInputContentSize(e.nativeEvent.contentSize.height)}
-                            editable={data.getChat.participants.length > 1 && !data.getChat.participants.some(participant => participant.isBanned || participant.isDeactivated)}
+                            editable={data.Chat.is_active}
                         />
                         {chatInputScroll.showing && <ChatInputScrollbar style={{ height: 87 * 87 / chatInputContentSize, top: chatInputScroll.top }} />}
                         <ChatSendBtn onPress={() => sendMessage()}>

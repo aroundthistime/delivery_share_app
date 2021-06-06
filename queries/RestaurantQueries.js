@@ -49,13 +49,14 @@ export const GET_RESTAURANT = gql`
             delivery_tip
             seperatable
             menus{
+              seq
               name
               thumbnail
               description
               isAvailable
               isSeperatable
               price
-              bestmenu
+              isBestmenu
               options {
                 category
                 isRequired
@@ -79,27 +80,29 @@ export const TOGGLE_LIKE_RESTAURANT = gql`
 export const GET_RESTAURANT_REVIEWS = gql`
     query getRestaurantReviews ($resseq : Int!){
         getResReviews(resseq : $resseq) {
-            seq
-            createdAt
-            rate
-            content
-            images{
-                image
-            }
-            user{
+            reviews{
                 seq
-                name
-                thumbnail
-            }
-            reply{
+                createdAt
+                rate
                 content
+                images{
+                    image
+                }
+                user{
+                    seq
+                    name
+                    thumbnail
+                }
+                reply{
+                    content
+                }
             }
         }
     }
 `
 
 export const GET_MENU = gql`
-    query getMenu($seq : seq){
+    query getMenu($seq : Int!){
         Menu(seq : $seq){
             seq
             name
@@ -107,9 +110,6 @@ export const GET_MENU = gql`
             price
             description
             isAvailable
-            bestmenus{
-                name
-            }
             isSeperatable
             options{
                 category
@@ -138,6 +138,9 @@ export const GET_LIKED_RESTAURANTS = gql`
             rate4count
             rate5count
             isopen
+            bestmenus{
+                name
+            }
         }
     }
 `

@@ -14,6 +14,7 @@ import FooterBtn from "../../components/FooterBtn";
 import { useMutation } from "@apollo/client";
 import { CREATE_CALL } from "../../queries/CallQueries";
 import { useCart } from "../../Contexts/CartContext";
+import { madeCall } from "../../reactiveVars";
 
 const MarkerTitle = styled.Text`
     padding-left : 8;
@@ -106,6 +107,7 @@ export default ({ navigation, route }) => {
     const [isGettingAddress, setIsGettingAddress] = useState(false);
     const receivingSpotInput = useInput("");
     const [createCallMutation] = useMutation(CREATE_CALL);
+    const cart = useCart();
     const setReceivingSpotByMarker = async (latitude, longitude) => {
         setIsGettingAddress(true)
         setReceivingSpot({
@@ -179,25 +181,26 @@ export default ({ navigation, route }) => {
     }, []);
     const createCall = async () => {
         try {
-            const cart = useCart();
-            const { data: { createCall: createCallResult } } = createCallMutation({
+            const { data: { createCall: result }, error } = await createCallMutation({
                 variables: {
                     cart: JSON.stringify(cart),
                     latitude: receivingSpot.latitude,
                     longitude: receivingSpot.longitude,
                     address: receivingSpotInput.value,
-                    requestToRestaurant,
+                    requestToRes: requestToRestaurant,
                     requestToUser,
                     timeLimit
                 }
             })
-            if (createCallResult) {
+            if (result) {
                 Alert.alert("콜이 요청되었습니다.");
+                madeCall(true);
                 navigation.dispatch(StackActions.replace("MethodSelect"))
             } else {
                 Alert.alert("콜 요청에 실패하였습니다. 다시 시도해주세요.");
             }
-        } catch {
+        } catch (error) {
+            console.log(error);
             Alert.alert("콜 요청에 실패하였습니다. 다시 시도해주세요.");
         }
     }

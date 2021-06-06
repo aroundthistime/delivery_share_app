@@ -1,11 +1,14 @@
-import React from "react";
-import { FlatList, Text, Touchable, TouchableOpacity, View } from "react-native";
+import React, { useState } from "react";
+import { FlatList, RefreshControl, Text, Touchable, TouchableOpacity, View } from "react-native";
 import styled from "styled-components";
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import ScreenHeader from "../../components/ScreenHeader";
 import constants from "../../constants";
 import styles from "../../styles";
 import { getOpponent, getTimeStamp } from "../../utils";
+import { useQuery } from "@apollo/client";
+import { GET_ORDERS } from "../../queries/OrderQueries";
+import Loader from "../../components/Loader";
 
 const OrderListBar = styled.View`
     background-color : white;
@@ -176,60 +179,93 @@ const orders = [
 ]
 
 export default ({ navigation }) => {
+    const { loading, data, error, refetch } = useQuery(GET_ORDERS);
+    const [isFetching, setIsFetching] = useState(false);
+    const onRefresh = async () => {
+        setIsFetching(true);
+        await refetch();
+        setIsFetching(false);
+    }
     const renderOrderItem = ({ item: order }) => {
         // const opponent = getOpponent(order.participants, user.id);
-        const opponent = getOpponent(order.users, "1");
+        if (!order.call) {
+            return <></>
+        }
+        const participants = order.call.cart.map(cartObj => cartObj.user);
+        const opponent = getOpponent(participants, "1");
+        const restaurant = order.call.restaurant;
+        const selectedMenus = order.call.cart[0].selected_menu.concat(order.call.cart[1].selected_menu);
+        let orderStatus;
+        if (order.status === "pending") {
+            orderStatus = "준비중"
+        } else if (order.status === "completed") {
+            orderStatus = "배달완료"
+        } else {
+            orderStatus = "주문취소"
+        }
         return <>
             <OrderListBar>
                 <OrderHeader>
-                    <OrderDate>{getTimeStamp(order.createdAt)}</OrderDate>
-                    <OrderStatus>{order.status}</OrderStatus>
+                    <OrderDate>{getTimeStamp(order.created_at)}</OrderDate>
+                    <OrderStatus>{orderStatus}</OrderStatus>
                 </OrderHeader>
                 <OrderBody>
-                    <TouchableOpacity onPress={() => navigation.navigate("Restaurant", { id: order.restaurant.id })}>
-                        <RestaurantImg source={{ uri: order.restaurant.thumbnail }} />
+                    <TouchableOpacity onPress={() => navigation.navigate("Restaurant", { id: restaurant.seq })}>
+                        <RestaurantImg source={{ uri: restaurant.thumbnail }} />
                     </TouchableOpacity>
                     <OrderInfos>
-                        <TouchableOpacity>
-                            <RestaurantName numberOfLines={1}>{order.restaurant.name}</RestaurantName>
+                        <TouchableOpacity onPress={() => navigation.navigate("Restaurant", { id: restaurant.seq })}>
+                            <RestaurantName numberOfLines={1}>{restaurant.name}</RestaurantName>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => navigation.navigate("UserReviews", { userId: opponent.id })}>
+                        <TouchableOpacity onPress={() => navigation.navigate("UserReviews", { userId: opponent.seq })}>
                             <OpponentContainer>
                                 <FontAwesome name="user" size={15} color="rgba(0, 0, 0, 0.6)" />
                                 <OpponentName>{opponent.name}</OpponentName>
                             </OpponentContainer>
                         </TouchableOpacity>
                         <OrderContent>
-                            {order.menus.length > 1 ? (
-                                `${order.menus[0].menu.name} 외 ${order.menus.length - 1}개`
+                            {selectedMenus.length > 1 ? (
+                                `${selectedMenus[0].menu.name} 외 ${selectedMenus.length - 1}개`
                             ) : (
-                                order.menus[0].menu.name
+                                selectedMenus[0].menu.name
                             )}
                         </OrderContent>
                     </OrderInfos>
                 </OrderBody>
                 <OrderFooter>
-                    <FooterBtn isAvailable={true} text={"주문상세"} onPress={() => navigation.navigate("Order", { orderId: order.id })} />
-                    <FooterBtn isAvailable={Boolean(order.restaurantReview)} text={"식당리뷰쓰기"} onPress={() => navigation.navigate("WriteRestaurantReview", { orderId: order.id, restaurant: order.restaurant, menus: order.menus })} />
-                    <FooterBtn isAvailable={Boolean(order.userReview)} text={"유저리뷰쓰기"} onPress={() => navigation.navigate("WriteUserReview", { orderId: order.id, opponentId: opponent.id })} />
+                    <FooterBtn isAvailable={true} text={"주문상세"} onPress={() => navigation.navigate("Order", { orderId: order.seq })} />
+                    <FooterBtn isAvailable={order.canWriteRestaurantReview} text={"식당리뷰쓰기"} onPress={() => navigation.navigate("WriteRestaurantReview", { orderId: order.seq, restaurant, menus: selectedMenus })} />
+                    <FooterBtn isAvailable={order.canWriteUserReview} text={"유저리뷰쓰기"} onPress={() => navigation.navigate("WriteUserReview", { orderId: order.seq, opponentId: opponent.seq })} />
                 </OrderFooter>
             </OrderListBar>
         </>
     }
     return <>
         <ScreenHeader title={'주문내역'} />
-        {orders && orders.length > 0 > 0 ? (
-            <FlatList
-                data={orders}
-                renderItem={renderOrderItem}
-            />
-        ) :
-            (
-                <NoOrderContainer>
-                    <NoOrderImage />
-                    <NoOrderMessage>주문내역이 없습니다.</NoOrderMessage>
-                </NoOrderContainer>
-            )
-        }
+        {!loading && data && data.allOrders ? (
+            <>
+                {data.allOrders.length > 0 ? (
+                    <FlatList
+                        data={data.allOrders}
+                        renderItem={renderOrderItem}
+                        refreshControl={<RefreshControl
+                            colors={[styles.lightThemeColor, styles.themeColor]}
+                            refreshing={isFetching}
+                            onRefresh={onRefresh}
+                        />}
+
+                    />
+                ) :
+                    (
+                        <NoOrderContainer>
+                            <NoOrderImage />
+                            <NoOrderMessage>주문내역이 없습니다.</NoOrderMessage>
+                        </NoOrderContainer>
+                    )
+                }
+            </>
+        ) : (
+            <Loader />
+        )}
     </>
 }

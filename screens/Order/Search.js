@@ -100,7 +100,6 @@ export default ({ navigation }) => {
         }
         getHistory()
     }, []);
-    console.log(`currentKeyword : ${currentKeyword}`)
     useEffect(
         () => navigation.addListener("beforeRemove", (event) => {
             if (currentKeyword === "") {

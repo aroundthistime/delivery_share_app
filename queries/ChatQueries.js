@@ -2,113 +2,127 @@ import { gql } from '@apollo/client';
 
 export const GET_CHATS = gql`
     query getChats{
-        getChats{
-            id
-            participants{
-                id
+        allChats{
+            seq
+            participant1{
+                seq
+                name
+                thumbnail
+            }
+            participant2{
+                seq
                 name
                 thumbnail
             }
             lastMessage{
                 text
                 from{
-                    id
+                    seq
                 }
-                isChecked
-                createdAt
+                is_read
+                created_at
             }
-            createdAt
+            created_at
         }
     }
 `
 
 export const NEW_MESSAGE = gql`
-    subscription newMessage($id : String!) {
-        newMessage(id : $id){
-            id
+    subscription newMessage($seq : String!) {
+        newMessage(seq : $seq){
+            seq
             text
             from{
-                id
+                seq
             }
-            createdAt
+            created_at
             chat{
-                id
+                seq
             }
         }
     }
 `
 
 export const NEW_CHAT = gql`
-    subscription newChat($id : String!){
-        newChat(id : $id){
-            id
-            participants{
-                id
+    subscription newChat($seq : String!){
+        newChat(seq : $seq){
+            seq
+            participant1{
+                seq
+                name
+                thumbnail
+            }
+            participant2{
+                seq
                 name
                 thumbnail
             }
             lastMessage{
                 text
                 from{
-                    id
+                    seq
                 }
-                isChecked
-                createdAt
+                is_read
+                created_at
             }
-            createdAt
+            created_at
         }
     }
 `
 
 
 export const QUIT_CHAT = gql`
-    mutation quitChat($id : String!){
-        quitChat(id : $id)
+    mutation quitChat($seq : String!){
+        quitChat(seq : $seq)
     }
 `
 
 export const GET_CHAT = gql`
-    query getChat($id : String!){
-        getChat(id : $id){
-            id
-            participants{
-                id
+    query getChat($seq : Int!){
+        Chat(seq : $seq){
+            seq
+            participant1{
+                seq
                 name
                 thumbnail
-                isBanned
-                isDeactivated
             }
+            participant2{
+                seq
+                name
+                thumbnail
+            }
+            is_active
             messages{
-                id
+                seq
                 text
                 from{
-                    id
+                    seq
                 }
-                createdAt
-                isChecked
+                created_at
+                is_read
             }
         }
     }
 `
 
 export const SEND_MESSAGE = gql`
-    mutation sendMessage($chatId : String!, $opponentId : String!, $text : String!){
-        sendMessage(chatId : $chatId, opponentId : $opponentId, text : $text){
-            id
+    mutation sendMessage($chat_seq : Int!, $toseq : Int!, $text : String!){
+        sendMessage(chat_seq : $chat_seq, toseq : $toseq, text : $text){
+            seq
             text
         }
     }
 `
 
 export const NEW_MESSAGE_FROM_CHAT = gql`
-    subscription newMessageFromChat($id : String!) {
-        newMessageFromChat(id : $id){
-            id
+    subscription newMessageFromChat($seq : String!) {
+        newMessageFromChat(seq : $seq){
+            seq
             text
             from{
-                id
+                seq
             }
-            createdAt
+            created_at
         }
     }
 `
@@ -123,14 +137,14 @@ export const DETECT_MESSAGE_READ = gql`
     subscription detectMessageRead($chatId : String!){
         detectMessageRead(chatId : $chatId){
             message{
-                id
+                seq
             }
         }
     }
 `
 
 export const REPORT_USER = gql`
-    mutation reportUser($id : String!, $chatId : String, $reason : String!, $content : String){
-        reportUser(id : $id, chatId : $chatId, reason : $reason, content : $content)
+    mutation reportUser($userId : String!, $chatId : String, $reason : String!, $content : String){
+        reportUser(userId : $userId, chatId : $chatId, reason : $reason, content : $content)
     }
 `

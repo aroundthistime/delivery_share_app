@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Alert } from "react-native";
 import ScreenHeader from "../../components/ScreenHeader";
 import { useMutation, useQuery } from "@apollo/client";
@@ -9,10 +9,11 @@ import ChatsPresenter from "./ChatsPresenter";
 
 
 export default ({ navigation }) => {
-    const { loading, data, refetch } = useQuery(GET_CHATS, {
+    const { loading, data, refetch, error } = useQuery(GET_CHATS, {
         fetchPolicy: "network-only",
         notifyOnNetworkStatusChange: true
     });
+    console.log(loading, data, error);
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', async () => {
             await refetch();
@@ -22,8 +23,8 @@ export default ({ navigation }) => {
     return (
         <>
             <ScreenHeader title={"채팅"} />
-            {!loading && data && data.getChats ? (
-                <ChatsPresenter chatsList={data.getChats} refetch={refetch} navigation={navigation} />
+            {!loading && data && data.allChats ? (
+                <ChatsPresenter chatsList={data.allChats} refetch={refetch} navigation={navigation} />
             ) : (
                 <Loader />
             )}

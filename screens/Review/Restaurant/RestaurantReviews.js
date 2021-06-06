@@ -94,7 +94,7 @@ const SortingMethod = ({ text, isSelected, onPress }) => (
 )
 
 const ReviewItem = styled.View`
-    margin-bottom : 15;
+    margin-bottom : 30;
 `
 
 const ReviewHeader = styled.View`
@@ -174,14 +174,12 @@ const NoReviewMessage = styled.Text`
 
 export default ({ navigation }) => {
     const [sorting, setSorting] = useState("최신순");
-    console.log(1);
     const restaurant = useRestaurant();
     const { loading, data, error } = useQuery(GET_RESTAURANT_REVIEWS, {
         variables: {
             resseq: restaurant.seq
         }
     })
-    // console.log(loading, data, error);
     const reviewsCount = restaurant.rate1count
         + restaurant.rate2count
         + restaurant.rate3count
@@ -201,7 +199,7 @@ export default ({ navigation }) => {
                     <RateStars rate={review.rate} />
                 </View>
             </ReviewHeader>
-            {review.images.length && (
+            {review.images.length > 0 && (
                 <View style={{ marginBottom: 10 }}>
                     <ImageSlider images={review.images.map(imageObj => imageObj.image)} width={constants.width - 40} height={constants.width - 40} />
                 </View>
@@ -222,7 +220,7 @@ export default ({ navigation }) => {
         {!loading && data && data.getResReviews ? (
             <View style={{ marginBottom: restaurant.isopen ? 0 : 45 }}>
                 {
-                    data.getResReviews.length > 0 ? (
+                    data.getResReviews.reviews.length > 0 ? (
                         <View>
                             <Section style={{ flexDirection: "row", justifyContent: "center", marginBottom: 5 }}>
                                 <ReviewsBrief>
@@ -254,7 +252,7 @@ export default ({ navigation }) => {
                                     ))}
                                 </View>
                                 <FlatList
-                                    data={data.getResReviews}
+                                    data={data.getResReviews.reviews}
                                     renderItem={renderReviewItem}
                                     style={{ paddingTop: 20 }}
                                 />

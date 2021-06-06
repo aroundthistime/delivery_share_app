@@ -1,9 +1,10 @@
 import { useMutation, useSubscription } from "@apollo/client";
-import React, { useState } from "react";
-import { Alert } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Alert, ScrollView } from "react-native";
 import styled from "styled-components";
 import { NEW_CHAT, NEW_MESSAGE, QUIT_CHAT } from "../../queries/ChatQueries";
 import styles from "../../styles";
+import { getOpponent, getTimeStamp } from "../../utils";
 
 const ChatTabsContainer = styled.View`
     background-color : rgba(0, 0, 0, 0.1);
@@ -84,14 +85,14 @@ export default ({
         let chat1Date;
         let chat2Date;
         if (chat1.lastMessage) {
-            chat1Date = new Date(chat1.lastMessage.createdAt);
+            chat1Date = new Date(chat1.lastMessage.created_at);
         } else {
-            chat1Date = new Date(chat1.createdAt)
+            chat1Date = new Date(chat1.created_at)
         }
         if (chat2.lastMessage) {
-            chat2Date = new Date(chat2.lastMessage.createdAt);
+            chat2Date = new Date(chat2.lastMessage.created_at);
         } else {
-            chat2Date = new Date(chat2.createdAt)
+            chat2Date = new Date(chat2.created_at)
         }
         return chat2Date - chat1Date;
     }
@@ -169,11 +170,14 @@ export default ({
                 <ScrollView style={{ flex: 1, backgroundColor: styles.bgColor }}>
                     <ChatTabsContainer>
                         {sortedChats.map((chat) => {
-                            const opponent = getOpponent(chat.participants, userObj.id);
+                            if (!chat.lastMessage) {
+                                return <></>
+                            }
+                            const opponent = getOpponent(chat.participant1, chat.participant2, userObj.id);
                             return (
                                 <ChatTab key={chat.id}
-                                    onPress={() => navigation.navigate("Chat", { chatId: chat.id, opponentName: opponent.name })}
-                                    onLongPress={() => { confirmQuitChat(chat.id, opponent.name) }}
+                                    onPress={() => navigation.navigate("Chat", { chatId: chat.seq, opponentName: opponent.name })}
+                                    onLongPress={() => { confirmQuitChat(chat.seq, opponent.name) }}
                                 >
                                     <ChatAvatar source={{ uri: opponent.thumbnail }} />
                                     <ChatInfoMain>
@@ -181,8 +185,8 @@ export default ({
                                         <ChatPreview numberOfLines={1}>{chat.lastMessage.text}</ChatPreview>
                                     </ChatInfoMain>
                                     <ChatInfoSub>
-                                        <ChatTimestamp>{getTimeStamp(chat.lastMessage.createdAt)}</ChatTimestamp>
-                                        {!chat.lastMessage.isChecked && chat.lastMessage.from.id !== userObj.id && <ChatUnreadMark />}
+                                        <ChatTimestamp>{getTimeStamp(chat.lastMessage.created_at)}</ChatTimestamp>
+                                        {!chat.lastMessage.is_read && chat.lastMessage.from.seq !== userObj.seq && <ChatUnreadMark />}
                                     </ChatInfoSub>
                                 </ChatTab>
                             )

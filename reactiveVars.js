@@ -5,3 +5,5 @@ export const locationVar = makeVar();
 export const isCallReceiverVar = makeVar();
 
 export const currentCallVar = makeVar();
+
+export const myCall = makeVar();

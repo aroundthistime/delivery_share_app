@@ -71,7 +71,7 @@ export default ({ images, width, height }) => {
             <FlatList
                 data={images}
                 renderItem={({ item: uri, index }) => (
-                    <Image source={{ uri }} style={{ width, height }} key={index} />
+                    <Image source={{ uri }} style={{ width, height }} />
                 )}
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
