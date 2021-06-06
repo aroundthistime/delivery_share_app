@@ -91,7 +91,7 @@ const Payment = ({ navigation, route }) => {
             type: "Ionicons",
             name: "md-menu",
           }}
-          params={["Order"]}
+          params={["Orders"]}
           text="주문조회"
         />
       </ButtonArea>
