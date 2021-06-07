@@ -147,141 +147,100 @@ const NoOrderMessage = styled.Text`
   color: #545151;
 `;
 
-const orders = [
-  {
-    id: 1,
-    restaurant: {
-      id: 2,
-      name: "엽기떡볶이 장위점",
-      thumbnail:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxFnfMMuOyds6KPs2b51clDv-S3agSe84D4w&usqp=CAU",
-    },
-    createdAt: new Date(),
-    deliveryTime: 60,
-    status: "배달완료",
-    users: [
-      {
-        id: 3,
-        name: "콘요맘떼",
-      },
-      {
-        id: 4,
-        name: "Celebrity",
-      },
-    ],
-    userReview: {},
-    restaurantReview: {
-      id: 1,
-    },
-    menus: [
-      {
-        menu: {
-          name: "로제떡볶이",
-        },
-      },
-      {
-        menu: {
-          name: "김치볶음밥",
-        },
-      },
-    ],
-  },
-];
 
 export default ({ navigation }) => {
-    const { loading, data, error, refetch } = useQuery(GET_ORDERS);
-    const [isFetching, setIsFetching] = useState(false);
-    const onRefresh = async () => {
-        setIsFetching(true);
-        await refetch();
-        setIsFetching(false);
+  const { loading, data, error, refetch } = useQuery(GET_ORDERS);
+  const [isFetching, setIsFetching] = useState(false);
+  const onRefresh = async () => {
+    setIsFetching(true);
+    await refetch();
+    setIsFetching(false);
+  }
+  const ordersSortFunc = (order1, order2) => {
+    const order1Date = new Date(order1.created_at);
+    const order2Date = new Date(order2.created_at);
+    return order2Date - order1Date;
+  }
+  const renderOrderItem = ({ item: order }) => {
+    if (!order.call) {
+      return <></>
     }
-    const ordersSortFunc = (order1, order2) => {
-        const order1Date = new Date(order1.created_at);
-        const order2Date = new Date(order2.created_at);
-        return order2Date - order1Date;
-    }
-    const renderOrderItem = ({ item: order }) => {
-        if (!order.call) {
-            return <></>
-        }
-        const participants = order.call.cart.map(cartObj => cartObj.user);
-        const opponent = getOpponent(participants[0], participants[1], "1");
-        const restaurant = order.call.restaurant;
-        const selectedMenus = order.call.cart.length > 1 ? order.call.cart[0].selected_menu.concat(order.call.cart[1].selected_menu) : order.call.cart[0].selected_menu;
-        // const selectedMenus = order.call.cart[0].selected_menu.concat(order.call.cart[1].selected_menu);
-        let orderStatus;
-        if (order.status === "pending") {
-            orderStatus = "준비중"
-        } else if (order.status === "completed") {
-            orderStatus = "배달완료"
-        } else {
-            orderStatus = "주문취소"
-        }
-        return <>
-            <OrderListBar>
-                <OrderHeader>
-                    <OrderDate>{getTimeStamp(order.created_at)}</OrderDate>
-                    <OrderStatus>{orderStatus}</OrderStatus>
-                </OrderHeader>
-                <OrderBody>
-                    <TouchableOpacity onPress={() => navigation.navigate("Restaurant", { id: restaurant.seq })}>
-                        <RestaurantImg source={{ uri: restaurant.thumbnail }} />
-                    </TouchableOpacity>
-                    <OrderInfos>
-                        <TouchableOpacity onPress={() => navigation.navigate("Restaurant", { id: restaurant.seq })}>
-                            <RestaurantName numberOfLines={1}>{restaurant.name}</RestaurantName>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => navigation.navigate("UserReviews", { userId: opponent.seq })}>
-                            <OpponentContainer>
-                                <FontAwesome name="user" size={15} color="rgba(0, 0, 0, 0.6)" />
-                                <OpponentName>{opponent.name}</OpponentName>
-                            </OpponentContainer>
-                        </TouchableOpacity>
-                        <OrderContent>
-                            {/* {selectedMenus.length > 1 ? (
-                                `${selectedMenus[0].menu.name} 외 ${selectedMenus.length - 1}개`
-                            ) : (
-                                selectedMenus[0].menu.name
-                            )} */}
-                        </OrderContent>
-                    </OrderInfos>
-                </OrderBody>
-                <OrderFooter>
-                    <FooterBtn isAvailable={true} text={"주문상세"} onPress={() => navigation.navigate("Order", { orderId: order.seq })} />
-                    <FooterBtn isAvailable={order.canWriteRestaurantReview} text={"식당리뷰쓰기"} onPress={() => navigation.navigate("WriteRestaurantReview", { orderId: order.seq, restaurant, menus: selectedMenus })} />
-                    <FooterBtn isAvailable={order.canWriteUserReview} text={"유저리뷰쓰기"} onPress={() => navigation.navigate("WriteUserReview", { orderId: order.seq, opponentId: opponent.seq })} />
-                </OrderFooter>
-            </OrderListBar>
-        </>
+    const participants = order.call.cart.map(cartObj => cartObj.user);
+    const opponent = getOpponent(participants[0], participants[1], "1");
+    const restaurant = order.call.restaurant;
+    // const selectedMenus = order.call.cart.length > 1 ? order.call.cart[0].selected_menu.concat(order.call.cart[1].selected_menu) : order.call.cart[0].selected_menu;
+    const selectedMenus = order.call.cart[0].selected_menu.concat(order.call.cart[1].selected_menu);
+    let orderStatus;
+    if (order.status === "pending") {
+      orderStatus = "준비중"
+    } else if (order.status === "completed") {
+      orderStatus = "배달완료"
+    } else {
+      orderStatus = "주문취소"
     }
     return <>
-        <ScreenHeader title={'주문내역'} />
-        {!loading && !isFetching && data && data.allOrders ? (
-            <>
-                {data.allOrders.length > 0 ? (
-                    <FlatList
-                        data={[...data.allOrders].sort(ordersSortFunc)}
-                        renderItem={renderOrderItem}
-                        refreshControl={<RefreshControl
-                            colors={[styles.lightThemeColor, styles.themeColor]}
-                            refreshing={isFetching}
-                            onRefresh={onRefresh}
-                        />}
-
-                    />
-                ) :
-                    (
-                        <NoOrderContainer>
-                            <NoOrderImage />
-                            <NoOrderMessage>주문내역이 없습니다.</NoOrderMessage>
-                        </NoOrderContainer>
-                    )
-                }
-            </>
-        ) : (
-            <Loader />
-        )}
+      <OrderListBar>
+        <OrderHeader>
+          <OrderDate>{getTimeStamp(order.created_at)}</OrderDate>
+          <OrderStatus>{orderStatus}</OrderStatus>
+        </OrderHeader>
+        <OrderBody>
+          <TouchableOpacity onPress={() => navigation.navigate("Restaurant", { id: restaurant.seq })}>
+            <RestaurantImg source={{ uri: restaurant.thumbnail }} />
+          </TouchableOpacity>
+          <OrderInfos>
+            <TouchableOpacity onPress={() => navigation.navigate("Restaurant", { id: restaurant.seq })}>
+              <RestaurantName numberOfLines={1}>{restaurant.name}</RestaurantName>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate("UserReviews", { userId: opponent.seq })}>
+              <OpponentContainer>
+                <FontAwesome name="user" size={15} color="rgba(0, 0, 0, 0.6)" />
+                <OpponentName>{opponent.name}</OpponentName>
+              </OpponentContainer>
+            </TouchableOpacity>
+            <OrderContent>
+              {selectedMenus.length > 1 ? (
+                `${selectedMenus[0].menu.name} 외 ${selectedMenus.length - 1}개`
+              ) : (
+                selectedMenus[0].menu.name
+              )}
+            </OrderContent>
+          </OrderInfos>
+        </OrderBody>
+        <OrderFooter>
+          <FooterBtn isAvailable={true} text={"주문상세"} onPress={() => navigation.navigate("Order", { orderId: order.seq })} />
+          <FooterBtn isAvailable={order.canWriteRestaurantReview} text={"식당리뷰쓰기"} onPress={() => navigation.navigate("WriteRestaurantReview", { orderId: order.seq, restaurant, menus: selectedMenus })} />
+          <FooterBtn isAvailable={order.canWriteUserReview} text={"유저리뷰쓰기"} onPress={() => navigation.navigate("WriteUserReview", { orderId: order.seq, opponentId: opponent.seq })} />
+        </OrderFooter>
+      </OrderListBar>
     </>
-  );
+  }
+  return <>
+    <ScreenHeader title={'주문내역'} />
+    {!loading && !isFetching && data && data.allOrders ? (
+      <>
+        {data.allOrders.length > 0 ? (
+          <FlatList
+            data={[...data.allOrders].sort(ordersSortFunc)}
+            renderItem={renderOrderItem}
+            refreshControl={<RefreshControl
+              colors={[styles.lightThemeColor, styles.themeColor]}
+              refreshing={isFetching}
+              onRefresh={onRefresh}
+            />}
+
+          />
+        ) :
+          (
+            <NoOrderContainer>
+              <NoOrderImage />
+              <NoOrderMessage>주문내역이 없습니다.</NoOrderMessage>
+            </NoOrderContainer>
+          )
+        }
+      </>
+    ) : (
+      <Loader />
+    )}
+  </>
 };

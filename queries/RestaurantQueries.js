@@ -144,3 +144,24 @@ export const GET_LIKED_RESTAURANTS = gql`
         }
     }
 `
+
+export const SEARCH_RESTAURANT = gql`
+    query searchRestaurant($si : String!, $dong : String!, $keyword : String!){
+        searchRestaurant(si : $si, dong : $dong, keyword : $keyword){
+            name
+            rate
+            min_order
+            thumbnail
+            seq
+            rate1count
+            rate2count
+            rate3count
+            rate4count
+            rate5count
+            isopen
+            bestmenus{
+                name
+            }
+        }
+    }
+`
