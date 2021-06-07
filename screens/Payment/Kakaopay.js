@@ -1,6 +1,8 @@
+import { useMutation } from "@apollo/client";
 import React, { useState, useEffect } from "react";
 import { Text, View } from "react-native";
 import styled from "styled-components";
+import { UPDATE_CALL } from "../../queries/CallingsQueries";
 
 /**
  * TODO *
@@ -11,30 +13,34 @@ import styled from "styled-components";
 
 const Kakaopay = ({ navigation, route }) => {
   const {
-    params: { requestForStore, requestForDelivery, menus, userId },
+    params: { userId, seq },
   } = route;
   const [modalState, setModalState] = useState(false);
-  const [isPayCompleted, setIsPayCompleted] = useState(false);
+
+  const handleCancel = () => {
+    navigation.navigate("TabNavigation");
+  };
+
+  const [updateCall] = useMutation(UPDATE_CALL);
 
   const handlePress = () => {
     setModalState(true);
     updateMyPayStatus();
     setTimeout(() => {
       navigation.navigate("Payment", {
-        requestForStore,
-        requestForDelivery,
-        menus,
         userId,
+        seq,
       });
       setModalState(false);
     }, 2000);
   };
 
   const updateMyPayStatus = () => {
-    setIsPayCompleted(true);
-
-    // some graphQL request to server
-    // update my kakaopay status
+    updateCall({
+      variables: {
+        seq,
+      },
+    });
   };
 
   return (
@@ -59,7 +65,7 @@ const Kakaopay = ({ navigation, route }) => {
           <KakaoComplete>결제완료</KakaoComplete>
         </KakaoButton>
         <KakaoButton>
-          <KakaoCancel>취소하기</KakaoCancel>
+          <KakaoCancel onPress={handleCancel}>취소하기</KakaoCancel>
         </KakaoButton>
       </KakaopayButtons>
 

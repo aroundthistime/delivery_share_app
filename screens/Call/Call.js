@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { Marker } from "react-native-maps";
 import { ScrollView, Text, View } from "react-native";
-import * as Location from 'expo-location';
+import { FontAwesome } from "@expo/vector-icons";
+import * as Location from "expo-location";
 import "./styled";
 import styles from "../../styles";
 import { currentCallVar, locationVar } from "../../reactiveVars";
@@ -30,79 +31,46 @@ import constants from "../../constants";
 /**
  * TODO *
  * 1. component 단위 modularization (✔)
- * 2. 필요한 부가 정보 있는지 체크
+ * 2. 필요한 부가 정보 있는지 체크 (✔)
  * 3. 메뉴 정보 map 으로 리턴 필요 (✔)
- * 4. 매장 상세 정보 이동 시 로딩 구현
+ * 4. Emulator Geolocation 연동 문제로 초기 MapView 로딩 위치역시
+ *    callLocation에 있는 (콜 만남 장소) 위도, 경도로 설정
  */
 
 export default ({ navigation, route }) => {
   const {
-    params: { image, brandName, userId, menus, dist, requestToRestaurant, requestToUser },
+    params: {
+      seq,
+      distance,
+      callLocation,
+      restaurant,
+      price,
+      user,
+      request_call,
+      status,
+      time_limit,
+      cart,
+    },
   } = route;
-  const location = useReactiveVar(locationVar);
-  // const [requestForStore, setRequestForStore] = useState("");
-  // const [requestForDelivery, setRequestForDelivery] = useState("");
-  const call = {
-    request_R: "",
-    request_call: "안녕하세요",
-    user: [
-      {
-        id: 222,
-        name: "김팝콘"
-      }
-    ],
-    callLocation: {
-      place: "서울시 어디동 저기구 227-30",
-      latitude: 37.59720501279483,
-      longitude: 127.05882764767271
-    },
-    cart: {
-      menus: [
-        {
-          menu: {
-            id: 2,
-            name: "로제떡볶이"
-          },
-          count: 1,
-          options: [
-            {
-              category: "맵기선택",
-              items: [
-                "0단계"
-              ]
-            }
-          ],
-          price: 12000,
-          isSeperated: true
-        }
-      ]
-    },
-    restaurant: {
-      seq: 2
-    },
-    seq: 3
-  }
-  const getAmountOfMenus = () => {
-    return splitNumberPerThousand(
-      menus.reduce((acc, cur) => acc + cur.price, 0)
-    );
-  };
 
-  const setCurrentCall = (call) => {
+  const location = useReactiveVar(locationVar);
+
+  const setCurrentCall = () => {
     currentCallVar({
-      id: call.seq,
+      id: seq,
       user: {
-        id: call.user[0].seq,
-        name: call.user[0].name
+        id: user.seq,
+        name: user.name,
+        nickname: user.ID,
       },
       // restaurant
-      restaurantId: call.restaurant.seq,
+      restaurantId: restaurant.seq,
       cart: {
-        menus: call.cart.menus
+        menus: cart[0].selected_menu,
       },
-      requestForStore: call.request_R,
-    })
-  }
+      requestForStore: cart[0].request,
+    });
+  };
 
   return (
     <ScrollView
@@ -110,7 +78,7 @@ export default ({ navigation, route }) => {
       style={{ flex: 1, backgroundColor: styles.bgColor }}
     >
       <ContainerWrapper>
-        <UserSpecification userId={userId} />
+        <UserSpecification user={user} />
 
         <ButtonContainer>
           <NavigationButton
@@ -119,7 +87,7 @@ export default ({ navigation, route }) => {
               type: "MaterialCommunityIcons",
               name: "account-details-outline",
             }}
-            params={["UserReviews", { userId }]}
+            params={["UserReviews", { user }]}
             text="상세정보"
           />
 
@@ -138,18 +106,30 @@ export default ({ navigation, route }) => {
       <ContainerWrapper>
         <View style={{ marginBottom: 20 }}>
           <TextTitle>• 매장 정보</TextTitle>
-          <Text>- 이름 : {brandName}</Text>
+          <Text>- 이름 : {restaurant.name}</Text>
+          <Text>- 소개 : {restaurant.introduction}</Text>
+          <Text>- 종류 : {restaurant.category}</Text>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Text style={{ textAlignVertical: "center", marginRight: 10 }}>
+              - 평점 :
+            </Text>
+            <FontAwesome name="star" size={13.5} color={styles.yellowColor} />
+            <Text style={{ marginLeft: 5 }}>{restaurant.rate.toFixed(1)}</Text>
+          </View>
+          <Text>
+            - 배달팁 : {splitNumberPerThousand(restaurant.delivery_tip)}원
+          </Text>
         </View>
 
         <NavigationButton
           navigation={navigation}
-          params={["Restaurant", { id: 1 }]}
+          params={["Restaurant", { id: +restaurant.seq }]}
           flaticon={{
             type: "Ionicons",
             name: "restaurant-outline",
           }}
           text="상세정보"
-          additionalMethod={() => setCurrentCall(call)}
+          additionalMethod={() => setCurrentCall()}
         />
       </ContainerWrapper>
 
@@ -157,12 +137,12 @@ export default ({ navigation, route }) => {
         <MenuContainer>
           <View>
             <TextTitle>• 선택한 메뉴 목록</TextTitle>
-            <MenuListWithName menus={menus} />
+            <MenuListWithName menus={cart[0].selected_menu} />
           </View>
 
           <View>
-            <TextTitle>총액 : {getAmountOfMenus()}원</TextTitle>
-            <MenuListWithPrice menus={menus} />
+            <TextTitle>총액 : 원</TextTitle>
+            <MenuListWithPrice menus={cart[0].selected_menu} />
           </View>
         </MenuContainer>
 
@@ -170,51 +150,50 @@ export default ({ navigation, route }) => {
 
         <InputContainer>
           <TextTitle>• 가게측 요청사항</TextTitle>
-          {/* <TextInputBox
-            value={requestForStore}
-            onChangeText={(text) => setRequestForStore(text)}
-            placeholder="가게측 요청사항이 있다면 적어주세요."
-          ></TextInputBox> */}
-          <TextContainer>{requestToRestaurant ? requestToRestaurant : "없음"}</TextContainer>
+          <TextContainer>{cart[0].request || "없음"}</TextContainer>
         </InputContainer>
 
         <InputContainer>
           <TextTitle>• 매칭용 요청사항</TextTitle>
-          <TextContainer>{requestToUser ? requestToUser : "없음"}</TextContainer>
-          {/* <TextInputBox
-            value={requestForDelivery}
-            onChangeText={(text) => setRequestForDelivery(text)}
-            placeholder="배달측 요청사항이 있다면 적어주세요."
-          ></TextInputBox> */}
+          <TextContainer>{request_call || "없음"}</TextContainer>
         </InputContainer>
 
         <TextTitle>• 수령장소</TextTitle>
-        <Text>- {call.callLocation.place}</Text>
+        <Text>- {callLocation.place}</Text>
         <MapView
-          style={{ width: constants.width - 40, height: constants.width - 40, marginVertical: 15 }}
+          style={{
+            width: constants.width - 40,
+            height: constants.width - 40,
+            marginVertical: 15,
+          }}
           region={{
-            longitude: location.longitude,
-            latitude: location.latitude,
+            longitude: callLocation.longitude,
+            latitude: callLocation.latitude,
             latitudeDelta: 0.01,
-            longitudeDelta: 0.01
+            longitudeDelta: 0.01,
           }}
         >
           <Marker
-            coordinate={{ latitude: location.latitude, longitude: location.longitude }}
+            coordinate={{
+              latitude: callLocation.latitude,
+              longitude: callLocation.longitude,
+            }}
             style={{ alignItems: "center" }}
           >
             <MarkerTitle>현위치</MarkerTitle>
             <MarkerIcon isCurrent={true} />
           </Marker>
           <Marker
-            coordinate={{ latitude: call.callLocation.latitude, longitude: call.callLocation.longitude }}
+            coordinate={{
+              latitude: callLocation.latitude,
+              longitude: callLocation.longitude,
+            }}
             style={{ alignItems: "center" }}
           >
             <MarkerTitle>수령장소</MarkerTitle>
             <MarkerIcon isCurrent={false} />
           </Marker>
         </MapView>
-
       </ContainerWrapper>
 
       <NavigationButton
@@ -222,7 +201,23 @@ export default ({ navigation, route }) => {
         navigation={navigation}
         params={["Restaurant", { id: 1 }]}
         text="메뉴 추가"
-        additionalMethod={() => setCurrentCall(call)}
+        additionalMethod={() => setCurrentCall()}
+      />
+
+      <NavigationButton
+        background={styles.themeColor}
+        navigation={navigation}
+        params={[
+          "Request",
+          {
+            seq,
+            request: cart[0].request,
+            user,
+            cart,
+            place: callLocation.place,
+          },
+        ]}
+        text="바로 주문"
       />
     </ScrollView>
   );
