@@ -93,41 +93,44 @@ export default ({ navigation, route }) => {
     );
     const { loading, data, error } = useQuery(GET_RESTAURANTS, {
         variables: {
-            category: currentCategory,
-            si: locObj.si,
-            dong: locObj.dong
+            // category: currentCategory,
+            // si: locObj.si,
+            // dong: locObj.dong
+            category: "중식",
+            si: "고양시",
+            dong: "주엽동"
         }
     });
     return <Container>
-        <View style={{ height: 55 }}>
-            <ScrollView
-                horizontal={true}
-                ref={categoryScrollRef}
-                showsHorizontalScrollIndicator={false}
-                onContentSizeChange={scrollToCurrentCategory}
-            >
-                <CategoryTabs>
-                    {constants.categories.map(categoryObj => {
-                        const category = categoryObj.name
-                        return <CategoryTab
-                            category={category}
-                            onPress={() =>
-                                navigation.dispatch(StackActions.replace("Restaurants", {
-                                    category
-                                }))}
-                            isSelected={category === currentCategory}
-                            key={category}
-                        />
-                    }
-                    )}
-                </CategoryTabs>
-            </ScrollView>
-        </View>
-        {!loading && data && data.Restaurant ? (
+        {!loading && data && data.getRestaurants ? (
             <>
-                {data.Restaurant.length > 0 ? (
+                <View style={{ height: 55 }}>
+                    <ScrollView
+                        horizontal={true}
+                        ref={categoryScrollRef}
+                        showsHorizontalScrollIndicator={false}
+                        onContentSizeChange={scrollToCurrentCategory}
+                    >
+                        <CategoryTabs>
+                            {constants.categories.map(categoryObj => {
+                                const category = categoryObj.name
+                                return <CategoryTab
+                                    category={category}
+                                    onPress={() =>
+                                        navigation.dispatch(StackActions.replace("Restaurants", {
+                                            category
+                                        }))}
+                                    isSelected={category === currentCategory}
+                                    key={category}
+                                />
+                            }
+                            )}
+                        </CategoryTabs>
+                    </ScrollView>
+                </View>
+                {data.getRestaurants.length > 0 ? (
                     <FlatList
-                        data={data.Restaurant}
+                        data={data.getRestaurants}
                         renderItem={renderRestaurantBar}
                         style={{
                             backgroundColor: styles.lightGrayColor,
@@ -140,7 +143,6 @@ export default ({ navigation, route }) => {
                         <NoRestaurantMessage>주변에 음식점이 없습니다.</NoRestaurantMessage>
                     </ViewContainer>
                 )}
-
             </>
         ) : (
             <Loader />

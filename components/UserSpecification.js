@@ -23,7 +23,7 @@ const UserSpecification = ({ user }) => {
       />
       <View>
         <Text style={{ marginBottom: 10, fontWeight: "bold", fontSize: 18 }}>
-          {user.ID}
+          {user.name}
         </Text>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Text style={{ textAlignVertical: "center", marginRight: 10 }}>
@@ -46,8 +46,8 @@ export const UserSpecs = styled.View`
 `;
 
 export const ProfileImage = styled.Image`
-  width: 80px;
-  height: 80px;
-  border-radius: 80px;
+  width: 60px;
+  height: 60px;
+  border-radius: 60px;
   margin-right: 20px;
 `;

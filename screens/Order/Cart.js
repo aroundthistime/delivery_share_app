@@ -90,7 +90,7 @@ export default ({ navigation }) => {
     const isCallReceiver = useReactiveVar(isCallReceiverVar);
     const currentCall = useReactiveVar(currentCallVar);
     const checkCanMakeOrder = async () => {
-        console.log(currentCall.cart.menus, cart.menus)
+        (currentCall.cart.menus, cart.menus)
         for (let i = 0; i < currentCall.cart.menus.length; i++) {
             const menuObj = currentCall.cart.menus[i];
             if (menuObj.isSeperated

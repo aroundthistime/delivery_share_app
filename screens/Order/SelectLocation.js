@@ -11,6 +11,10 @@ import constants from "../../constants";
 import styles from "../../styles";
 import useInput from "../../Hooks/useInput";
 import FooterBtn from "../../components/FooterBtn";
+import { useMutation } from "@apollo/client";
+import { CREATE_CALL } from "../../queries/CallQueries";
+import { useCart } from "../../Contexts/CartContext";
+import { myCallVar } from "../../reactiveVars";
 
 const MarkerTitle = styled.Text`
     padding-left : 8;
@@ -92,13 +96,18 @@ const MarkerGuide = styled.Text`
     margin-top : 5;
 `
 
-export default () => {
+export default ({ navigation, route }) => {
+    const {
+        params: { timeLimit, requestToUser, requestToRestaurant }
+    } = route;
     const [errorMsg, setErrorMsg] = useState(null);
     const [loading, setloading] = useState(true);
     const [currentSpot, setCurrentSpot] = useState();
     const [receivingSpot, setReceivingSpot] = useState();
     const [isGettingAddress, setIsGettingAddress] = useState(false);
     const receivingSpotInput = useInput("");
+    const [createCallMutation] = useMutation(CREATE_CALL);
+    const cart = useCart();
     const setReceivingSpotByMarker = async (latitude, longitude) => {
         setIsGettingAddress(true)
         setReceivingSpot({
@@ -170,6 +179,32 @@ export default () => {
             setloading(false);
         })();
     }, []);
+    const createCall = async () => {
+        try {
+            console.log(JSON.stringify(cart));
+            const { data: { createCall: result }, error } = await createCallMutation({
+                variables: {
+                    cart: JSON.stringify(cart),
+                    latitude: receivingSpot.latitude,
+                    longitude: receivingSpot.longitude,
+                    address: receivingSpotInput.value,
+                    requestToRes: requestToRestaurant,
+                    requestToUser,
+                    timeLimit
+                }
+            })
+            if (result) {
+                Alert.alert("콜이 요청되었습니다.");
+                myCallVar(result);
+                navigation.dispatch(StackActions.replace("TabNavigation"))
+            } else {
+                Alert.alert("콜 요청에 실패하였습니다. 다시 시도해주세요.");
+            }
+        } catch (error) {
+            console.log(error);
+            Alert.alert("콜 요청에 실패하였습니다. 다시 시도해주세요.");
+        }
+    }
     return <>
         {loading ? (
             <Loader />
@@ -228,7 +263,7 @@ export default () => {
                         )}
                     </InputRow>
                     <MarkerGuide>주소를 직접 입력 후 엔터를 누르거나 지도화면을 터치하여 수령장소를 선택할 수 있습니다.</MarkerGuide>
-                    <FooterBtn text="콜 요청하기" onPress={() => 1} needStyle />
+                    <FooterBtn text="콜 요청하기" onPress={createCall} needStyle />
                 </FooterContainer>
             </View>
         )}

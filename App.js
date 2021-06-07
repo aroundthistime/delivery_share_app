@@ -3,6 +3,7 @@ import { Alert } from "react-native";
 import AppLoading from 'expo-app-loading';
 import * as Location from 'expo-location';
 import Constants from "expo-constants";
+import * as Notifications from 'expo-notifications';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons, FontAwesome5, FontAwesome } from "@expo/vector-icons"
 import * as Font from "expo-font"
@@ -15,13 +16,27 @@ import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import { persistCache } from 'apollo3-cache-persist';
 import apolloOptions from './apolloOptions';
 import { extractLocationInfos } from './utils';
-import { locationVar } from './reactiveVars';
+import { locationVar, myCallVar } from './reactiveVars';
 
 export default function App() {
   const [loading, setLoading] = useState(true);
   const [client, setClient] = useState(null);
+  const [notificationToken, setNotificationToken] = useState();
   const onFinish = () => setLoading(false);
   const preLoad = async () => {
+    const registerForPushNotificationsAsync = async () => {
+      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+      if (existingStatus !== 'granted') {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+      if (finalStatus !== 'granted') {
+        return;
+      }
+      const token = (await Notifications.getExpoPushTokenAsync()).data;
+      return token;
+    }
     const cache = new InMemoryCache();
     await persistCache({
       cache,
@@ -55,6 +70,8 @@ export default function App() {
     const fontPromises = fontsToLoad.map((font) => Font.loadAsync(font));
     const imagesToLoad = [require("./assets/icon.png")];
     const imagePromises = imagesToLoad.map(image => Asset.loadAsync(image));
+    const token = await registerForPushNotificationsAsync();
+    setNotificationToken(token);
     return Promise.all([
       ...fontPromises,
       ...imagePromises
