@@ -1,5 +1,6 @@
 import { useQuery } from "@apollo/client";
 import React, { useState, useEffect } from "react";
+import { useIsFocused } from "@react-navigation/native";
 import {
   FlatList,
   ScrollView,
@@ -27,9 +28,14 @@ const locObj = {
 };
 
 export default ({ navigation }) => {
+  const isFocused = useIsFocused();
   const { loading, data, refetch } = useQuery(GET_NEAR_CALLINGS, {
     variables: locObj,
   });
+
+  useEffect(() => {
+    refetch();
+  }, [isFocused]);
 
   const handleRefresh = () => {
     refetch();

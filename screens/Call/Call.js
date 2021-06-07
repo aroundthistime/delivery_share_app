@@ -207,7 +207,16 @@ export default ({ navigation, route }) => {
       <NavigationButton
         background={styles.themeColor}
         navigation={navigation}
-        params={["Request", { request: cart[0].request, user, cart }]}
+        params={[
+          "Request",
+          {
+            seq,
+            request: cart[0].request,
+            user,
+            cart,
+            place: callLocation.place,
+          },
+        ]}
         text="바로 주문"
       />
     </ScrollView>
