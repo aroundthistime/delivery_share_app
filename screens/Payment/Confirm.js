@@ -18,15 +18,16 @@ import { Divider } from "../Call/styled";
  * TODO *
  * 1. component 단위로 modularization (✔)
  * 2. 주문 내역 map 을 통해 list 형태 리턴 (✔)
- * 3. 배달장소 정보 연동 필요
+ * 3. 배달장소 정보 연동 필요 (✔)
  * 4. 요청사항 메시지 형태 디자인 변경 (✔)
  * 5. 추가로 필요한 부가 정보 있는지 검토 (✔)
- * 6. 결제진행 클릭 시 Kakaopay API 호출 - 백엔드 연동 필요
+ * 6. 결제진행 클릭 시 Kakaopay API 호출 - 디자인만 구현 (✔)
+ * 7. 주문 내역에서 A의 결제항목/금액 & B의 결제항목/금액 구분 필요
  */
 
 const Confirm = ({ navigation, route }) => {
   const {
-    params: { cart, request, user, restaurantRequest },
+    params: { seq, cart, request, user, restaurantRequest, place },
   } = route;
 
   // const cart = useCart();
@@ -73,7 +74,7 @@ const Confirm = ({ navigation, route }) => {
 
         <View>
           <TextTitle style={{ marginBottom: 10 }}>배달장소</TextTitle>
-          <Text>서울시 동대문구 이문동1동 천장산로10 </Text>
+          <Text>{place}</Text>
         </View>
 
         <Divider />
@@ -107,6 +108,7 @@ const Confirm = ({ navigation, route }) => {
             "Kakaopay",
             {
               userId: user.ID,
+              seq,
             },
           ]}
           text="결 제 진 행"

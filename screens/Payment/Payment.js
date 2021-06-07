@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Text, Image } from "react-native";
 import styled from "styled-components";
 import styles from "../../styles";
 import { Feather } from "@expo/vector-icons";
 import NavigationButton from "../../components/NavigationButton";
+import { useQuery } from "@apollo/client";
+import { GET_CALLING } from "../../queries/CallingsQueries";
+import { useIsFocused } from "@react-navigation/native";
 
 /**
  * TODO *
@@ -16,35 +19,40 @@ import NavigationButton from "../../components/NavigationButton";
  */
 
 const Payment = ({ navigation, route }) => {
+  const isFocused = useIsFocused();
   const {
-    params: { userId },
+    params: { userId, seq },
   } = route;
 
-  const [tempPayResult, setTempPayResult] = useState(false);
-  const [totalPayStatus, setTotalPayStatus] = useState(false);
+  const { loading, data } = useQuery(GET_CALLING, {
+    variables: {
+      seq,
+    },
+    pollInterval: 3000,
+  });
+
+  const [isAllPaid, setIsAllPaid] = useState("");
 
   useEffect(() => {
-    const tempTimer = setTimeout(() => {
-      setTempPayResult(true);
-    }, 5000);
+    if (!loading) {
+      const { Calling } = data;
+      setIsAllPaid(Calling.status);
 
-    const tempTimer2 = setTimeout(() => {
-      setTotalPayStatus(true);
-    }, 8000);
-
-    tempTimer;
-    tempTimer2;
-
-    return () => {
-      clearTimeout(tempTimer);
-      clearTimeout(tempTimer2);
-    };
-  }, []);
+      if (Calling.status === "isCompleted") {
+        // createOrder
+      }
+    }
+  }, [isFocused, loading]);
 
   return (
     <PaymentView>
       <PayBill>
-        <PayCheck>
+        <PayCheck
+          style={{
+            backgroundColor:
+              isAllPaid === "isCompleted" ? "#10c06e" : styles.lightGrayColor,
+          }}
+        >
           <Feather name="check" size={35} color="#fff" />
         </PayCheck>
         <Image
@@ -52,9 +60,11 @@ const Payment = ({ navigation, route }) => {
           source={require("../../assets/deliver.png")}
         />
 
-        <PendingList bgColor={tempPayResult ? "#10c06e" : styles.lightColor}>
+        <PendingList
+          bgColor={isAllPaid === "isCompleted" ? "#10c06e" : styles.lightColor}
+        >
           <UserNickname>{userId}</UserNickname>
-          {tempPayResult ? (
+          {isAllPaid === "isCompleted" ? (
             <Feather name="check-circle" size={20} color="#006B38FF" />
           ) : (
             <LoadingBar source={require("../../assets/loading.gif")} />
@@ -66,11 +76,11 @@ const Payment = ({ navigation, route }) => {
           <Feather name="check-circle" size={20} color="#006B38FF" />
         </PendingList>
 
-        <PendingMessage>
-          {totalPayStatus
-            ? "결제가 모두 완료되었습니다."
-            : "상대방의 결제를 기다리고 있습니다..."}
-        </PendingMessage>
+        {isAllPaid === "isCompleted" ? (
+          <Text>"결제가 모두 완료되었습니다."</Text>
+        ) : (
+          <PendingMessage>상대방의 결제를 기다리고 있습니다...</PendingMessage>
+        )}
       </PayBill>
 
       <ButtonArea>
@@ -84,8 +94,12 @@ const Payment = ({ navigation, route }) => {
           text="메인화면"
         />
         <NavigationButton
-          disabled={!totalPayStatus}
-          bgColor={totalPayStatus ? styles.themeColor : styles.lightGrayColor}
+          disabled={isAllPaid === "isCompleted" ? false : true}
+          bgColor={
+            isAllPaid === "isCompleted"
+              ? styles.themeColor
+              : styles.lightGrayColor
+          }
           navigation={navigation}
           flaticon={{
             type: "Ionicons",
@@ -119,7 +133,6 @@ const PayCheck = styled.View`
   width: 50px;
   height: 50px;
   border-radius: 50px;
-  background-color: #10c06e;
   position: absolute;
   top: -25px;
   justify-content: center;
