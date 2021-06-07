@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { ScrollView, Text, TextInput, View, Image } from "react-native";
 import styled from "styled-components";
+import { CommonActions } from "@react-navigation/native";
 import ContainerWrapper from "../../../components/ContainerWrapper";
 import { Ionicons } from "@expo/vector-icons";
 import styles from "../../../styles";
@@ -9,14 +10,21 @@ import Slider from "@react-native-community/slider";
 import RateStars from "../../../components/RateStars";
 import constants from "../../../constants";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { useMutation } from "@apollo/client";
+import { CREATE_RES_REVIEW } from "../../../queries/ReviewsMutations";
 
 const STARS_ROW_WIDTH = 220;
 
 export default ({ navigation, route }) => {
+  const {
+    params: { orderId },
+  } = route;
   const [starValue, setStarValue] = useState(3);
   const [comment, setComment] = useState("");
   const [error, setError] = useState(false);
   const [imageUpload, setImageUpload] = useState(false);
+
+  const [writeRestaurantReview] = useMutation(CREATE_RES_REVIEW);
 
   const clickSubmitButton = () => {
     if (!checkComment()) {
@@ -25,7 +33,7 @@ export default ({ navigation, route }) => {
     }
     setError(false);
     handleSubmit();
-    navigation.navigate("Orders");
+    navigation.dispatch(CommonActions.goBack());
   };
 
   const checkComment = () => {
@@ -33,7 +41,13 @@ export default ({ navigation, route }) => {
   };
 
   const handleSubmit = () => {
-    console.log(starValue, comment);
+    writeRestaurantReview({
+      variables: {
+        content: comment,
+        order_seq: orderId,
+        rate: starValue,
+      },
+    });
   };
 
   return (

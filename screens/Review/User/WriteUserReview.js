@@ -39,7 +39,7 @@ export default ({ navigation, route }) => {
     }
     setError(false);
     handleSubmit();
-    navigation.dispatch(CommonActions.goBack("UserReviews"));
+    navigation.dispatch(CommonActions.goBack());
   };
 
   const checkComment = () => {
