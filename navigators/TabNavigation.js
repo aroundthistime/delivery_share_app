@@ -18,6 +18,7 @@ const SELECTED_TAB_COLOR = styles.themeColor;
 
 export default ({ navigation, route }) => {
   const myCall = useReactiveVar(myCallVar);
+  console.log(myCall);
   return (
     <>
       <StatusBar />

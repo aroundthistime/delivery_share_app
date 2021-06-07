@@ -26,6 +26,7 @@ export const GET_RESTAURANT = gql`
         getRestaurant(seq : $seq){
             seq
             name
+            thumbnail
             dayoff
             rate
             min_order

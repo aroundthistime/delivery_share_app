@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Alert, TouchableOpacity, Text } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
@@ -62,9 +62,6 @@ const LoggedInNavigation = createStackNavigator();
 
 export default ({ navigation, route }) => {
   const { data, loading, error } = useQuery(GET_MY_CALL);
-  if (!loading && data && data.getMYCall) {
-    myCallVar(data.getMYCall);
-  }
   const cart = useCart();
   const clearCart = useClearCart();
   const clearCartAlert = () => {
@@ -84,9 +81,10 @@ export default ({ navigation, route }) => {
       ]
     )
   }
-  if (loading || !data || !data.getMyCall) {
-    return <Loader />
-  }
+  // if (data && data.getMyCall) {
+  //   console.log(data.getMyCall);
+  //   myCallVar(data.getMyCall)
+  // }
   return (
     <LoggedInNavigation.Navigator initialRouteName="TabNavigation">
       <LoggedInNavigation.Screen

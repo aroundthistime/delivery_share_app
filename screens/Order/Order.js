@@ -290,12 +290,12 @@ export default ({ navigation, route }) => {
             {data.Order.call.cart.map(cartObj => (
               <RequestContainer>
                 <RequestHeader><Text style={{ fontWeight: "bold" }}>{cartObj.user.name}</Text> 님의 요청사항</RequestHeader>
-                <RequestContent>{cartObj.request}</RequestContent>
+                <RequestContent>{cartObj.request ? cartObj.reqeust : "없음"}</RequestContent>
               </RequestContainer>
             ))}
             <RequestContainer>
               <RequestHeader style={{ fontWeight: "bold" }}>매칭 메시지</RequestHeader>
-              <RequestContent>{data.Order.call.request_call}</RequestContent>
+              <RequestContent>{data.Order.call.request_call ? data.Order.call.request_call : "없음"}</RequestContent>
             </RequestContainer>
 
             <Divider />

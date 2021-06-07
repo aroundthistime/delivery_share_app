@@ -1,4 +1,5 @@
 import { useMutation, useReactiveVar } from "@apollo/client";
+import { StackActions } from "@react-navigation/routers";
 import React, { useEffect, useState } from "react";
 import { Alert, Image, TouchableOpacity, View } from "react-native";
 import styled from "styled-components";
@@ -43,6 +44,10 @@ const CancelBtnText = styled.Text`
 
 export default ({ navigation, route }) => {
     const myCall = useReactiveVar(myCallVar);
+    if (!myCall) {
+        console.log("TTT");
+        navigation.dispatch(StackActions.replace("MethodSelect"))
+    }
     const [remainingTimeString, setRemainingTimeString] = useState("00:00:00");
     const [cancelMutation] = useMutation(CANCEL_CALL);
     useEffect(() => {
@@ -53,8 +58,10 @@ export default ({ navigation, route }) => {
     }, [])
     const getRemainingTime = () => {
         const current = new Date();
-        const callStart = new Date(myCall.created_at);
-        const remainingTime = callStart.getTime() + 60000 * myCall.time_limit - current.getTime();
+        let callStart = new Date(myCall.created_at);
+        callStart = new Date(callStart.getFullYear(), callStart.getMonth(), callStart.getDate(), callStart.getUTCHours(), callStart.getUTCMinutes());
+        // callStart = new Date(`${callStart.getFullYear()}-${callStart.getMonth() + 1}-${callStart.getDate()} ${callStart.getUTCHours()}:${callStart.getUTCMinutes()}`);
+        const remainingTime = callStart.getTime() + 6000 * myCall.time_limit - current.getTime();
         let remainingHour = parseInt(remainingTime / (1000 * 60 * 60));
         if (remainingHour < 10) {
             remainingHour = `0${remainingHour}`
@@ -73,17 +80,19 @@ export default ({ navigation, route }) => {
         if (remainingSecond < 10) {
             remainingSecond = `0${remainingSecond}`
         }
-        if (remainingTime === 0) {
+        if (remainingTime <= 0) {
             cancelMutation({
                 variables: {
                     seq: myCall.seq
                 }
             });
             myCallVar(undefined);
+            setRemainingTimeString("00:00:00")
             Alert.alert("콜이 취소되었습니다")
-            navigation.navigate("Home")
+            navigation.dispatch(StackActions.replace("TabNavigation"))
+        } else {
+            setRemainingTimeString(`${remainingHour}:${remainingMinute}:${remainingSecond}`)
         }
-        setRemainingTimeString(`${remainingHour}:${remainingMinute}:${remainingSecond}`)
     }
     return (
         <View style={{ flex: 1, justifyContent: "space-between", alignItems: "center", backgroundColor: "white", paddingVertical: constants.height * 0.11 }}>
@@ -101,7 +110,7 @@ export default ({ navigation, route }) => {
                 });
                 myCallVar(undefined);
                 Alert.alert("콜이 취소되었습니다")
-                navigation.navigate("Home")
+                navigation.dispatch(StackActions.replace("TabNavigation"))
             }}>
                 <CancelBtnContainer>
                     <CancelBtnText>콜 취소하기</CancelBtnText>

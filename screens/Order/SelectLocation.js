@@ -13,8 +13,9 @@ import useInput from "../../Hooks/useInput";
 import FooterBtn from "../../components/FooterBtn";
 import { useMutation } from "@apollo/client";
 import { CREATE_CALL } from "../../queries/CallQueries";
-import { useCart } from "../../Contexts/CartContext";
+import { useCart, useClearCart } from "../../Contexts/CartContext";
 import { myCallVar } from "../../reactiveVars";
+import { StackActions } from "@react-navigation/routers";
 
 const MarkerTitle = styled.Text`
     padding-left : 8;
@@ -108,6 +109,7 @@ export default ({ navigation, route }) => {
     const receivingSpotInput = useInput("");
     const [createCallMutation] = useMutation(CREATE_CALL);
     const cart = useCart();
+    const clearCart = useClearCart();
     const setReceivingSpotByMarker = async (latitude, longitude) => {
         setIsGettingAddress(true)
         setReceivingSpot({
@@ -194,9 +196,12 @@ export default ({ navigation, route }) => {
             })
             if (result) {
                 Alert.alert("콜이 요청되었습니다.");
+                console.log(result);
                 myCallVar(result);
+                clearCart();
                 navigation.dispatch(StackActions.replace("TabNavigation"))
             } else {
+                console.log(error);
                 Alert.alert("콜 요청에 실패하였습니다. 다시 시도해주세요.");
             }
         } catch (error) {

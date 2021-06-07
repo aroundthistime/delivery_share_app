@@ -102,9 +102,10 @@ export default () => {
             <InfoRow>
                 <InfoTitle>운영시간</InfoTitle>
                 <View style={{ width: constants.width - 115, fontSize: 14.5 }}>
-                    {runTimeList.map(runTimeObj => (
+                    {/* {runTimeList.map(runTimeObj => (
                         <Text>{runTimeObj.days.join(", ")}  -  {formatAmPm(runTimeObj.open)} ~ {formatAmPm(runTimeObj.close)}</Text>
-                    ))}
+                    ))} */}
+                    <Text>{restaurant.runtime.day}  -  {formatAmPm(restaurant.runtime.close.substring(0, 4))} ~ {formatAmPm(restaurant.runtime.close.substring(0, 4))}</Text>
                 </View>
             </InfoRow>
             <InfoRow>

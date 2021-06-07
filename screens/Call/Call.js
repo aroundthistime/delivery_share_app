@@ -67,6 +67,7 @@ export default ({ navigation, route }) => {
       restaurantId: restaurant.seq,
       cart: {
         menus: cart[0].selected_menu,
+        totalCost: cart[0].total_cost
       },
       requestForStore: cart[0].request,
     });

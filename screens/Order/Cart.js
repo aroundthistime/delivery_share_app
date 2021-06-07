@@ -127,7 +127,8 @@ export default ({ navigation }) => {
     const onFinishCart = async () => {
         if (isCallReceiver) {
             const canMakeOrder = await checkCanMakeOrder();
-            if (canMakeOrder === true) {
+            const totalPrice = getTotalPrice();
+            if (canMakeOrder === true && cart.restaurant.minOrder <= totalPrice + currentCall.cart.totalCost) {
                 navigation.navigate("CallMakeForm")
             } else {
                 Alert.alert(
@@ -194,7 +195,7 @@ export default ({ navigation }) => {
                 <BinaryBtnFooter
                     leftText={"메뉴 추가"}
                     leftOnPress={() => navigation.navigate("Restaurant", { id: cart.restaurant.id })}
-                    rightText={`${getTotalPrice()}원 콜 요청하기`}
+                    rightText={isCallReceiver ? `${getTotalPrice()}원 주문하기` : `${getTotalPrice()}원 콜 요청하기`}
                     rightOnPress={onFinishCart}
                 />
             </View>

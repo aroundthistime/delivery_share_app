@@ -93,9 +93,12 @@ export default ({ navigation, route }) => {
     );
     const { loading, data, error } = useQuery(GET_RESTAURANTS, {
         variables: {
+            // category: currentCategory,
+            // si: locObj.si,
+            // dong: locObj.dong
             category: currentCategory,
-            si: locObj.si,
-            dong: locObj.dong
+            si: "고양시",
+            dong: "주엽동"
         }
     });
     return <Container>

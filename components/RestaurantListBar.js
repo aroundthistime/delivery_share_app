@@ -55,7 +55,7 @@ const BlurText = styled.Text`
 const RestaurantRate = ({ rate, reviewCounts }) => (
     <View style={{ flexDirection: "row", alignItems: "center" }}>
         <FontAwesome name="star" size={11.5} color={styles.yellowColor} />
-        <Text style={{ marginLeft: 5, fontSize: 12 }}><Text style={{ fontWeight: "bold" }}>{rate}</Text> ({reviewCounts})</Text>
+        <Text style={{ marginLeft: 5, fontSize: 12 }}><Text style={{ fontWeight: "bold" }}>{rate.toFixed(1)}</Text> ({reviewCounts})</Text>
     </View>
 )
 

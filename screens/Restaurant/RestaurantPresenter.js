@@ -48,7 +48,7 @@ const RestaurantRate = ({ rate }) => (
         marginRight: 20
     }}>
         <FontAwesome name="star" size={RESTAURANT_ICON_INFO_SIZE} color={styles.yellowColor} />
-        <Text style={{ fontSize: RESTAURANT_ICON_INFO_SIZE }}> {rate}</Text>
+        <Text style={{ fontSize: RESTAURANT_ICON_INFO_SIZE }}> {rate.toFixed(1)}</Text>
     </Text>
 )
 

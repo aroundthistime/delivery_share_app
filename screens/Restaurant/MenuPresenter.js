@@ -306,7 +306,7 @@ export default ({ menuData, navigation, restaurant }) => {
     const extractSelectedMenu = () => {
         return {
             menu: {
-                id: menu.id,
+                id: menu.seq,
                 name: menu.name
             },
             price: menu.price,
@@ -320,6 +320,7 @@ export default ({ menuData, navigation, restaurant }) => {
     }
     const addSelectedMenuToCart = async () => {
         const selectedMenu = extractSelectedMenu();
+        console.log(selectedMenu);
         const result = addMenuToCart(selectedMenu, restaurant);
         if (result === 1) {
             showToast("해당 메뉴가 장바구니에 추가되었습니다", false)
