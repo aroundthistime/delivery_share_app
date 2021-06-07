@@ -17,3 +17,19 @@ export const CREATE_USER_REVIEW = gql`
     }
   }
 `;
+
+export const CREATE_RES_REVIEW = gql`
+  mutation WriteRestaurantReview(
+    $content: String
+    $order_seq: Int
+    $rate: Float
+  ) {
+    WriteRestaurantReview(
+      content: $content
+      order_seq: $order_seq
+      rate: $rate
+    ) {
+      content
+    }
+  }
+`;

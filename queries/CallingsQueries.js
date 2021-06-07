@@ -54,6 +54,18 @@ export const GET_NEAR_CALLINGS = gql`
   }
 `;
 
+export const GET_CALLING = gql`
+  query Calling($seq: Int!) {
+    Calling(seq: $seq) {
+      status
+      user {
+        ID
+        seq
+      }
+    }
+  }
+`;
+
 export const GET_USER = gql`
   query getUser($seq: Long!) {
     getUser(seq: $seq) {
@@ -68,6 +80,14 @@ export const GET_USER = gql`
         }
         created_at
       }
+    }
+  }
+`;
+
+export const UPDATE_CALL = gql`
+  mutation updateCall($seq: Int!) {
+    updateCall(seq: $seq) {
+      status
     }
   }
 `;
