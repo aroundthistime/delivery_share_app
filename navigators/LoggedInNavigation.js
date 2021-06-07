@@ -1,5 +1,5 @@
 import React from "react";
-import { Alert, TouchableOpacity } from "react-native";
+import { Alert, TouchableOpacity, Text } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Ionicons } from "@expo/vector-icons";
 import styled from "styled-components";
@@ -260,13 +260,21 @@ export default ({ navigation, route }) => {
       <LoggedInNavigation.Screen
         name="Payment"
         component={Payment}
-        options={{ title: "결제창", headerTitleAlign: "center" }}
+        options={{
+          title: "결제창",
+          headerTitleAlign: "center",
+          headerLeft: () => <Text></Text>,
+        }}
       />
 
       <LoggedInNavigation.Screen
         name="Kakaopay"
         component={Kakaopay}
-        options={{ title: "카카오페이", headerTitleAlign: "center" }}
+        options={{
+          title: "카카오페이",
+          headerTitleAlign: "center",
+          headerLeft: () => <Text></Text>,
+        }}
       />
     </LoggedInNavigation.Navigator>
   );
