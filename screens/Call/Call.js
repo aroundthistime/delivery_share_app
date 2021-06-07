@@ -123,7 +123,7 @@ export default ({ navigation, route }) => {
 
         <NavigationButton
           navigation={navigation}
-          params={["Restaurant", { id: +restaurant.seq }]}
+          params={["Restaurant", { id: restaurant.seq }]}
           flaticon={{
             type: "Ionicons",
             name: "restaurant-outline",
@@ -141,7 +141,7 @@ export default ({ navigation, route }) => {
           </View>
 
           <View>
-            <TextTitle>총액 : 원</TextTitle>
+            <TextTitle>총액 : {cart[0].total_cost}원</TextTitle>
             <MenuListWithPrice menus={cart[0].selected_menu} />
           </View>
         </MenuContainer>
@@ -167,16 +167,16 @@ export default ({ navigation, route }) => {
             marginVertical: 15,
           }}
           region={{
-            longitude: callLocation.longitude,
-            latitude: callLocation.latitude,
+            longitude: location.longitude,
+            latitude: location.latitude,
             latitudeDelta: 0.01,
             longitudeDelta: 0.01,
           }}
         >
           <Marker
             coordinate={{
-              latitude: callLocation.latitude,
-              longitude: callLocation.longitude,
+              latitude: location.latitude,
+              longitude: location.longitude,
             }}
             style={{ alignItems: "center" }}
           >

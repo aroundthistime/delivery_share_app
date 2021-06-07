@@ -43,6 +43,7 @@ export const GET_NEAR_CALLINGS = gql`
       time_limit
       cart {
         request
+        total_cost
         selected_menu {
           menu {
             name

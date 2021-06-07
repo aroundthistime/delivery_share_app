@@ -7,21 +7,19 @@ import { useRestaurant } from "../../Contexts/RestaurantContext";
 export default ({ navigation }) => {
   const restaurant = useRestaurant();
   const menus = restaurant.menus;
-  const renderMenuBar = ({ item }) => {
-    console.log(item.seq); return (
-      <MenuListBar {...item} onPress={() => navigation.navigate("Menu",
-        {
-          menuId: item.seq,
-          restaurant: {
-            id: restaurant.seq,
-            name: restaurant.name,
-            minOrder: restaurant.min_order,
-            deliveryTip: restaurant.delivery_tip,
-            isOpen: restaurant.isopen
-          }
-        })} />
-    )
-  }
+  const renderMenuBar = ({ item }) => (
+    <MenuListBar {...item} onPress={() => navigation.navigate("Menu",
+      {
+        menuId: item.seq,
+        restaurant: {
+          id: restaurant.seq,
+          name: restaurant.name,
+          minOrder: restaurant.min_order,
+          deliveryTip: restaurant.delivery_tip,
+          isOpen: restaurant.isopen
+        }
+      })} />
+  )
   return (
     <>
       <FlatList

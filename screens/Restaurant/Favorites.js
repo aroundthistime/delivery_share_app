@@ -35,7 +35,10 @@ const NoFavorites = styled.View`
 `
 
 export default ({ navigation }) => {
-    const { loading, data, error } = useQuery(GET_LIKED_RESTAURANTS);
+    const { loading, data, error } = useQuery(GET_LIKED_RESTAURANTS, {
+        fetchPolicy: "network-only",
+        notifyOnNetworkStatusChange: true
+    });
     const renderRestaurantBar = ({ item }) => (
         <RestaurantListBar {...item}
             onPress={() => navigation.navigate("Restaurant", { id: item.seq })}

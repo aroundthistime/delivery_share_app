@@ -213,7 +213,7 @@ export default ({ navigation, route }) => {
     const [quitChatMutation] = useMutation(QUIT_CHAT);
     const [reportUserMutation] = useMutation(REPORT_USER);
     const userObj = {
-        id: 1
+        id: 10
     }
     const { data: newMessageData, loading } = useSubscription(
         NEW_MESSAGE_FROM_CHAT,
@@ -298,7 +298,7 @@ export default ({ navigation, route }) => {
     if (isFocused && messages.length > 0 && messages[messages.length - 1].from.seq !== userObj.id) {
         readMessageMutation({
             variables: {
-                message_seq: messages[messages.length - 1].seq
+                seq: messages[messages.length - 1].seq
             }
         })
     }
@@ -427,7 +427,7 @@ export default ({ navigation, route }) => {
                             {messages.map((message, index, array) => {
                                 let isChecked = false;
                                 let createdAt = "";
-                                const fromMe = userObj.seq === message.from.seq;
+                                const fromMe = userObj.id === message.from.seq;
                                 if (fromMe && index === array.length - 1) {
                                     isChecked = message.is_read;
                                 }

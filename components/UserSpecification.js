@@ -23,7 +23,7 @@ const UserSpecification = ({ user }) => {
       />
       <View>
         <Text style={{ marginBottom: 10, fontWeight: "bold", fontSize: 18 }}>
-          {user.name}
+          {user.name ? user.name : user.ID}
         </Text>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Text style={{ textAlignVertical: "center", marginRight: 10 }}>

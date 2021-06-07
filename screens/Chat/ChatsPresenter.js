@@ -99,7 +99,7 @@ export default ({
     const [chats, setChats] = useState(chatsList);
     const sortedChats = [...chats].sort(chatsSortFunc);
     const userObj = {
-        id: 1
+        id: 10
     }
     const [quitChatMutation] = useMutation(QUIT_CHAT);
     const { data: newMessageData } = useSubscription(
@@ -186,7 +186,7 @@ export default ({
                                     </ChatInfoMain>
                                     <ChatInfoSub>
                                         <ChatTimestamp>{getTimeStamp(chat.lastMessage.created_at)}</ChatTimestamp>
-                                        {!chat.lastMessage.is_read && chat.lastMessage.from.seq !== userObj.seq && <ChatUnreadMark />}
+                                        {!chat.lastMessage.is_read && chat.lastMessage.from.seq !== userObj.id && <ChatUnreadMark />}
                                     </ChatInfoSub>
                                 </ChatTab>
                             )

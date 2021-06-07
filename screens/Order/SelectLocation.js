@@ -181,7 +181,6 @@ export default ({ navigation, route }) => {
     }, []);
     const createCall = async () => {
         try {
-            console.log(JSON.stringify(cart));
             const { data: { createCall: result }, error } = await createCallMutation({
                 variables: {
                     cart: JSON.stringify(cart),

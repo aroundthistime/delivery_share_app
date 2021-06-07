@@ -30,7 +30,6 @@ export default ({ navigation, route }) => {
     if (!loading && data && data.Menu) {
         navigation.setOptions({ title: data.Menu.name });
     }
-    console.log(data);
     return (
         !loading && data && data.Menu ? (
             <MenuPresenter menuData={data.Menu} navigation={navigation} restaurant={restaurant} />
