@@ -79,24 +79,22 @@ export const TOGGLE_LIKE_RESTAURANT = gql`
 `
 
 export const GET_RESTAURANT_REVIEWS = gql`
-    query getRestaurantReviews ($resseq : Int!){
-        getResReviews(resseq : $resseq) {
-            reviews{
+    query getRestaurantReviews ($resseq : Int!, $sortingmethod : String){
+        getResReviews(resseq : $resseq, sortingmethod : $sortingmethod) {
+            seq
+            createdAt
+            rate
+            content
+            images{
+                image
+            }
+            user{
                 seq
-                createdAt
-                rate
+                name
+                thumbnail
+            }
+            reply{
                 content
-                images{
-                    image
-                }
-                user{
-                    seq
-                    name
-                    thumbnail
-                }
-                reply{
-                    content
-                }
             }
         }
     }

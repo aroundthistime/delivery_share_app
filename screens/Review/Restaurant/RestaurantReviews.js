@@ -177,7 +177,8 @@ export default ({ navigation }) => {
     const restaurant = useRestaurant();
     const { loading, data, error } = useQuery(GET_RESTAURANT_REVIEWS, {
         variables: {
-            resseq: restaurant.seq
+            resseq: restaurant.seq,
+            sortingmethod: sorting
         }
     })
     const reviewsCount = restaurant.rate1count
@@ -220,7 +221,7 @@ export default ({ navigation }) => {
         {!loading && data && data.getResReviews ? (
             <View style={{ marginBottom: restaurant.isopen ? 0 : 45 }}>
                 {
-                    data.getResReviews.reviews.length > 0 ? (
+                    data.getResReviews.length > 0 ? (
                         <View>
                             <Section style={{ flexDirection: "row", justifyContent: "center", marginBottom: 5 }}>
                                 <ReviewsBrief>
@@ -252,7 +253,7 @@ export default ({ navigation }) => {
                                     ))}
                                 </View>
                                 <FlatList
-                                    data={data.getResReviews.reviews}
+                                    data={data.getResReviews}
                                     renderItem={renderReviewItem}
                                     style={{ paddingTop: 20 }}
                                 />
@@ -267,7 +268,10 @@ export default ({ navigation }) => {
                 }
             </View>
         ) : (
-            <Loader />
+            <View style={{ height: 200, backgroundColor: styles.bgColor, justifyContent: "center", alignItems: "center" }}>
+                <Loader />
+            </View>
+
         )}
     </>
 }
